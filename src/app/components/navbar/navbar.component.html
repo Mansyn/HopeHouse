@@ -5,7 +5,7 @@
       <span>Hope House</span>
     </span>
   </a>
-  <a class="docs-navbar-hide-small" mat-button tabindex="0" aria-disabled="false" [routerLink]="['/schedule']">
+  <a *ngIf="canAccessSchedule()" class="docs-navbar-hide-small" mat-button tabindex="0" aria-disabled="false" [routerLink]="['/schedule']">
     <span class="mat-button-wrapper">Schedule</span>
   </a>
   <div class="flex-spacer"></div>
@@ -18,9 +18,24 @@
   <a class="docs-navbar-show-small" mat-button tabindex="0" aria-disabled="false" [routerLink]="['/contact']">
     <mat-icon aria-label="Contact">mail_outline</mat-icon>
   </a>
+  <a class="docs-navbar-hide-small" mat-button tabindex="0" aria-disabled="false" [routerLink]="['/account']">
+    <span class="mat-button-wrapper">
+      <span *ngIf="auth.user$ | async; then account else login"></span>
+    </span>
+  </a>
+  <a class="docs-navbar-show-small" mat-button tabindex="0" aria-disabled="false" [routerLink]="['/account']">
+    <span *ngIf="auth.user$ | async; then account else login"></span>
+  </a>
 </nav>
 <nav class="docs-navbar docs-navbar-show-small">
-  <a class="docs-navbar-link" mat-button tabindex="0" aria-disabled="false" [routerLink]="['/schedule']">
+  <a *ngIf="canAccessSchedule()" class="docs-navbar-link" mat-button tabindex="0" aria-disabled="false" [routerLink]="['/schedule']">
     <span class="mat-button-wrapper">Schedule</span>
   </a>
 </nav>
+
+<ng-template #login>
+  <span>Login</span>
+</ng-template>
+<ng-template #account>
+  <span>Account</span>
+</ng-template>

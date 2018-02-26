@@ -1,0 +1,13 @@
+@import "../theme";
+.spacer {
+  flex: 1 1 auto;
+}
+
+#top {
+  margin-top: 3rem;
+}
+
+.form-padding {
+  padding: 2em;
+  background-color: mat-color($candy-app-primary, 100);
+}

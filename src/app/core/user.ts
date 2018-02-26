@@ -1,7 +1,7 @@
 
 export interface Roles {
     subscriber?: boolean;
-    editor?: boolean;
+    volunteer?: boolean;
     admin?: boolean;
 }
 

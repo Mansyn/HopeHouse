@@ -28,86 +28,24 @@
     font-size: 28px;
   }
 
-  .spacer {
-    min-height: 40px;
-    background-color: mat-color($candy-app-primary);
-    background-image: url("data:image/svg+xml,%3Csvg width='12' height='16' viewBox='0 0 12 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4 .99C4 .445 4.444 0 5 0c.552 0 1 .45 1 .99v4.02C6 5.555 5.556 6 5 6c-.552 0-1-.45-1-.99V.99zm6 8c0-.546.444-.99 1-.99.552 0 1 .45 1 .99v4.02c0 .546-.444.99-1 .99-.552 0-1-.45-1-.99V8.99z' fill='%23eeeeee' fill-opacity='0.4' fill-rule='evenodd'/%3E%3C/svg%3E");
-    border-top: 1px solid mat-color($candy-app-accent);
-    border-bottom: 1px solid mat-color($candy-app-accent);
+  .mat-card {
+    max-width: 408px;
   }
 
-  .frame-container {
-    background-color: #eee;
-  }
-
-  .frame {
+  .cta {
+    height: 360px;
+    width: 360px;
     position: relative;
+    background-repeat: no-repeat;
+    margin-bottom: 32px;
   }
 
-  .frame img {
-    vertical-align: bottom;
+  .cta_2 {
+    background-color: rgb(0, 188, 212);
+    background-image: url('../../assets/tile-densityandsize.svg');
   }
 
-  .fade {
-    height: 100%;
-    width: 100%;
-    position: absolute;
-    background: -webkit-linear-gradient(left, rgba(238, 238, 238, 1) 0%, rgba(238, 238, 238, 0) 15%, rgba(238, 238, 238, 0) 85%, rgba(238, 238, 238, 1) 100%);
-  }
-
-  .img {
-    padding: 5px;
-    background-color: #ffffff;
-    border: 1px solid #757575;
-    max-width: 550px;
-    -webkit-transition: all 0.2s ease-in-out;
-    -o-transition: all 0.2s ease-in-out;
-    transition: all 0.2s ease-in-out;
-    display: inline-block;
-  }
-
-  blockquote:nth-child(odd) {
-    padding: 10px 20px;
-    margin: 0 0 20px;
-    font-size: 17.5px;
-    text-align: left;
-    border-left: 6px solid mat-color($candy-app-accent);
-    border-radius: 12px;
-  }
-
-  blockquote:nth-child(even) {
-    padding: 10px 20px;
-    margin: 0 0 20px;
-    font-size: 17.5px;
-    padding-right: 15px;
-    padding-left: 0;
-    text-align: right;
-    border-right: 6px solid mat-color($candy-app-accent);
-    border-radius: 12px;
-  }
-
-  blockquote h2 {
-    font-size: 2em !important;
-    margin-bottom: 5px !important;
-  }
-
-  blockquote p {
-    display: block;
-    margin: 0;
-    color: #777;
-  }
-
-  footer {
-    width: 100%;
-    background-color: mat-color($candy-app-accent);
-  }
-
-  footer>div {
-    align-items: center;
-  }
-
-  footer .logo {
-    font-size: 33px;
-    line-height: 33px;
-    font-weight: bold;
+  .cta_3 {
+    background-color: rgb(95, 124, 138);
+    background-image: url('../../assets/tile-opensource.svg');
   }

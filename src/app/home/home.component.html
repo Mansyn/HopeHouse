@@ -1,9 +1,37 @@
-<div class="flex-100 layout-column layout-align-start-stretch">
+<div class="layout-column layout-align-start-stretch">
   <header>
     <div class="txt-center layout-column layout-align-center-center h-100 p-20">
       <h1 color="primary" class="cream">Hope House Scheduler</h1>
       <h3 class="md-display-1" class="allan">Allowing our volunteers to schedule their time effectively and as easily as possible.</h3>
     </div>
   </header>
+  <main class="layout-row layout-start-start">
+    <div class="flex-15">&nbsp;</div>
+    <div class="flex-70 layout-row layout-align-space-around-center m-v-15">
+      <mat-card>
+        <div class="cta cta_2"></div>
+        <mat-card-content>
+          <p>
+            You must be a verified user to access the schedule
+          </p>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-button [routerLink]="['/schedule']">Schedule</button>
+        </mat-card-actions>
+      </mat-card>
+      <mat-card>
+        <div class="cta cta_3"></div>
+        <mat-card-content>
+          <p>
+            We offer a login through Google or Facebook to access the schedule
+          </p>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-button [routerLink]="['/account']">Account</button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+    <div class="flex-15">&nbsp;</div>
+  </main>
 </div>
 <app-footer></app-footer>
