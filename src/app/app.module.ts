@@ -5,17 +5,22 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
 import {
+  MatButtonModule,
   MatCardModule,
+  MatCheckboxModule,
+  MatChipsModule,
   MatDialogModule,
-  MatToolbarModule,
-  MatTooltipModule,
+  MatIconModule,
+  MatInputModule,
+  MatListModule,
+  MatPaginatorModule,
+  MatProgressBarModule,
   MatSidenavModule,
   MatSnackBarModule,
-  MatButtonModule,
-  MatIconModule,
-  MatListModule,
-  MatInputModule,
-  MatProgressBarModule
+  MatSortModule,
+  MatToolbarModule,
+  MatTableModule,
+  MatTooltipModule
 } from '@angular/material'
 
 import { environment } from '../environments/environment';
@@ -30,9 +35,11 @@ import { AppRoutingModule } from './app-routing.module';
 
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
-import { SuperSecretComponent } from './account/super-secret/super-secret.component';
-import { SubscriberPageComponent } from './account/subscriber-page/subscriber-page.component';
+// import { SuperSecretComponent } from './account/super-secret/super-secret.component';
+// import { SubscriberPageComponent } from './account/subscriber-page/subscriber-page.component';
 import { AccountComponent } from './account/account.component';
+import { AdminComponent } from './account/admin/admin.component';
+import { VolunteerDialog } from './account/admin/admin.component';
 
 import { NavbarComponent } from './components/navbar/navbar.component'
 import { FooterComponent } from './components/footer/footer.component'
@@ -41,11 +48,11 @@ import { FooterComponent } from './components/footer/footer.component'
   declarations: [
     AppComponent,
     HomeComponent,
-    SuperSecretComponent,
-    SubscriberPageComponent,
+    AdminComponent,
     NavbarComponent,
     FooterComponent,
-    AccountComponent
+    AccountComponent,
+    VolunteerDialog
   ],
   imports: [
     BrowserModule,
@@ -54,21 +61,27 @@ import { FooterComponent } from './components/footer/footer.component'
     AppRoutingModule,
     HttpModule,
     CoreModule,
-    MatCardModule,
-    MatDialogModule,
-    MatToolbarModule,
-    MatTooltipModule,
-    MatSidenavModule,
     MatButtonModule,
+    MatCardModule,
+    MatCheckboxModule,
+    MatChipsModule,
+    MatDialogModule,
     MatIconModule,
-    MatSnackBarModule,
-    MatListModule,
     MatInputModule,
+    MatListModule,
+    MatPaginatorModule,
     MatProgressBarModule,
+    MatSidenavModule,
+    MatSnackBarModule,
+    MatSortModule,
+    MatToolbarModule,
+    MatTableModule,
+    MatTooltipModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireDatabaseModule,
     AngularFireAuthModule
   ],
+  entryComponents: [VolunteerDialog],
   providers: [AngularFirestore],
   bootstrap: [AppComponent]
 })

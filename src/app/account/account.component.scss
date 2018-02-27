@@ -7,7 +7,21 @@
   margin-top: 3rem;
 }
 
+@media (max-width:720px) {
+  #top {
+    margin-top: 4rem;
+  }
+}
+
 .form-padding {
   padding: 2em;
-  background-color: mat-color($candy-app-primary, 100);
+  background-color: mat-color($candy-app-accent, 100);
+}
+
+.mat-toolbar {
+  background-color: mat-color($candy-app-primary, 200);
+}
+
+.mat-toolbar button {
+  margin: 0 8px;
 }

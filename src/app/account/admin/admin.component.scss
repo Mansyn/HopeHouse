@@ -1,0 +1,47 @@
+@import "../../theme";
+.spacer {
+  flex: 1 1 auto;
+}
+
+#top {
+  margin-top: 3rem;
+}
+
+@media (max-width:720px) {
+  #top {
+    margin-top: 4rem;
+  }
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  min-width: 300px;
+}
+
+.mat-form-field {
+  font-size: 14px;
+  width: 100%;
+}
+
+.mat-toolbar {
+  background-color: mat-color($candy-app-primary, 200);
+}
+
+.form-padding {
+  padding: 2em;
+  background-color: mat-color($candy-app-accent, 100);
+}
+
+.mat-toolbar button {
+  margin: 0 8px;
+}
+
+.mat-table {
+  overflow: auto;
+  max-height: 500px;
+}
+
+.mat-column-select {
+  overflow: initial;
+}

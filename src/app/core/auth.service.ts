@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import * as firebase from 'firebase/app';
 import { AngularFireAuth } from 'angularfire2/auth';
-import { AngularFirestore, AngularFirestoreDocument } from 'angularfire2/firestore';
+import { AngularFirestore, AngularFirestoreDocument, AngularFirestoreCollection } from 'angularfire2/firestore';
 import { Observable } from 'rxjs/Observable';
 import { switchMap } from 'rxjs/operators';
 import { User } from './user';
@@ -11,6 +11,10 @@ import { User } from './user';
 export class AuthService {
 
   user$: Observable<User>;
+
+  // only for admin use
+  private usersCollection: AngularFirestoreCollection<User>;
+  users: Observable<User[]>;
 
   constructor(private afAuth: AngularFireAuth,
     private afs: AngularFirestore,
@@ -25,9 +29,6 @@ export class AuthService {
         }
       })
   }
-
-
-  ///// Login/Signup //////
 
   googleLogin() {
     const provider = new firebase.auth.GoogleAuthProvider()
@@ -50,6 +51,7 @@ export class AuthService {
     const userRef: AngularFirestoreDocument<any> = this.afs.doc(`users/${user.uid}`);
     const data: User = {
       uid: user.uid,
+      displayName: user.displayName,
       email: user.email,
       photoURL: user.photoURL,
       roles: {
@@ -59,6 +61,21 @@ export class AuthService {
     return userRef.set(data, { merge: true })
   }
 
+  setUserVolunteer(user, isVolunteer) {
+    // Sets user data to firestore on login
+    const userRef: AngularFirestoreDocument<any> = this.afs.doc(`users/${user.uid}`);
+    const data: User = {
+      uid: user.uid,
+      displayName: user.displayName,
+      email: user.email,
+      photoURL: user.photoURL,
+      roles: {
+        subscriber: true,
+        volunteer: isVolunteer
+      }
+    }
+    return userRef.set(data, { merge: true })
+  }
 
   ///// Role-based Authorization //////
 
@@ -77,8 +94,6 @@ export class AuthService {
     return this.checkAuthorization(user, allowed)
   }
 
-
-
   // determines if user has matching role
   private checkAuthorization(user: User, allowedRoles: string[]): boolean {
     if (!user) return false
@@ -90,5 +105,10 @@ export class AuthService {
     return false
   }
 
+  getAllUsers() {
+    this.usersCollection = this.afs.collection<User>('users');
+    this.users = this.usersCollection.valueChanges();
+    return this.users;
+  }
 
 }

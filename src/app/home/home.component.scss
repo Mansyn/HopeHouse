@@ -28,8 +28,13 @@
     font-size: 28px;
   }
 
-  .mat-card {
+  main {
+    padding: 2em 0 3em 0;
+  }
+
+  main .mat-card {
     max-width: 408px;
+    background-color: mat-color($candy-app-accent, 300);
   }
 
   .cta {

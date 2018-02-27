@@ -8,8 +8,6 @@ import { AuthService } from '../core/auth.service';
 })
 export class AccountComponent implements OnInit {
 
-  canEdit;
-
   constructor(public auth: AuthService) { }
 
   ngOnInit() {

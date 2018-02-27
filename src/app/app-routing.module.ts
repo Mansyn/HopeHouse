@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { HomeComponent } from './home/home.component';
 import { AccountComponent } from './account/account.component';
+import { AdminComponent } from './account/admin/admin.component';
 
 import { AdminGuard } from './core/admin.guard';
 import { VolunteerGuard } from './core/volunteer.guard';
@@ -12,7 +13,7 @@ const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'home', component: HomeComponent },
   { path: 'account', component: AccountComponent },
-  // { path: 'schedules', component: VideosComponent },
+  { path: 'account/admin', component: AdminComponent, canActivate: [AdminGuard] },
   // { path: 'schedule/add', component: AddVideoComponent },
   // { path: 'schedule/edit/:id', component: EditVideoComponent, canActivate: [EditorGuard] },
   { path: '*', redirectTo: 'home' }

@@ -20,11 +20,12 @@
   </a>
   <a class="docs-navbar-hide-small" mat-button tabindex="0" aria-disabled="false" [routerLink]="['/account']">
     <span class="mat-button-wrapper">
+      <mat-icon aria-label="Contact">account_circle</mat-icon>
       <span *ngIf="auth.user$ | async; then account else login"></span>
     </span>
   </a>
   <a class="docs-navbar-show-small" mat-button tabindex="0" aria-disabled="false" [routerLink]="['/account']">
-    <span *ngIf="auth.user$ | async; then account else login"></span>
+    <mat-icon aria-label="Contact">account_circle</mat-icon>
   </a>
 </nav>
 <nav class="docs-navbar docs-navbar-show-small">
