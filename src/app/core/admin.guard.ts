@@ -7,7 +7,7 @@ import { tap, map, take } from 'rxjs/operators';
 @Injectable()
 export class AdminGuard implements CanActivate {
 
-  constructor(private auth: AuthService) {}
+  constructor(private auth: AuthService) { }
 
   canActivate(
     next: ActivatedRouteSnapshot,

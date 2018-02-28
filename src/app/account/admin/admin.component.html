@@ -1,16 +1,16 @@
-<div id="top" class="layout-row">
+<div class="layout-row">
   <div class="flex-5 flex-gt-xs-15"></div>
   <div class="flex-90 flex-gt-xs-70 mat-elevation-z4">
     <mat-toolbar>
       <mat-toolbar-row>
         <span>Users</span>
         <span class="spacer"></span>
-        <button mat-raised-button *ngIf="selection.selected.length > 0" color="primary" (click)="volunteerDialog()" class="button">
+        <button mat-raised-button *ngIf="user_selection.selected.length > 0" color="primary" (click)="volunteerDialog(true)" class="button">
           Set Volunteer
         </button>
-        <!-- <button mat-raised-button *ngIf="selection.selected.length > 0" color="warn" (click)="removeVolunteerDialog()" class="button">
+        <button mat-raised-button *ngIf="user_selection.selected.length > 0" color="warn" (click)="volunteerDialog(false)" class="button">
           Remove Volunteer
-        </button> -->
+        </button>
       </mat-toolbar-row>
     </mat-toolbar>
     <div class="form-padding">
@@ -21,17 +21,16 @@
               <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
             </mat-form-field>
           </div>
-
-          <mat-table #table matSort [dataSource]="dataSource">
+          <mat-table #table matSort [dataSource]="user_dataSource">
 
             <!-- Selection Column -->
             <ng-container matColumnDef="select">
               <mat-header-cell *matHeaderCellDef>
-                <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()" [indeterminate]="selection.hasValue() && !isAllSelected()">
+                <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="user_selection.hasValue() && isAllSelected()" [indeterminate]="user_selection.hasValue() && !isAllSelected()">
                 </mat-checkbox>
               </mat-header-cell>
               <mat-cell *matCellDef="let row">
-                <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)">
+                <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? user_selection.toggle(row) : null" [checked]="user_selection.isSelected(row)">
                 </mat-checkbox>
               </mat-cell>
             </ng-container>
@@ -48,14 +47,33 @@
               <mat-cell *matCellDef="let element"> {{element.email}} </mat-cell>
             </ng-container>
 
+            <!-- Email Column -->
+            <ng-container matColumnDef="roles">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> Roles </mat-header-cell>
+              <mat-cell *matCellDef="let element">
+                <mat-chip-list>
+                  <mat-chip *ngIf="element.roles?.subscriber" color="accent" selected="true">Subscriber</mat-chip>
+                  <mat-chip *ngIf="element.roles?.volunteer" color="primary" selected="true">Volunteer</mat-chip>
+                  <mat-chip *ngIf="element.roles?.admin" color="warn" selected="true">Admin</mat-chip>
+                </mat-chip-list>
+              </mat-cell>
+            </ng-container>
+
             <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
             <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
           </mat-table>
-          <mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 20]" [showFirstLastButtons]="true">
+          <mat-paginator #user_paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 20]" [showFirstLastButtons]="true">
           </mat-paginator>
         </div>
       </div>
     </div>
+  </div>
+  <div class="flex-5 flex-gt-xs-15"></div>
+</div>
+<div class="layout-row">
+  <div class="flex-5 flex-gt-xs-15"></div>
+  <div class="flex-90 flex-gt-xs-70 mat-elevation-z4">
+
   </div>
   <div class="flex-5 flex-gt-xs-15"></div>
 </div>

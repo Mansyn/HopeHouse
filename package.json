@@ -27,6 +27,8 @@
     "@angular/service-worker": "^5.0.0",
     "angularfire2": "^5.0.0-rc.4",
     "core-js": "^2.4.1",
+    "devextreme": "17.2.5",
+    "devextreme-angular": "^17.2.5",
     "firebase": "^4.6.2",
     "rxjs": "^5.5.5",
     "zone.js": "^0.8.14"

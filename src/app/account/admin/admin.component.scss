@@ -3,7 +3,7 @@
   flex: 1 1 auto;
 }
 
-#top {
+:host>div {
   margin-top: 3rem;
 }
 
@@ -16,7 +16,7 @@
 .container {
   display: flex;
   flex-direction: column;
-  min-width: 300px;
+  width: 100%;
 }
 
 .mat-form-field {

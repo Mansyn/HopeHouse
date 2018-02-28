@@ -23,6 +23,9 @@ import {
   MatTooltipModule
 } from '@angular/material'
 
+
+import { DxSchedulerModule, DxTemplateModule } from 'devextreme-angular';
+
 import { environment } from '../environments/environment';
 
 import { AngularFireModule } from 'angularfire2';
@@ -42,7 +45,10 @@ import { AdminComponent } from './account/admin/admin.component';
 import { VolunteerDialog } from './account/admin/admin.component';
 
 import { NavbarComponent } from './components/navbar/navbar.component'
-import { FooterComponent } from './components/footer/footer.component'
+import { FooterComponent } from './components/footer/footer.component';
+import { ContactComponent } from './contact/contact.component';
+
+import { ScheduleComponent } from './schedule/schedule.component';
 
 @NgModule({
   declarations: [
@@ -52,7 +58,9 @@ import { FooterComponent } from './components/footer/footer.component'
     NavbarComponent,
     FooterComponent,
     AccountComponent,
-    VolunteerDialog
+    VolunteerDialog,
+    ContactComponent,
+    ScheduleComponent
   ],
   imports: [
     BrowserModule,
@@ -77,6 +85,8 @@ import { FooterComponent } from './components/footer/footer.component'
     MatToolbarModule,
     MatTableModule,
     MatTooltipModule,
+    DxSchedulerModule,
+    DxTemplateModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireDatabaseModule,
     AngularFireAuthModule
