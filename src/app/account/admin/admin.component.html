@@ -3,77 +3,128 @@
   <div class="flex-90 flex-gt-xs-70 mat-elevation-z4">
     <mat-toolbar>
       <mat-toolbar-row>
-        <span>Users</span>
+        <span>Admin</span>
         <span class="spacer"></span>
-        <button mat-raised-button *ngIf="user_selection.selected.length > 0" color="primary" (click)="volunteerDialog(true)" class="button">
+
+        <!-- User Functions -->
+        <button mat-raised-button *ngIf="tabIndex == 0 && user_selection.selected.length > 0" color="primary" (click)="volunteerDialog(true)" class="button">
           Set Volunteer
         </button>
-        <button mat-raised-button *ngIf="user_selection.selected.length > 0" color="warn" (click)="volunteerDialog(false)" class="button">
+        <button mat-raised-button *ngIf="tabIndex == 0 && user_selection.selected.length > 0" color="warn" (click)="volunteerDialog(false)" class="button">
           Remove Volunteer
+        </button>
+
+        <!-- Schedule Functions -->
+        <button mat-raised-button *ngIf="tabIndex == 1 && schedule_selection.selected.length > 0" color="primary" (click)="scheduleDialog()" class="button">
+          Update Schedule
+        </button>
+        <button mat-raised-button *ngIf="tabIndex == 1" color="primary" (click)="scheduleDialog()" class="button">
+          Create Schedule
         </button>
       </mat-toolbar-row>
     </mat-toolbar>
-    <div class="form-padding">
-      <div class="layout-column layout-gt-sm-row">
-        <div class="container">
-          <div class="header">
-            <mat-form-field>
-              <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
-            </mat-form-field>
+    <mat-tab-group (selectedTabChange)="tabChanged($event)">
+      <mat-tab label="USERS">
+        <div class="form-padding">
+          <div class="layout-column layout-gt-sm-row">
+            <div class="container">
+              <div class="header">
+                <mat-form-field>
+                  <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+                </mat-form-field>
+              </div>
+              <mat-table #table matSort [dataSource]="user_dataSource">
+
+                <!-- Selection Column -->
+                <ng-container matColumnDef="select">
+                  <mat-header-cell *matHeaderCellDef>
+                    <mat-checkbox (change)="$event ? user_masterToggle() : null" [checked]="user_selection.hasValue() && user_isAllSelected()" [indeterminate]="user_selection.hasValue() && !user_isAllSelected()">
+                    </mat-checkbox>
+                  </mat-header-cell>
+                  <mat-cell *matCellDef="let row">
+                    <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? user_selection.toggle(row) : null" [checked]="user_selection.isSelected(row)">
+                    </mat-checkbox>
+                  </mat-cell>
+                </ng-container>
+
+                <!-- Name Column -->
+                <ng-container matColumnDef="displayName">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header> Name </mat-header-cell>
+                  <mat-cell *matCellDef="let element"> {{element.displayName}} </mat-cell>
+                </ng-container>
+
+                <!-- Email Column -->
+                <ng-container matColumnDef="email">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header> Email </mat-header-cell>
+                  <mat-cell *matCellDef="let element"> {{element.email}} </mat-cell>
+                </ng-container>
+
+                <!-- Email Column -->
+                <ng-container matColumnDef="roles">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header> Roles </mat-header-cell>
+                  <mat-cell *matCellDef="let element">
+                    <mat-chip-list>
+                      <mat-chip *ngIf="element.roles?.subscriber" color="accent" selected="true">Subscriber</mat-chip>
+                      <mat-chip *ngIf="element.roles?.volunteer" color="primary" selected="true">Volunteer</mat-chip>
+                      <mat-chip *ngIf="element.roles?.admin" color="warn" selected="true">Admin</mat-chip>
+                    </mat-chip-list>
+                  </mat-cell>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="user_displayedColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: user_displayedColumns;"></mat-row>
+              </mat-table>
+              <mat-paginator #user_paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 20]" [showFirstLastButtons]="true">
+              </mat-paginator>
+            </div>
           </div>
-          <mat-table #table matSort [dataSource]="user_dataSource">
-
-            <!-- Selection Column -->
-            <ng-container matColumnDef="select">
-              <mat-header-cell *matHeaderCellDef>
-                <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="user_selection.hasValue() && isAllSelected()" [indeterminate]="user_selection.hasValue() && !isAllSelected()">
-                </mat-checkbox>
-              </mat-header-cell>
-              <mat-cell *matCellDef="let row">
-                <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? user_selection.toggle(row) : null" [checked]="user_selection.isSelected(row)">
-                </mat-checkbox>
-              </mat-cell>
-            </ng-container>
-
-            <!-- Name Column -->
-            <ng-container matColumnDef="displayName">
-              <mat-header-cell *matHeaderCellDef mat-sort-header> Name </mat-header-cell>
-              <mat-cell *matCellDef="let element"> {{element.displayName}} </mat-cell>
-            </ng-container>
-
-            <!-- Email Column -->
-            <ng-container matColumnDef="email">
-              <mat-header-cell *matHeaderCellDef mat-sort-header> Email </mat-header-cell>
-              <mat-cell *matCellDef="let element"> {{element.email}} </mat-cell>
-            </ng-container>
-
-            <!-- Email Column -->
-            <ng-container matColumnDef="roles">
-              <mat-header-cell *matHeaderCellDef mat-sort-header> Roles </mat-header-cell>
-              <mat-cell *matCellDef="let element">
-                <mat-chip-list>
-                  <mat-chip *ngIf="element.roles?.subscriber" color="accent" selected="true">Subscriber</mat-chip>
-                  <mat-chip *ngIf="element.roles?.volunteer" color="primary" selected="true">Volunteer</mat-chip>
-                  <mat-chip *ngIf="element.roles?.admin" color="warn" selected="true">Admin</mat-chip>
-                </mat-chip-list>
-              </mat-cell>
-            </ng-container>
-
-            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-          </mat-table>
-          <mat-paginator #user_paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 20]" [showFirstLastButtons]="true">
-          </mat-paginator>
         </div>
-      </div>
-    </div>
-  </div>
-  <div class="flex-5 flex-gt-xs-15"></div>
-</div>
-<div class="layout-row">
-  <div class="flex-5 flex-gt-xs-15"></div>
-  <div class="flex-90 flex-gt-xs-70 mat-elevation-z4">
+      </mat-tab>
+      <mat-tab label="SCHEDULES">
+        <div class="form-padding">
+          <div class="layout-column layout-gt-sm-row">
+            <div class="container">
+              <mat-table #table matSort [dataSource]="schedule_dataSource">
 
+                <!-- Selection Column -->
+                <ng-container matColumnDef="select">
+                  <mat-header-cell *matHeaderCellDef>
+                    &nbsp;
+                  </mat-header-cell>
+                  <mat-cell *matCellDef="let row">
+                    <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? schedule_selection.toggle(row) : null" [checked]="schedule_selection.isSelected(row)">
+                    </mat-checkbox>
+                  </mat-cell>
+                </ng-container>
+
+                <!-- Title Column -->
+                <ng-container matColumnDef="title">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header> Name </mat-header-cell>
+                  <mat-cell *matCellDef="let element"> {{element.title}} </mat-cell>
+                </ng-container>
+
+                <!-- Description Column -->
+                <ng-container matColumnDef="description">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header> Description </mat-header-cell>
+                  <mat-cell *matCellDef="let element"> {{element.description}} </mat-cell>
+                </ng-container>
+
+                <!-- Color Column -->
+                <ng-container matColumnDef="color">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header> Color </mat-header-cell>
+                  <mat-cell *matCellDef="let element"> {{element.color}} </mat-cell>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="schedule_displayedColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: schedule_displayedColumns;"></mat-row>
+              </mat-table>
+              <mat-paginator #schedule_paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 20]" [showFirstLastButtons]="true">
+              </mat-paginator>
+            </div>
+          </div>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
   </div>
   <div class="flex-5 flex-gt-xs-15"></div>
 </div>

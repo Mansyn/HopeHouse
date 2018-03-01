@@ -20,11 +20,9 @@ import {
   MatSortModule,
   MatToolbarModule,
   MatTableModule,
+  MatTabsModule,
   MatTooltipModule
 } from '@angular/material'
-
-
-import { DxSchedulerModule, DxTemplateModule } from 'devextreme-angular';
 
 import { environment } from '../environments/environment';
 
@@ -32,23 +30,25 @@ import { AngularFireModule } from 'angularfire2';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { AngularFireAuthModule } from 'angularfire2/auth';
+import { DxSchedulerModule, DxTemplateModule } from 'devextreme-angular';
 
 import { CoreModule } from './core/core.module';
 import { AppRoutingModule } from './app-routing.module';
 
+/* My Components */
 import { AppComponent } from './app.component';
+import { NavbarComponent } from './components/navbar/navbar.component'
+import { FooterComponent } from './components/footer/footer.component';
 import { HomeComponent } from './home/home.component';
-// import { SuperSecretComponent } from './account/super-secret/super-secret.component';
-// import { SubscriberPageComponent } from './account/subscriber-page/subscriber-page.component';
 import { AccountComponent } from './account/account.component';
 import { AdminComponent } from './account/admin/admin.component';
 import { VolunteerDialog } from './account/admin/admin.component';
-
-import { NavbarComponent } from './components/navbar/navbar.component'
-import { FooterComponent } from './components/footer/footer.component';
+import { ScheduleDialog } from './account/admin/admin.component';
 import { ContactComponent } from './contact/contact.component';
-
 import { ScheduleComponent } from './schedule/schedule.component';
+
+/* Services */
+import { SchedulesService } from './schedule/shared/schedule.service';
 
 @NgModule({
   declarations: [
@@ -58,9 +58,10 @@ import { ScheduleComponent } from './schedule/schedule.component';
     NavbarComponent,
     FooterComponent,
     AccountComponent,
-    VolunteerDialog,
     ContactComponent,
-    ScheduleComponent
+    ScheduleComponent,
+    VolunteerDialog,
+    ScheduleDialog
   ],
   imports: [
     BrowserModule,
@@ -84,6 +85,7 @@ import { ScheduleComponent } from './schedule/schedule.component';
     MatSortModule,
     MatToolbarModule,
     MatTableModule,
+    MatTabsModule,
     MatTooltipModule,
     DxSchedulerModule,
     DxTemplateModule,
@@ -91,8 +93,8 @@ import { ScheduleComponent } from './schedule/schedule.component';
     AngularFireDatabaseModule,
     AngularFireAuthModule
   ],
-  entryComponents: [VolunteerDialog],
-  providers: [AngularFirestore],
+  entryComponents: [VolunteerDialog, ScheduleDialog],
+  providers: [AngularFirestore, SchedulesService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
