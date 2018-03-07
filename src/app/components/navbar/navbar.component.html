@@ -5,8 +5,8 @@
       <span>Hope House</span>
     </span>
   </a>
-  <a *ngIf="canAccessSchedule()" class="docs-navbar-hide-small" mat-button tabindex="0" aria-disabled="false" [routerLink]="['/schedule']">
-    <span class="mat-button-wrapper">Schedule</span>
+  <a *ngIf="canAccessServe()" class="docs-navbar-hide-small" mat-button tabindex="0" aria-disabled="false" [routerLink]="['/serve']">
+    <span class="mat-button-wrapper">Serve</span>
   </a>
   <div class="flex-spacer"></div>
   <a class="docs-navbar-hide-small" mat-button tabindex="0" aria-disabled="false" [routerLink]="['/contact']">
@@ -29,8 +29,8 @@
   </a>
 </nav>
 <nav class="docs-navbar docs-navbar-show-small">
-  <a *ngIf="canAccessSchedule()" class="docs-navbar-link" mat-button tabindex="0" aria-disabled="false" [routerLink]="['/schedule']">
-    <span class="mat-button-wrapper">Schedule</span>
+  <a *ngIf="canAccessServe()" class="docs-navbar-link" mat-button tabindex="0" aria-disabled="false" [routerLink]="['/serve']">
+    <span class="mat-button-wrapper">Serve</span>
   </a>
 </nav>
 

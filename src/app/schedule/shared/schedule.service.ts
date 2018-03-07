@@ -4,7 +4,7 @@ import { Schedule } from './schedule';
 import 'rxjs/add/operator/map';
 
 @Injectable()
-export class SchedulesService {
+export class ScheduleService {
 
     schedules: AngularFireList<Schedule[]> = null;
 

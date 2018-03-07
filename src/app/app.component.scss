@@ -1,7 +1,6 @@
 @import "theme";
 body {
   font-family: Roboto, Helvetica Neue Light, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;
-  margin: 0;
 }
 
 .hope-app-background {
@@ -29,12 +28,6 @@ hope-app {
   }
 }
 
-hope-app>about {
-  -webkit-box-flex: 1;
-  -ms-flex: 1 1 auto;
-  flex: 1 1 auto
-}
-
 hope-app>:last-child {
   overflow-y: auto
 }
@@ -47,171 +40,11 @@ navbar {
   z-index: 2;
 }
 
-about,
-app-sidenav {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex
-}
-
 .content {
+  flex: 1 0 auto;
   margin-top: 53px;
 }
 
-.hope-component-viewer-sidenav-container {
-  width: 100%
-}
-
-.hope-component-viewer-sidenav-container .mat-drawer-content {
-  position: absolute;
-  right: 0;
-  left: 0
-}
-
-.hope-component-viewer-sidenav {
-  padding-bottom: 72px;
-  width: 240px;
-  bottom: 0;
-  overflow: auto;
-  height: 100%
-}
-
-.hope-component-viewer-sidenav,
-.hope-component-viewer-sidenav.mat-sidenav-opened {
-  box-shadow: 3px 0 6px rgba(0, 0, 0, .24)
-}
-
-.hope-component-viewer-sidenav h3 {
-  border: none;
-  font-size: 10px;
-  letter-spacing: 1px;
-  line-height: 24px;
-  text-transform: uppercase;
-  font-weight: 400;
-  margin: 0;
-  padding: 0 16px
-}
-
-.hope-component-viewer-sidenav ul {
-  list-style-type: none;
-  margin: 0;
-  padding: 0
-}
-
-.hope-component-viewer-sidenav li {
-  border-bottom-width: 1px;
-  border-bottom-style: solid;
-  margin: 0;
-  padding: 0
-}
-
-.hope-component-viewer-sidenav li:last-child {
-  border-color: transparent
-}
-
-.hope-component-viewer-sidenav li>a {
-  box-sizing: border-box;
-  display: block;
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 47px;
-  text-decoration: none;
-  transition: all .3s;
-  padding: 0 16px;
-  position: relative
-}
-
-.hope-component-viewer-sidenav li>a.hope-component-viewer-sidenav-item-selected {
-  font-weight: 600
-}
-
-.hope-component-sidenav-content {
-  min-height: 100%;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-  -ms-flex-direction: column;
-  flex-direction: column
-}
-
-.hope-component-sidenav-content router-outlet+* {
-  -webkit-box-flex: 1;
-  -ms-flex-positive: 1;
-  flex-grow: 1
-}
-
-.component {
-  -webkit-box-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-}
-
-.mat-sidenav {
-  padding-bottom: 72px;
-  width: 240px;
-  bottom: 0;
-  overflow: auto;
-  height: 100%;
-}
-
-.mat-sidenav,
-.dmat-sidenav.mat-sidenav-opened {
-  box-shadow: 3px 0 6px rgba(0, 0, 0, .24)
-}
-
-.mat-sidenav ul {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-}
-
-.mat-sidenav li {
-  border-bottom-width: 1px;
-  border-bottom-style: solid;
-  margin: 0;
-  padding: 0;
-}
-
-.mat-sidenav li>a {
-  box-sizing: border-box;
-  display: block;
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 47px;
-  text-decoration: none;
-  transition: all .3s;
-  padding: 0 16px;
-  position: relative;
-}
-
-.mat-sidenav li>a {
-  color: rgba(255, 255, 255, 0.7);
-}
-
-.mat-sidenav li {
-  border-color: rgba(255, 255, 255, 0.06);
-  color: rgba(255, 255, 255, 0.87);
-}
-
-.mat-drawer {
-  background-color: mat-color($candy-app-accent, 700);
-  color: rgba(255, 255, 255, 0.87);
-}
-
-.mat-sidenav h3 {
-  border: none;
-  font-size: 12px;
-  letter-spacing: 1px;
-  line-height: 24px;
-  text-transform: uppercase;
-  font-weight: 400;
-  margin: 0;
-  padding: 0 16px;
-  background: mat-color($candy-app-accent, A400);
-  color: mat-color($candy-app-accent);
+.footer {
+  flex-shrink: 0;
 }

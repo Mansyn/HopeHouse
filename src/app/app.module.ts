@@ -4,6 +4,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
+/* Angular Material */
 import {
   MatButtonModule,
   MatCardModule,
@@ -24,16 +25,22 @@ import {
   MatTooltipModule
 } from '@angular/material'
 
-import { environment } from '../environments/environment';
+/* Prime NG */
+import { ScheduleModule, CalendarModule, DialogModule, DragDropModule, ButtonModule } from 'primeng/primeng';
 
+/* Firebase */
 import { AngularFireModule } from 'angularfire2';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { AngularFireAuthModule } from 'angularfire2/auth';
-import { DxSchedulerModule, DxTemplateModule } from 'devextreme-angular';
 
+/* My Config */
 import { CoreModule } from './core/core.module';
 import { AppRoutingModule } from './app-routing.module';
+import { environment } from '../environments/environment';
+
+/* Services */
+import { ScheduleService } from './schedule/shared/schedule.service';
 
 /* My Components */
 import { AppComponent } from './app.component';
@@ -45,10 +52,8 @@ import { AdminComponent } from './account/admin/admin.component';
 import { VolunteerDialog } from './account/admin/admin.component';
 import { ScheduleDialog } from './account/admin/admin.component';
 import { ContactComponent } from './contact/contact.component';
-import { ScheduleComponent } from './schedule/schedule.component';
-
-/* Services */
-import { SchedulesService } from './schedule/shared/schedule.service';
+import { SchedulerComponent } from './schedule/scheduler.component';
+import { ServeComponent } from './serve/serve.component';
 
 @NgModule({
   declarations: [
@@ -59,9 +64,10 @@ import { SchedulesService } from './schedule/shared/schedule.service';
     FooterComponent,
     AccountComponent,
     ContactComponent,
-    ScheduleComponent,
+    SchedulerComponent,
     VolunteerDialog,
-    ScheduleDialog
+    ScheduleDialog,
+    ServeComponent
   ],
   imports: [
     BrowserModule,
@@ -70,6 +76,7 @@ import { SchedulesService } from './schedule/shared/schedule.service';
     AppRoutingModule,
     HttpModule,
     CoreModule,
+    ScheduleModule,
     MatButtonModule,
     MatCardModule,
     MatCheckboxModule,
@@ -87,14 +94,13 @@ import { SchedulesService } from './schedule/shared/schedule.service';
     MatTableModule,
     MatTabsModule,
     MatTooltipModule,
-    DxSchedulerModule,
-    DxTemplateModule,
+    ScheduleModule, CalendarModule, DialogModule, DragDropModule, ButtonModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireDatabaseModule,
     AngularFireAuthModule
   ],
   entryComponents: [VolunteerDialog, ScheduleDialog],
-  providers: [AngularFirestore, SchedulesService],
+  providers: [AngularFirestore, ScheduleService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -5,7 +5,7 @@ import { HomeComponent } from './home/home.component';
 import { AccountComponent } from './account/account.component';
 import { AdminComponent } from './account/admin/admin.component';
 import { ContactComponent } from './contact/contact.component'
-import { ScheduleComponent } from './schedule/schedule.component';
+import { ServeComponent } from './serve/serve.component';
 
 import { AdminGuard } from './core/admin.guard';
 import { VolunteerGuard } from './core/volunteer.guard';
@@ -17,7 +17,7 @@ const routes: Routes = [
   { path: 'account', component: AccountComponent },
   { path: 'contact', component: ContactComponent },
   { path: 'account/admin', component: AdminComponent, canActivate: [AdminGuard] },
-  { path: 'schedule', component: ScheduleComponent, canActivate: [VolunteerGuard] },
+  { path: 'serve', component: ServeComponent, canActivate: [VolunteerGuard] },
   { path: '*', redirectTo: 'home' }
 ];
 

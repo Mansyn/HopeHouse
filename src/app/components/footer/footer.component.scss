@@ -1,12 +1,6 @@
 @import "../../theme";
-:host {
-  position: fixed;
-  width: 100%;
-  bottom: 0;
-  background-color: mat-color($candy-app-accent, 800);
-  color: #fff;
-}
-
 .foot {
   align-items: center;
+  background-color: mat-color($candy-app-accent, 800);
+  color: #fff;
 }

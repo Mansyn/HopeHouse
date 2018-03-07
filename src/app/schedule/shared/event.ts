@@ -1,7 +1,7 @@
 export class Event {
-    //$key: string;
+    $key: string;
+    schedule_key: string;
+    start_date: string;
+    end_date: string;
     text: string;
-    employeeID: number;
-    startDate: Date;
-    endDate: Date;
 }

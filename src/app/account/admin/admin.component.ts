@@ -5,7 +5,7 @@ import { MatTableDataSource, MatSort, MatPaginator, MatDialog, MatTabChangeEvent
 import _ from 'lodash';
 
 import { AuthService } from '../../core/auth.service';
-import { SchedulesService } from '../../schedule/shared/schedule.service';
+import { ScheduleService } from '../../schedule/shared/schedule.service';
 import { User } from '../../core/user';
 import { Schedule } from '../../schedule/shared/schedule';
 import { SelectionModel } from '@angular/cdk/collections';
@@ -30,7 +30,7 @@ export class AdminComponent implements AfterViewInit {
     schedule_dataSource = new MatTableDataSource<Schedule>();
     schedule_selection = new SelectionModel<Schedule>(false, []);
 
-    constructor(public auth: AuthService, public dialog: MatDialog, public snackBar: MatSnackBar, private _schedulesService: SchedulesService) { }
+    constructor(public auth: AuthService, public dialog: MatDialog, public snackBar: MatSnackBar, private _scheduleService: ScheduleService) { }
 
     ngAfterViewInit() {
         this.auth.getAllUsers().subscribe(data => {
@@ -39,7 +39,7 @@ export class AdminComponent implements AfterViewInit {
         this.user_dataSource.paginator = this.user_paginator;
         this.user_dataSource.sort = this.user_sort;
 
-        this._schedulesService.getSchedules()
+        this._scheduleService.getSchedules()
             .snapshotChanges()
             .subscribe(data => {
                 let schedules = [];
@@ -113,12 +113,12 @@ export class AdminComponent implements AfterViewInit {
             console.log('The dialog was closed');
             if (result) {
                 if (isNew) {
-                    this._schedulesService.addSchedule(result)
+                    this._scheduleService.addSchedule(result)
                         .then((data) => {
                             this.openSnackBar('Schedule Saved', 'OKAY');
                         });
                 } else {
-                    this._schedulesService.updateSchedule(this.schedule_selection.selected[0].$key, result)
+                    this._scheduleService.updateSchedule(this.schedule_selection.selected[0].$key, result)
                         .then((data) => {
                             this.openSnackBar('Schedule Saved', 'OKAY');
                         })

@@ -1,0 +1,10 @@
+@import "../theme";
+#top {
+  margin: 3rem 0 5rem 0;
+}
+
+@media (max-width:720px) {
+  #top {
+    margin: 4rem 0;
+  }
+}
