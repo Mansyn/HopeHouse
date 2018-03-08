@@ -7,6 +7,7 @@ import { HttpModule } from '@angular/http';
 /* Angular Material */
 import {
   MatButtonModule,
+  MatButtonToggleModule,
   MatCardModule,
   MatCheckboxModule,
   MatChipsModule,
@@ -25,8 +26,8 @@ import {
   MatTooltipModule
 } from '@angular/material'
 
-/* Prime NG */
-import { ScheduleModule, CalendarModule, DialogModule, DragDropModule, ButtonModule } from 'primeng/primeng';
+/* Angular Calendar */
+import { CalendarModule } from 'angular-calendar';
 
 /* Firebase */
 import { AngularFireModule } from 'angularfire2';
@@ -76,8 +77,8 @@ import { ServeComponent } from './serve/serve.component';
     AppRoutingModule,
     HttpModule,
     CoreModule,
-    ScheduleModule,
     MatButtonModule,
+    MatButtonToggleModule,
     MatCardModule,
     MatCheckboxModule,
     MatChipsModule,
@@ -94,7 +95,7 @@ import { ServeComponent } from './serve/serve.component';
     MatTableModule,
     MatTabsModule,
     MatTooltipModule,
-    ScheduleModule, CalendarModule, DialogModule, DragDropModule, ButtonModule,
+    CalendarModule.forRoot(),
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireDatabaseModule,
     AngularFireAuthModule

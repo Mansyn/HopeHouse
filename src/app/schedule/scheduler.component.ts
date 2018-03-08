@@ -1,28 +1,125 @@
-import { Component, ElementRef, OnInit, ViewChild, ViewEncapsulation } from "@angular/core";
+import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Subject } from 'rxjs/Subject';
+import {
+    isSameMonth,
+    isSameDay,
+    startOfMonth,
+    endOfMonth,
+    startOfWeek,
+    endOfWeek,
+    startOfDay,
+    endOfDay,
+    format,
+    subDays,
+    addDays,
+    addHours
+} from 'date-fns';
+
+import { CalendarEvent, CalendarEventAction } from 'angular-calendar';
+
 import { ScheduleService } from './shared/schedule.service';
 import { EventService } from "./shared/event.service";
 import { Event } from "./shared/event";
 import { Schedule } from "./shared/schedule";
 
-import "dhtmlx-scheduler";
-import { } from "@types/dhtmlxscheduler";
+const colors: any = {
+    red: {
+        primary: '#ad2121',
+        secondary: '#FAE3E3'
+    },
+    blue: {
+        primary: '#1e90ff',
+        secondary: '#D1E8FF'
+    },
+    yellow: {
+        primary: '#e3bc08',
+        secondary: '#FDF1BA'
+    }
+};
 
 @Component({
-    encapsulation: ViewEncapsulation.None,
     selector: 'scheduler',
-    styleUrls: ['scheduler.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    styleUrls: [
+        '../../../node_modules/bootstrap/dist/css/bootstrap.min.css',
+        'scheduler.component.scss'],
     templateUrl: 'scheduler.component.html',
     providers: [EventService]
 })
 
 export class SchedulerComponent implements OnInit {
-    @ViewChild("scheduler_here") schedulerContainer: ElementRef;
+
+    view: string = 'month';
+    viewDate: Date = new Date();
+    activeDayIsOpen: boolean = true;
 
     lunchSchedule: Schedule;
+
+    actions: CalendarEventAction[] = [
+        {
+            label: '<i class="fa fa-fw fa-pencil"></i>',
+            onClick: ({ event }: { event: CalendarEvent }): void => {
+                //this.handleEvent('Edited', event);
+            }
+        },
+        {
+            label: '<i class="fa fa-fw fa-times"></i>',
+            onClick: ({ event }: { event: CalendarEvent }): void => {
+                this.events = this.events.filter(iEvent => iEvent !== event);
+                //this.handleEvent('Deleted', event);
+            }
+        }
+    ];
+
+    events: CalendarEvent[] = [
+        {
+            start: subDays(startOfDay(new Date()), 1),
+            end: addDays(new Date(), 1),
+            title: 'A 3 day event',
+            color: colors.red,
+            actions: this.actions
+        },
+        {
+            start: startOfDay(new Date()),
+            title: 'An event with no end date',
+            color: colors.yellow,
+            actions: this.actions
+        },
+        {
+            start: subDays(endOfMonth(new Date()), 3),
+            end: addDays(endOfMonth(new Date()), 3),
+            title: 'A long event that spans 2 months',
+            color: colors.blue
+        },
+        {
+            start: addHours(startOfDay(new Date()), 2),
+            end: new Date(),
+            title: 'A draggable and resizable event',
+            color: colors.yellow,
+            actions: this.actions,
+            resizable: {
+                beforeStart: true,
+                afterEnd: true
+            },
+            draggable: true
+        }
+    ];
 
     constructor(private scheduleService: ScheduleService, private eventService: EventService) { }
 
     ngOnInit() {
+        const getStart: any = {
+            month: startOfMonth,
+            week: startOfWeek,
+            day: startOfDay
+        }[this.view];
+
+        const getEnd: any = {
+            month: endOfMonth,
+            week: endOfWeek,
+            day: endOfDay
+        }[this.view];
+
         this.scheduleService.getSchedule('-L6YBHfPcs5DMTbzyTxo')
             .snapshotChanges()
             .subscribe(data => {
@@ -30,44 +127,36 @@ export class SchedulerComponent implements OnInit {
                 x["$key"] = data.key;
                 this.lunchSchedule = x as Schedule;
             });
+    }
 
-        scheduler.config.xml_date = "%Y-%m-%d %H:%i";
+    dayClicked({
+        date,
+        events
+    }: {
+            date: Date;
+            events: Array<CalendarEvent<{ film: Event }>>;
+        }): void {
+        if (isSameMonth(date, this.viewDate)) {
+            if (
+                (isSameDay(this.viewDate, date) && this.activeDayIsOpen === true) ||
+                events.length === 0
+            ) {
+                this.activeDayIsOpen = false;
+            } else {
+                this.activeDayIsOpen = true;
+                this.viewDate = date;
+            }
+        }
+    }
 
-        scheduler.init(this.schedulerContainer.nativeElement, new Date());
-
-        scheduler.attachEvent("onEventAdded", (id, ev) => {
-            this.eventService.addEvent(this.serializeEvent(ev, true))
-                .then((response) => {
-                    if (response.key != id) {
-                        scheduler.changeEventId(id, response.key);
-                    }
-                })
-        });
-
-        scheduler.attachEvent("onEventChanged", (id, ev) => {
-            this.eventService.updateEvent(this.lunchSchedule.$key, this.serializeEvent(ev));
-        });
-
-        scheduler.attachEvent("onEventDeleted", (id) => {
-            this.eventService.deleteEvent(id);
-        });
-
-        scheduler.parse(this.eventService.getScheduleEvents('-L6YBHfPcs5DMTbzyTxo'), "json");
+    add() {
 
     }
 
-    private serializeEvent(data: any, insert: boolean = false): Event {
-        var result = {};
-
-        for (let i in data) {
-            if (i.charAt(0) == "$" || i.charAt(0) == "_") continue;
-            if (insert && i == "id") continue;
-            if (data[i] instanceof Date) {
-                result[i] = scheduler.templates.xml_format(data[i]);
-            } else {
-                result[i] = data[i];
-            }
-        }
-        return result as Event;
+    eventClicked(event: CalendarEvent<{ film: Event }>): void {
+        window.open(
+            `https://www.themoviedb.org/movie/${event.meta.film}`,
+            '_blank'
+        );
     }
 }

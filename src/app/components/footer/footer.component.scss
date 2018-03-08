@@ -1,4 +1,9 @@
 @import "../../theme";
+:host {
+  flex-shrink: 0;
+  margin-top: 53px;
+}
+
 .foot {
   align-items: center;
   background-color: mat-color($candy-app-accent, 800);

@@ -1,8 +1,36 @@
-:host {
-  display: block;
-  height: 100%;
-  position: relative;
-  width: 100%;
+:host>div {
+  padding: 20px;
 }
 
-@import '~dhtmlx-scheduler/codebase/dhtmlxscheduler.css';
+.spacer {
+  flex: 1 1 auto;
+}
+
+.header>div {
+  padding: 5px;
+}
+
+.header>div h3 {
+  margin: 0;
+}
+
+.direction {
+  text-align: left;
+}
+
+.views {
+  text-align: right;
+}
+
+@media (max-width:960px) {
+  .direction {
+    text-align: center;
+  }
+  .views {
+    text-align: center;
+  }
+}
+
+.mat-mini-fab {
+  border-radius: 50% !important;
+}

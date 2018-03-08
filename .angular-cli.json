@@ -21,7 +21,8 @@
     "styles": [
       "app/styles.scss",
       "app/standards.scss",
-      "app/flex.scss"
+      "app/flex.scss",
+      "../node_modules/angular-calendar/css/angular-calendar.css"
     ],
     "scripts": [],
     "environmentSource": "environments/environment.ts",

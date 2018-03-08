@@ -1,6 +1,7 @@
 @import "theme";
-body {
-  font-family: Roboto, Helvetica Neue Light, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;
+.content {
+  flex: 1 0 auto;
+  margin-top: 53px;
 }
 
 .hope-app-background {
@@ -38,13 +39,4 @@ navbar {
   left: 0;
   right: 0;
   z-index: 2;
-}
-
-.content {
-  flex: 1 0 auto;
-  margin-top: 53px;
-}
-
-.footer {
-  flex-shrink: 0;
 }

@@ -1,15 +1,75 @@
-<div>
-  <div #scheduler_here class="dhx_cal_container" style="width: 100%; height:80vh">
-    <div class="dhx_cal_navline">
-      <div class="dhx_cal_prev_button">&nbsp;</div>
-      <div class="dhx_cal_next_button">&nbsp;</div>
-      <div class="dhx_cal_today_button"></div>
-      <div class="dhx_cal_date"></div>
-      <div class="dhx_cal_tab" name="day_tab"></div>
-      <div class="dhx_cal_tab" name="week_tab"></div>
-      <div class="dhx_cal_tab" name="month_tab"></div>
+<ng-template #modalContent let-close="close">
+  <div class="modal-header">
+    <h5 class="modal-title">Event action occurred</h5>
+    <button type="button" class="close" (click)="close()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div>
+      Action:
+      <pre>{{ modalData?.action }}</pre>
     </div>
-    <div class="dhx_cal_header"></div>
-    <div class="dhx_cal_data"></div>
+    <div>
+      Event:
+      <pre>{{ modalData?.event | json }}</pre>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-secondary" (click)="close()">OK</button>
+  </div>
+</ng-template>
+
+<mat-toolbar>
+  <mat-toolbar-row>
+    <span>Serving Schedule</span>
+    <span class="spacer"></span>
+    <button mat-mini-fab color="primary" (click)="add()" class="lose-outline">
+      <mat-icon aria-label="Add" matTooltip="Add" matTooltipPosition="before">add</mat-icon>
+    </button>
+  </mat-toolbar-row>
+</mat-toolbar>
+<div>
+  <div class="layout-column layout-gt-sm-row header">
+    <div class="flex-30 txt-left direction">
+      <mat-button-toggle-group #group="matButtonToggleGroup">
+        <mat-button-toggle value="prev" mwlCalendarPreviousView [view]="view" [(viewDate)]="viewDate" (viewDateChange)="activeDayIsOpen = false">
+          Previous
+        </mat-button-toggle>
+        <mat-button-toggle value="today" mwlCalendarToday [(viewDate)]="viewDate" checked="true">
+          Today
+        </mat-button-toggle>
+        <mat-button-toggle value="next" mwlCalendarNextView [view]="view" [(viewDate)]="viewDate" (viewDateChange)="activeDayIsOpen = false">
+          Next
+        </mat-button-toggle>
+      </mat-button-toggle-group>
+    </div>
+    <div class="flex-40 txt-center">
+      <h3>{{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</h3>
+    </div>
+    <div class="flex-30 txt-right views">
+      <mat-button-toggle-group #group="matButtonToggleGroup">
+        <mat-button-toggle value="prev" (click)="view = 'month'" [class.active]="view === 'month'" checked="true">
+          Month
+        </mat-button-toggle>
+        <mat-button-toggle value="today" (click)="view = 'week'" [class.active]="view === 'week'">
+          Week
+        </mat-button-toggle>
+        <mat-button-toggle value="next" (click)="view = 'day'" [class.active]="view === 'day'">
+          Day
+        </mat-button-toggle>
+      </mat-button-toggle-group>
+    </div>
+  </div>
+  <br>
+  <div>
+    <div [ngSwitch]="view">
+      <mwl-calendar-month-view *ngSwitchCase="'month'" [viewDate]="viewDate" [events]="events" [activeDayIsOpen]="activeDayIsOpen" (dayClicked)="dayClicked($event.day)" (eventClicked)="eventClicked($event.event)">
+      </mwl-calendar-month-view>
+      <mwl-calendar-week-view *ngSwitchCase="'week'" [viewDate]="viewDate" [events]="events" (eventClicked)="eventClicked($event.event)">
+      </mwl-calendar-week-view>
+      <mwl-calendar-day-view *ngSwitchCase="'day'" [viewDate]="viewDate" [events]="events" (eventClicked)="eventClicked($event.event)">
+      </mwl-calendar-day-view>
+    </div>
   </div>
 </div>
