@@ -5,9 +5,9 @@ import { MatTableDataSource, MatSort, MatPaginator, MatDialog, MatTabChangeEvent
 import _ from 'lodash';
 
 import { AuthService } from '../../core/auth.service';
-import { ScheduleService } from '../../schedule/shared/schedule.service';
+import { ScheduleService } from '../../components/schedule/shared/schedule.service';
 import { User } from '../../core/user';
-import { Schedule } from '../../schedule/shared/schedule';
+import { Schedule } from '../../components/schedule/shared/schedule';
 import { SelectionModel } from '@angular/cdk/collections';
 
 @Component({

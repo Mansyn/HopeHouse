@@ -11,6 +11,7 @@ import {
   MatCardModule,
   MatCheckboxModule,
   MatChipsModule,
+  MatDatepickerModule,
   MatDialogModule,
   MatIconModule,
   MatInputModule,
@@ -25,6 +26,8 @@ import {
   MatTabsModule,
   MatTooltipModule
 } from '@angular/material'
+import { MatDatetimepickerModule } from '@mat-datetimepicker/core';
+import { MatMomentDatetimeModule } from '@mat-datetimepicker/moment';
 
 /* Angular Calendar */
 import { CalendarModule } from 'angular-calendar';
@@ -41,7 +44,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { environment } from '../environments/environment';
 
 /* Services */
-import { ScheduleService } from './schedule/shared/schedule.service';
+import { ScheduleService } from './components/schedule/shared/schedule.service';
 
 /* My Components */
 import { AppComponent } from './app.component';
@@ -53,8 +56,9 @@ import { AdminComponent } from './account/admin/admin.component';
 import { VolunteerDialog } from './account/admin/admin.component';
 import { ScheduleDialog } from './account/admin/admin.component';
 import { ContactComponent } from './contact/contact.component';
-import { SchedulerComponent } from './schedule/scheduler.component';
+import { SchedulerComponent } from './components/schedule/scheduler.component';
 import { ServeComponent } from './serve/serve.component';
+import { EventDialog } from './components/schedule/scheduler.component';
 
 @NgModule({
   declarations: [
@@ -68,7 +72,8 @@ import { ServeComponent } from './serve/serve.component';
     SchedulerComponent,
     VolunteerDialog,
     ScheduleDialog,
-    ServeComponent
+    ServeComponent,
+    EventDialog
   ],
   imports: [
     BrowserModule,
@@ -82,6 +87,7 @@ import { ServeComponent } from './serve/serve.component';
     MatCardModule,
     MatCheckboxModule,
     MatChipsModule,
+    MatDatepickerModule,
     MatDialogModule,
     MatIconModule,
     MatInputModule,
@@ -95,12 +101,14 @@ import { ServeComponent } from './serve/serve.component';
     MatTableModule,
     MatTabsModule,
     MatTooltipModule,
+    MatMomentDatetimeModule,
+    MatDatetimepickerModule,
     CalendarModule.forRoot(),
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireDatabaseModule,
     AngularFireAuthModule
   ],
-  entryComponents: [VolunteerDialog, ScheduleDialog],
+  entryComponents: [VolunteerDialog, ScheduleDialog, EventDialog],
   providers: [AngularFirestore, ScheduleService],
   bootstrap: [AppComponent]
 })

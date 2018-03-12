@@ -34,3 +34,16 @@
 .mat-mini-fab {
   border-radius: 50% !important;
 }
+
+/deep/ .cal-month-view .cal-event-title {
+  text-decoration: none !important;
+}
+
+/deep/ .cal-month-view .cal-event-title:hover {
+  text-decoration: underline !important;
+}
+
+/deep/ .cal-month-view .cal-event-action i {
+  vertical-align: middle;
+  font-weight: bold;
+}
