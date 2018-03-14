@@ -4,5 +4,7 @@ export class Event {
     title: string;
     start: string;
     end: string;
+    primary: string;
+    secondary: string;
     timeStamp: number;
 }

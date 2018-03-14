@@ -18,11 +18,11 @@ export class EventService {
     }
 
     getScheduleEvents(schedule_key: string) {
-        let events = [
-            { id: 1, start_date: "2018-03-07 00:00", end_date: "2018-03-07 13:00", text: "Event 1" },
-            { id: 2, start_date: "2018-03-09 00:00", end_date: "2018-03-09 13:00", text: "Event 2" }
-        ];
-        return events;
+        var rootRef = this.db.database.ref();
+        var eventsRef = rootRef.child('events');
+        var scheduleEvents = eventsRef.equalTo('schedule_key', schedule_key);
+
+        return scheduleEvents;
     }
 
     getEvent(key) {

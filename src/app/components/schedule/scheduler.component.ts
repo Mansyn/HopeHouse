@@ -15,6 +15,9 @@ import {
     addHours
 } from 'date-fns';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import * as _moment from 'moment';
+import { default as _rollupMoment } from 'moment';
+const moment = _rollupMoment || _moment;
 
 import { CalendarEvent, CalendarEventAction } from 'angular-calendar';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatSnackBar } from '@angular/material';
@@ -23,21 +26,7 @@ import { ScheduleService } from './shared/schedule.service';
 import { EventService } from "./shared/event.service";
 import { Event } from "./shared/event";
 import { Schedule } from "./shared/schedule";
-
-const colors: any = {
-    red: {
-        primary: '#ad2121',
-        secondary: '#FAE3E3'
-    },
-    blue: {
-        primary: '#1e90ff',
-        secondary: '#D1E8FF'
-    },
-    yellow: {
-        primary: '#e3bc08',
-        secondary: '#FDF1BA'
-    }
-};
+import { colors } from "./colors";
 
 @Component({
     selector: 'scheduler',
@@ -51,6 +40,7 @@ const colors: any = {
 
 export class SchedulerComponent implements OnInit {
 
+    lunchkey: string = '-L6YBHfPcs5DMTbzyTxo';
     view: string = 'month';
     viewDate: Date = new Date();
     activeDayIsOpen: boolean = true;
@@ -111,12 +101,18 @@ export class SchedulerComponent implements OnInit {
             day: endOfDay
         }[this.view];
 
-        this.scheduleService.getSchedule('-L6YBHfPcs5DMTbzyTxo')
+        this.scheduleService.getSchedule(this.lunchkey)
             .snapshotChanges()
             .subscribe(data => {
                 var x = data.payload.toJSON();
                 x["$key"] = data.key;
                 this.lunchSchedule = x as Schedule;
+                this.eventService.getScheduleEvents(this.lunchSchedule.$key).once('value')
+                    .then((snapshot) => {
+                        snapshot.forEach(function (eventSnapshot) {
+                            var x = eventSnapshot
+                        });
+                    });
             });
     }
 
@@ -140,10 +136,12 @@ export class SchedulerComponent implements OnInit {
         }
     }
 
+    refresh: Subject<any> = new Subject();
+
     handleEditEvent(event: CalendarEvent): void {
 
         let dialogRef = this.dialog.open(EventDialog, {
-            width: '600px',
+            width: '650px',
             data: { event: event }
         });
 
@@ -166,13 +164,23 @@ export class SchedulerComponent implements OnInit {
 
     handleCreateEvent() {
 
-    }
+        let newEvent = {
+            schedule_key: this.lunchkey
+        }
 
-    eventClicked(event: CalendarEvent<{ film: Event }>): void {
-        window.open(
-            `https://www.themoviedb.org/movie/${event.meta.film}`,
-            '_blank'
-        );
+        let dialogRef = this.dialog.open(EventDialog, {
+            width: '650px',
+            data: { event: newEvent }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                this.eventService.addEvent(event)
+                    .then((data) => {
+                        this.openSnackBar('Schedule Added', 'OKAY');
+                    });
+            }
+        });
     }
 
     openSnackBar(message: string, action: string) {
@@ -199,22 +207,34 @@ export class SchedulerComponent implements OnInit {
                             Title is cannot exceed 25 characters
                         </mat-error>
                     </mat-form-field>
-                    <mat-form-field class="full-width">
+                    <mat-form-field class="half-width">
                         <mat-placeholder>Start</mat-placeholder>
                         <mat-datetimepicker-toggle [for]="startDatetimePicker" matSuffix></mat-datetimepicker-toggle>
                         <mat-datetimepicker #startDatetimePicker type="datetime" openOnFocus="true" timeInterval="5"></mat-datetimepicker>
-                        <input matInput [formControl]="form.controls['start']" [matDatetimepicker]="startDatetimePicker" required autocomplete="false">
+                        <input matInput [formControl]="form.controls['start']" [(ngModel)]="data.event.start" [matDatetimepicker]="startDatetimePicker" required autocomplete="false">
                     </mat-form-field>
-                    <mat-form-field class="full-width">
+                    <mat-form-field class="half-width">
                         <mat-placeholder>End</mat-placeholder>
                         <mat-datetimepicker-toggle [for]="endDatetimePicker" matSuffix></mat-datetimepicker-toggle>
                         <mat-datetimepicker #endDatetimePicker type="datetime" openOnFocus="true" timeInterval="5"></mat-datetimepicker>
-                        <input matInput [formControl]="form.controls['end']" [matDatetimepicker]="endDatetimePicker" required autocomplete="false">
+                        <input matInput [formControl]="form.controls['end']" [(ngModel)]="data.event.end" [matDatetimepicker]="endDatetimePicker" required autocomplete="false">
+                    </mat-form-field>
+                    <mat-form-field class="half-width">
+                        <input matInput placeholder="Primary Color" type="color" [formControl]="form.controls['primary']" [(ngModel)]="data.event.color.primary" (change)="refresh.next()">
+                        <mat-error *ngIf="form.controls['primary'].hasError('required')">
+                            Primary Color is required
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field class="half-width">
+                        <input matInput placeholder="Secondary Color" type="color" [formControl]="form.controls['secondary']" [(ngModel)]="data.event.color.secondary" (change)="refresh.next()">
+                        <mat-error *ngIf="form.controls['secondary'].hasError('required')">
+                            Secondary Color is required
+                        </mat-error>
                     </mat-form-field>
                 </form>
              </div>
              <div mat-dialog-actions align="end">
-               <button mat-button (click)="saveEvent()" [disabled]="!form.valid" color="primary">Ok</button>
+               <button mat-raised-button (click)="saveEvent()" [disabled]="!form.valid" color="primary">Ok</button>
                <button mat-button [mat-dialog-close]="false">Cancel</button>
              </div>`
 })
@@ -225,21 +245,34 @@ export class EventDialog {
 
     constructor(public dialogRef: MatDialogRef<EventDialog>, private fb: FormBuilder, @Inject(MAT_DIALOG_DATA) public data: any) {
         this.create = data.event.$key == null;
+        if (!data.event.color) {
+            data.event.color = {
+                'primary': colors.red.primary,
+                'secondary': colors.red.secondary
+            }
+        }
         this.form = this.fb.group({
             'title': [data.event.title || null, Validators.compose([Validators.maxLength(25), Validators.required])],
             'start': [data.event.start || null, Validators.required],
-            'end': [data.event.end || null, Validators.required]
+            'end': [data.event.end || null, Validators.required],
+            'primary': [data.event.color.primary, Validators.required],
+            'secondary': [data.event.color.secondary, Validators.required]
         })
     }
+
+    refresh: Subject<any> = new Subject();
 
     saveEvent() {
         if (this.form.valid) {
             let now = new Date().toDateString();
 
             let event = {
+                schedule_key: this.data.event.schedule_key,
                 title: this.data.event.title,
                 start: this.data.event.start,
                 end: this.data.event.end,
+                primary: this.data.event.color.primary,
+                secondary: this.data.event.color.secondary,
                 timeStamp: now
             }
 

@@ -35,15 +35,39 @@
   border-radius: 50% !important;
 }
 
-/deep/ .cal-month-view .cal-event-title {
+::ng-deep .cal-month-view .cal-event-title,
+::ng-deep .cal-week-view .cal-event-title,
+::ng-deep .cal-day-view .cal-event-title {
   text-decoration: none !important;
 }
 
-/deep/ .cal-month-view .cal-event-title:hover {
+::ng-deep .cal-week-view .cal-event-title,
+::ng-deep .cal-day-view .cal-event-title {
+  color: rgb(0, 0, 238);
+  text-decoration: none;
+  background-color: transparent;
+  vertical-align: middle;
+}
+
+
+::ng-deep .cal-month-view .cal-event-title:hover,
+::ng-deep .cal-week-view .cal-event-title:hover,
+::ng-deep .cal-day-view .cal-event-title:hover {
   text-decoration: underline !important;
 }
 
-/deep/ .cal-month-view .cal-event-action i {
+::ng-deep .cal-month-view .cal-event-action i,
+::ng-deep .cal-week-view .cal-event-action i,
+::ng-deep .cal-day-view .cal-event-action i {
   vertical-align: middle;
   font-weight: bold;
+}
+
+::ng-deep .cal-week-view .cal-event-action i,
+::ng-deep .cal-day-view .cal-event-action i {
+  font-size: 14px;
+    height: 14px;
+    width: 14px;
+    min-height: 14px;
+    min-width: 14px;
 }
