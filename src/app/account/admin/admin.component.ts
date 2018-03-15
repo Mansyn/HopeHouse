@@ -159,7 +159,6 @@ export class VolunteerDialog {
     constructor(
         public dialogRef: MatDialogRef<VolunteerDialog>,
         @Inject(MAT_DIALOG_DATA) public data: any) {
-        var i = data;
     }
 }
 

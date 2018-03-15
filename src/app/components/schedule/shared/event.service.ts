@@ -18,11 +18,8 @@ export class EventService {
     }
 
     getScheduleEvents(schedule_key: string) {
-        var rootRef = this.db.database.ref();
-        var eventsRef = rootRef.child('events');
-        var scheduleEvents = eventsRef.equalTo('schedule_key', schedule_key);
-
-        return scheduleEvents;
+        this.events = this.db.list('events', ref => ref.orderByChild('schedule_key').equalTo(schedule_key)) as AngularFireList<Event[]>;
+        return this.events;
     }
 
     getEvent(key) {

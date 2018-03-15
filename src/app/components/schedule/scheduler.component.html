@@ -8,46 +8,53 @@
   </mat-toolbar-row>
 </mat-toolbar>
 <div>
-  <div class="layout-column layout-gt-sm-row header">
-    <div class="flex-30 txt-left direction">
-      <mat-button-toggle-group #group="matButtonToggleGroup">
-        <mat-button-toggle value="prev" mwlCalendarPreviousView [view]="view" [(viewDate)]="viewDate" (viewDateChange)="activeDayIsOpen = false">
-          Previous
-        </mat-button-toggle>
-        <mat-button-toggle value="today" mwlCalendarToday [(viewDate)]="viewDate" checked="true">
-          Today
-        </mat-button-toggle>
-        <mat-button-toggle value="next" mwlCalendarNextView [view]="view" [(viewDate)]="viewDate" (viewDateChange)="activeDayIsOpen = false">
-          Next
-        </mat-button-toggle>
-      </mat-button-toggle-group>
-    </div>
-    <div class="flex-40 txt-center">
-      <h3>{{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</h3>
-    </div>
-    <div class="flex-30 txt-right views">
-      <mat-button-toggle-group #group="matButtonToggleGroup">
-        <mat-button-toggle value="prev" (click)="view = 'month'" [class.active]="view === 'month'" checked="true">
-          Month
-        </mat-button-toggle>
-        <mat-button-toggle value="today" (click)="view = 'week'" [class.active]="view === 'week'">
-          Week
-        </mat-button-toggle>
-        <mat-button-toggle value="next" (click)="view = 'day'" [class.active]="view === 'day'">
-          Day
-        </mat-button-toggle>
-      </mat-button-toggle-group>
+  <div *ngIf="loading">
+    <div class="layout-row layout-align-center-center">
+      <mat-spinner></mat-spinner>
     </div>
   </div>
-  <br>
-  <div>
-    <div [ngSwitch]="view">
-      <mwl-calendar-month-view *ngSwitchCase="'month'" [viewDate]="viewDate" [events]="events" [activeDayIsOpen]="activeDayIsOpen" (dayClicked)="dayClicked($event.day)" (eventClicked)="eventClicked($event.event)">
-      </mwl-calendar-month-view>
-      <mwl-calendar-week-view *ngSwitchCase="'week'" [viewDate]="viewDate" [events]="events" (eventClicked)="eventClicked($event.event)">
-      </mwl-calendar-week-view>
-      <mwl-calendar-day-view *ngSwitchCase="'day'" [viewDate]="viewDate" [events]="events" (eventClicked)="eventClicked($event.event)">
-      </mwl-calendar-day-view>
+  <div *ngIf="!loading">
+    <div class="layout-column layout-gt-sm-row header">
+      <div class="flex-30 txt-left direction">
+        <mat-button-toggle-group #group="matButtonToggleGroup">
+          <mat-button-toggle value="prev" mwlCalendarPreviousView [view]="view" [(viewDate)]="viewDate" (viewDateChange)="activeDayIsOpen = false">
+            Previous
+          </mat-button-toggle>
+          <mat-button-toggle value="today" mwlCalendarToday [(viewDate)]="viewDate" checked="true">
+            Today
+          </mat-button-toggle>
+          <mat-button-toggle value="next" mwlCalendarNextView [view]="view" [(viewDate)]="viewDate" (viewDateChange)="activeDayIsOpen = false">
+            Next
+          </mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+      <div class="flex-40 txt-center">
+        <h3>{{ lunchSchedule.title }} - {{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</h3>
+      </div>
+      <div class="flex-30 txt-right views">
+        <mat-button-toggle-group #group="matButtonToggleGroup">
+          <mat-button-toggle value="prev" (click)="view = 'month'" [class.active]="view === 'month'" checked="true">
+            Month
+          </mat-button-toggle>
+          <mat-button-toggle value="today" (click)="view = 'week'" [class.active]="view === 'week'">
+            Week
+          </mat-button-toggle>
+          <mat-button-toggle value="next" (click)="view = 'day'" [class.active]="view === 'day'">
+            Day
+          </mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+    </div>
+    <br>
+    <div>
+      <div [ngSwitch]="view">
+        <mwl-calendar-month-view *ngSwitchCase="'month'" [viewDate]="viewDate" [events]="events" [activeDayIsOpen]="activeDayIsOpen" (dayClicked)="dayClicked($event.day)" (eventClicked)="eventClicked($event.event)">
+        </mwl-calendar-month-view>
+        <mwl-calendar-week-view *ngSwitchCase="'week'" [viewDate]="viewDate" [events]="events" (eventClicked)="eventClicked($event.event)">
+        </mwl-calendar-week-view>
+        <mwl-calendar-day-view *ngSwitchCase="'day'" [viewDate]="viewDate" [events]="events" (eventClicked)="eventClicked($event.event)">
+        </mwl-calendar-day-view>
+      </div>
     </div>
   </div>
 </div>

@@ -18,6 +18,7 @@ import {
   MatListModule,
   MatPaginatorModule,
   MatProgressBarModule,
+  MatProgressSpinnerModule,
   MatSidenavModule,
   MatSnackBarModule,
   MatSortModule,
@@ -56,9 +57,8 @@ import { AdminComponent } from './account/admin/admin.component';
 import { VolunteerDialog } from './account/admin/admin.component';
 import { ScheduleDialog } from './account/admin/admin.component';
 import { ContactComponent } from './contact/contact.component';
-import { SchedulerComponent } from './components/schedule/scheduler.component';
+import { SchedulerComponent, EventDialog, EventDeleteDialog } from './components/schedule/scheduler.component';
 import { ServeComponent } from './serve/serve.component';
-import { EventDialog } from './components/schedule/scheduler.component';
 
 @NgModule({
   declarations: [
@@ -73,7 +73,8 @@ import { EventDialog } from './components/schedule/scheduler.component';
     VolunteerDialog,
     ScheduleDialog,
     ServeComponent,
-    EventDialog
+    EventDialog,
+    EventDeleteDialog
   ],
   imports: [
     BrowserModule,
@@ -94,6 +95,7 @@ import { EventDialog } from './components/schedule/scheduler.component';
     MatListModule,
     MatPaginatorModule,
     MatProgressBarModule,
+    MatProgressSpinnerModule,
     MatSidenavModule,
     MatSnackBarModule,
     MatSortModule,
@@ -108,7 +110,7 @@ import { EventDialog } from './components/schedule/scheduler.component';
     AngularFireDatabaseModule,
     AngularFireAuthModule
   ],
-  entryComponents: [VolunteerDialog, ScheduleDialog, EventDialog],
+  entryComponents: [VolunteerDialog, ScheduleDialog, EventDialog, EventDeleteDialog],
   providers: [AngularFirestore, ScheduleService],
   bootstrap: [AppComponent]
 })
