@@ -5,12 +5,12 @@
 
 export const environment = {
   production: false,
-  firebase: {
-    apiKey: "AIzaSyDCVgI1g_2_jP83PWseS6gNtSEYJzbI6tY",
-    authDomain: "hopehouse-b0878.firebaseapp.com",
-    databaseURL: "https://hopehouse-b0878.firebaseio.com",
-    projectId: "hopehouse-b0878",
-    storageBucket: "hopehouse-b0878.appspot.com",
-    messagingSenderId: "633904470990"
+  firebase:  {
+    apiKey: "AIzaSyBhiQWMdx4fhRFiGIH7ZGk4YEdN19yRhNw",
+    authDomain: "hopehouse-d.firebaseapp.com",
+    databaseURL: "https://hopehouse-d.firebaseio.com",
+    projectId: "hopehouse-d",
+    storageBucket: "hopehouse-d.appspot.com",
+    messagingSenderId: "786844687776"
   }
 };

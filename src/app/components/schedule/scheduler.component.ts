@@ -42,7 +42,8 @@ import EventUtils from './shared/event.utils';
 
 export class SchedulerComponent implements OnInit {
 
-    lunchkey: string = '-L6YBHfPcs5DMTbzyTxo';
+    lunchkey: string = '-L7zRv9j24pHDAj_lIi3';
+    //lunchkey: string = '-L6YBHfPcs5DMTbzyTxo';
 
     loading = true;
     activeDayIsOpen: boolean = false;
