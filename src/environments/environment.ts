@@ -5,7 +5,7 @@
 
 export const environment = {
   production: false,
-  firebase:  {
+  firebase: {
     apiKey: "AIzaSyBhiQWMdx4fhRFiGIH7ZGk4YEdN19yRhNw",
     authDomain: "hopehouse-d.firebaseapp.com",
     databaseURL: "https://hopehouse-d.firebaseio.com",

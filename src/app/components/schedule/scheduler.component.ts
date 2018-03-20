@@ -34,7 +34,7 @@ import EventUtils from './shared/event.utils';
 @Component({
     selector: 'scheduler',
     styleUrls: [
-        '../../../../node_modules/bootstrap/dist/css/bootstrap.min.css',
+        'bootstrap.min.css',
         'scheduler.component.scss'],
     templateUrl: 'scheduler.component.html',
     providers: [EventService]
