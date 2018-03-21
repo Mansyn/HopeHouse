@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from "@angular/core";
+import { Component, Inject } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { MAT_DIALOG_DATA, MatDialogRef, MatDatepickerInputEvent } from "@angular/material";
 import { Subject } from "rxjs/Subject";
@@ -15,7 +15,7 @@ import { User } from "../../../core/user";
     selector: 'event-dialog',
     templateUrl: 'event.component.html',
 })
-export class EventDialog implements OnInit {
+export class EventDialog {
 
     today = new Date();
 
@@ -26,8 +26,6 @@ export class EventDialog implements OnInit {
 
     create: boolean
     form: FormGroup
-
-    volunteers: User[];
 
     constructor(public auth: AuthService,
         public dialogRef: MatDialogRef<EventDialog>,
@@ -50,17 +48,7 @@ export class EventDialog implements OnInit {
         })
     }
 
-    ngOnInit(): void {
-        this.fetchVolunteers();
-    }
-
     refresh: Subject<any> = new Subject();
-
-    fetchVolunteers() {
-        this.auth.getAllVolunteers().subscribe(data => {
-            this.volunteers = data;
-        });
-    }
 
     changeStart(type: string, event: MatDatepickerInputEvent<Date>) {
         this.minEndDate = event.value;

@@ -28,6 +28,8 @@ import { colors } from "./shared/colors";
 import EventUtils from './shared/event.utils';
 import { EventDialog } from './dialogs/event.component';
 import { EventDeleteDialog } from './dialogs/delete.component';
+import { AuthService } from '../../core/auth.service';
+import { User } from '../../core/user';
 
 @Component({
     selector: 'scheduler',
@@ -65,14 +67,17 @@ export class SchedulerComponent implements OnInit {
     ];
 
     events: CalendarEvent[];
+    volunteers: User[];
 
-    constructor(private scheduleService: ScheduleService,
+    constructor(public auth: AuthService,
+        private scheduleService: ScheduleService,
         private eventService: EventService,
         public dialog: MatDialog,
         public snackBar: MatSnackBar) { }
 
     ngOnInit(): void {
         this.fetchEvents();
+        this.fetchVolunteers();
     }
 
     fetchEvents() {
@@ -104,6 +109,12 @@ export class SchedulerComponent implements OnInit {
             });
     }
 
+    fetchVolunteers() {
+        this.auth.getAllVolunteers().subscribe(data => {
+            this.volunteers = data;
+        });
+    }
+
     dayClicked({ date, events }: { date: Date; events: Array<CalendarEvent<{ film: Event }>>; }): void {
         if (isSameMonth(date, this.viewDate)) {
             if (
@@ -125,7 +136,7 @@ export class SchedulerComponent implements OnInit {
 
         let dialogRef = this.dialog.open(EventDialog, {
             width: '650px',
-            data: { event: event }
+            data: { event: event, volunteers: this.volunteers }
         });
 
         dialogRef.afterClosed().subscribe(result => {

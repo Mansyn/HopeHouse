@@ -15,17 +15,10 @@
     </mat-form-field>
     <mat-form-field class="full-width m-b-20">
       <mat-select placeholder="Select User" [(ngModel)]="data.event.user" [formControl]="form.controls['user']">
-        <mat-option *ngFor="let user of volunteers" [value]="user.uid">
+        <mat-option *ngFor="let user of data.volunteers" [value]="user.uid">
           {{ user.displayName }}
         </mat-option>
       </mat-select>
-      <!-- <input matInput placeholder="User" type="text" [formControl]="form.controls['title']" [(ngModel)]="data.event.title">
-      <mat-error *ngIf="form.controls['title'].hasError('required')">
-        Title is required
-      </mat-error>
-      <mat-error *ngIf="form.controls['title'].hasError('maxlength')">
-        Title is cannot exceed 25 characters
-      </mat-error> -->
     </mat-form-field>
     <mat-form-field class="half-width m-b-20">
       <mat-placeholder>Start</mat-placeholder>
