@@ -19,6 +19,7 @@ import {
   MatPaginatorModule,
   MatProgressBarModule,
   MatProgressSpinnerModule,
+  MatSelectModule,
   MatSidenavModule,
   MatSnackBarModule,
   MatSortModule,
@@ -57,7 +58,9 @@ import { AdminComponent } from './account/admin/admin.component';
 import { VolunteerDialog } from './account/admin/admin.component';
 import { ScheduleDialog } from './account/admin/admin.component';
 import { ContactComponent } from './contact/contact.component';
-import { SchedulerComponent, EventDialog, EventDeleteDialog } from './components/schedule/scheduler.component';
+import { SchedulerComponent } from './components/schedule/scheduler.component';
+import { EventDialog } from './components/schedule/dialogs/event.component';
+import { EventDeleteDialog } from './components/schedule/dialogs/delete.component';
 import { ServeComponent } from './serve/serve.component';
 
 @NgModule({
@@ -96,6 +99,7 @@ import { ServeComponent } from './serve/serve.component';
     MatPaginatorModule,
     MatProgressBarModule,
     MatProgressSpinnerModule,
+    MatSelectModule,
     MatSidenavModule,
     MatSnackBarModule,
     MatSortModule,

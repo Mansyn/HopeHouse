@@ -111,4 +111,9 @@ export class AuthService {
     return this.users;
   }
 
+  getAllVolunteers() {
+    this.usersCollection = this.afs.collection('users', ref => ref.where('roles.volunteer', '==', true));
+    this.users = this.usersCollection.valueChanges();
+    return this.users;
+  }
 }
