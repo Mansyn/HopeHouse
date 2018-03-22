@@ -5,11 +5,12 @@ import { HomeComponent } from './home/home.component';
 import { AccountComponent } from './account/account.component';
 import { AdminComponent } from './account/admin/admin.component';
 import { ContactComponent } from './contact/contact.component'
-import { ServeComponent } from './serve/serve.component';
+import { SchedulesComponent } from './schedules/schedules.component';
 
 import { AdminGuard } from './core/admin.guard';
 import { VolunteerGuard } from './core/volunteer.guard';
 import { CanReadGuard } from './core/can-read.guard';
+import { ScheduleComponent } from './schedule/schedule.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -17,7 +18,8 @@ const routes: Routes = [
   { path: 'account', component: AccountComponent },
   { path: 'contact', component: ContactComponent },
   { path: 'account/admin', component: AdminComponent, canActivate: [AdminGuard] },
-  { path: 'serve', component: ServeComponent, canActivate: [VolunteerGuard] },
+  { path: 'schedules', component: SchedulesComponent, canActivate: [VolunteerGuard] },
+  { path: 'schedule/:id', component: ScheduleComponent, canActivate: [VolunteerGuard] },
   { path: '*', redirectTo: 'home' }
 ];
 

@@ -7,19 +7,22 @@
         <span class="spacer"></span>
 
         <!-- User Functions -->
-        <button mat-raised-button *ngIf="tabIndex == 0 && user_selection.selected.length > 0" color="primary" (click)="volunteerDialog(true)" class="button">
+        <button mat-raised-button *ngIf="tabIndex == 0 && user_selection.selected.length > 0 && !isRole('volunteer')" color="primary" (click)="volunteerDialog(true)">
           Set Volunteer
         </button>
-        <button mat-raised-button *ngIf="tabIndex == 0 && user_selection.selected.length > 0" color="warn" (click)="volunteerDialog(false)" class="button">
+        <button mat-raised-button *ngIf="tabIndex == 0 && user_selection.selected.length > 0 && isRole('volunteer')" color="warn" (click)="volunteerDialog(false)">
           Remove Volunteer
         </button>
 
         <!-- Schedule Functions -->
-        <button mat-raised-button *ngIf="tabIndex == 1 && schedule_selection.selected.length > 0" color="primary" (click)="scheduleDialog()" class="button">
-          Update Schedule
+        <button mat-raised-button *ngIf="tabIndex == 1" color="accent" (click)="scheduleDialog()">
+          Create
         </button>
-        <button mat-raised-button *ngIf="tabIndex == 1" color="primary" (click)="scheduleDialog()" class="button">
-          Create Schedule
+        <button mat-raised-button *ngIf="tabIndex == 1 && schedule_selection.selected.length > 0" color="primary" (click)="scheduleDialog()">
+          Edit
+        </button>
+        <button mat-raised-button *ngIf="tabIndex == 1 && schedule_selection.selected.length > 0" color="warn" (click)="deleteScheduleDialog()">
+          Delete
         </button>
       </mat-toolbar-row>
     </mat-toolbar>
@@ -33,13 +36,12 @@
                   <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
                 </mat-form-field>
               </div>
-              <mat-table #table matSort [dataSource]="user_dataSource">
+              <mat-table #user_table matSort [dataSource]="user_dataSource">
 
                 <!-- Selection Column -->
                 <ng-container matColumnDef="select">
                   <mat-header-cell *matHeaderCellDef>
-                    <mat-checkbox (change)="$event ? user_masterToggle() : null" [checked]="user_selection.hasValue() && user_isAllSelected()" [indeterminate]="user_selection.hasValue() && !user_isAllSelected()">
-                    </mat-checkbox>
+                    &nbsp;
                   </mat-header-cell>
                   <mat-cell *matCellDef="let row">
                     <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? user_selection.toggle(row) : null" [checked]="user_selection.isSelected(row)">
@@ -84,7 +86,7 @@
         <div class="form-padding">
           <div class="layout-column layout-gt-sm-row">
             <div class="container">
-              <mat-table #table matSort [dataSource]="schedule_dataSource">
+              <mat-table #schedule_table matSort [dataSource]="schedule_dataSource">
 
                 <!-- Selection Column -->
                 <ng-container matColumnDef="select">
@@ -103,16 +105,18 @@
                   <mat-cell *matCellDef="let element"> {{element.title}} </mat-cell>
                 </ng-container>
 
-                <!-- Description Column -->
-                <ng-container matColumnDef="description">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header> Description </mat-header-cell>
-                  <mat-cell *matCellDef="let element"> {{element.description}} </mat-cell>
+                <!-- Location Column -->
+                <ng-container matColumnDef="location">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header> Location </mat-header-cell>
+                  <mat-cell *matCellDef="let element"> {{locationName(element.location)}} </mat-cell>
                 </ng-container>
 
                 <!-- Color Column -->
                 <ng-container matColumnDef="color">
                   <mat-header-cell *matHeaderCellDef mat-sort-header> Color </mat-header-cell>
-                  <mat-cell *matCellDef="let element"> {{element.color}} </mat-cell>
+                  <mat-cell *matCellDef="let element">
+                    <mat-chip [style.background]="element.color">{{element.color}}</mat-chip>
+                  </mat-cell>
                 </ng-container>
 
                 <mat-header-row *matHeaderRowDef="schedule_displayedColumns"></mat-header-row>

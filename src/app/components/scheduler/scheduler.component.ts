@@ -17,28 +17,30 @@ import {
 } from 'date-fns';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
-import { CalendarEvent, CalendarEventAction } from 'angular-calendar';
+import { CalendarEvent, CalendarEventAction, CalendarEventTimesChangedEvent, CalendarEventTitleFormatter } from 'angular-calendar';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatSnackBar } from '@angular/material';
 
-import { ScheduleService } from './shared/schedule.service';
+import { ScheduleService } from '../../schedule/shared/schedule.service';
 import { EventService } from "./shared/event.service";
-import { Event } from "./shared/event";
-import { Schedule } from "./shared/schedule";
+import { Event } from './shared/event';
+import { Schedule } from '../../schedule/shared/schedule';
 import { colors } from "./shared/colors";
-import EventUtils from './shared/event.utils';
 import { EventDialog } from './dialogs/event.component';
 import { EventDeleteDialog } from './dialogs/delete.component';
 import { AuthService } from '../../core/auth.service';
 import { User } from '../../core/user';
-import { CalendarEventTimesChangedEvent } from 'angular-calendar';
+import { EventTitleFormatter } from './event-title-formatter.provider';
+import EventUtils from './shared/event.utils';
 
 @Component({
     selector: 'scheduler',
     styleUrls: [
-        'bootstrap.min.css',
         'scheduler.component.scss'],
     templateUrl: 'scheduler.component.html',
-    providers: [EventService]
+    providers: [EventService, {
+        provide: CalendarEventTitleFormatter,
+        useClass: EventTitleFormatter
+    }]
 })
 
 export class SchedulerComponent implements OnInit {

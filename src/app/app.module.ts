@@ -13,6 +13,7 @@ import {
   MatChipsModule,
   MatDatepickerModule,
   MatDialogModule,
+  MatExpansionModule,
   MatIconModule,
   MatInputModule,
   MatListModule,
@@ -46,7 +47,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { environment } from '../environments/environment';
 
 /* Services */
-import { ScheduleService } from './components/schedule/shared/schedule.service';
+import { ScheduleService } from './schedule/shared/schedule.service';
+import { LocationService } from './schedule/shared/location.service';
 
 /* My Components */
 import { AppComponent } from './app.component';
@@ -55,13 +57,15 @@ import { FooterComponent } from './components/footer/footer.component';
 import { HomeComponent } from './home/home.component';
 import { AccountComponent } from './account/account.component';
 import { AdminComponent } from './account/admin/admin.component';
-import { VolunteerDialog } from './account/admin/admin.component';
-import { ScheduleDialog } from './account/admin/admin.component';
+import { VolunteerDialog } from './account/admin/dialogs/volunteer.component';
+import { ScheduleDialog } from './account/admin/dialogs/schedule.component';
+import { ScheduleDeleteDialog } from './account/admin/dialogs/schedule-delete.component';
 import { ContactComponent } from './contact/contact.component';
-import { SchedulerComponent } from './components/schedule/scheduler.component';
-import { EventDialog } from './components/schedule/dialogs/event.component';
-import { EventDeleteDialog } from './components/schedule/dialogs/delete.component';
-import { ServeComponent } from './serve/serve.component';
+import { SchedulerComponent } from './components/scheduler/scheduler.component';
+import { EventDialog } from './components/scheduler/dialogs/event.component';
+import { EventDeleteDialog } from './components/scheduler/dialogs/delete.component';
+import { SchedulesComponent } from './schedules/schedules.component';
+import { ScheduleComponent } from './schedule/schedule.component';
 
 @NgModule({
   declarations: [
@@ -73,11 +77,13 @@ import { ServeComponent } from './serve/serve.component';
     AccountComponent,
     ContactComponent,
     SchedulerComponent,
+    ScheduleDeleteDialog,
     VolunteerDialog,
     ScheduleDialog,
-    ServeComponent,
     EventDialog,
-    EventDeleteDialog
+    EventDeleteDialog,
+    SchedulesComponent,
+    ScheduleComponent
   ],
   imports: [
     BrowserModule,
@@ -94,6 +100,7 @@ import { ServeComponent } from './serve/serve.component';
     MatChipsModule,
     MatDatepickerModule,
     MatDialogModule,
+    MatExpansionModule,
     MatIconModule,
     MatInputModule,
     MatListModule,
@@ -116,7 +123,7 @@ import { ServeComponent } from './serve/serve.component';
     AngularFireAuthModule
   ],
   entryComponents: [VolunteerDialog, ScheduleDialog, EventDialog, EventDeleteDialog],
-  providers: [AngularFirestore, ScheduleService],
+  providers: [AngularFirestore, ScheduleService, ScheduleDeleteDialog, LocationService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

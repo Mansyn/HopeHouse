@@ -1,14 +1,17 @@
 import { Component, Inject, AfterViewInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatTableDataSource, MatSort, MatPaginator, MatDialog, MatTabChangeEvent, MatDialogRef, MAT_DIALOG_DATA, MatSnackBar } from '@angular/material';
-import _ from 'lodash';
 
-import { AuthService } from '../../core/auth.service';
-import { ScheduleService } from '../../components/schedule/shared/schedule.service';
 import { User } from '../../core/user';
-import { Schedule } from '../../components/schedule/shared/schedule';
+import { AuthService } from '../../core/auth.service';
+import { Schedule } from '../../schedule/shared/schedule';
+import { ScheduleService } from '../../schedule/shared/schedule.service';
+import { Location } from '../../schedule/shared/location';
+import { LocationService } from '../../schedule/shared/location.service';
 import { SelectionModel } from '@angular/cdk/collections';
+import { VolunteerDialog } from './dialogs/volunteer.component';
+import { ScheduleDialog } from './dialogs/schedule.component';
+import { ScheduleDeleteDialog } from './dialogs/schedule-delete.component';
 
 @Component({
     selector: 'admin',
@@ -25,12 +28,17 @@ export class AdminComponent implements AfterViewInit {
     tabIndex = 0;
     user_displayedColumns = ['select', 'displayName', 'email', 'roles'];
     user_dataSource = new MatTableDataSource<User>();
-    user_selection = new SelectionModel<User>(true, []);
-    schedule_displayedColumns = ['select', 'title', 'description', 'color'];
+    user_selection = new SelectionModel<User>(false, []);
+    schedule_displayedColumns = ['select', 'title', 'location', 'color'];
     schedule_dataSource = new MatTableDataSource<Schedule>();
     schedule_selection = new SelectionModel<Schedule>(false, []);
+    locations: Location[];
 
-    constructor(public auth: AuthService, public dialog: MatDialog, public snackBar: MatSnackBar, private _scheduleService: ScheduleService) { }
+    constructor(public auth: AuthService,
+        public dialog: MatDialog,
+        public snackBar: MatSnackBar,
+        private scheduleService: ScheduleService,
+        private locationService: LocationService) { }
 
     ngAfterViewInit() {
         this.auth.getAllUsers().subscribe(data => {
@@ -39,7 +47,7 @@ export class AdminComponent implements AfterViewInit {
         this.user_dataSource.paginator = this.user_paginator;
         this.user_dataSource.sort = this.user_sort;
 
-        this._scheduleService.getSchedules()
+        this.scheduleService.getSchedules()
             .snapshotChanges()
             .subscribe(data => {
                 let schedules = [];
@@ -53,6 +61,7 @@ export class AdminComponent implements AfterViewInit {
             });
         this.schedule_dataSource.paginator = this.schedule_paginator;
         this.schedule_dataSource.sort = this.schedule_sort;
+        this.fetchLocations();
     }
 
     tabChanged = (tabChangeEvent: MatTabChangeEvent): void => {
@@ -62,22 +71,32 @@ export class AdminComponent implements AfterViewInit {
         console.log('tab => ', tabChangeEvent.index);
     }
 
-    user_isAllSelected() {
-        const numSelected = this.user_selection.selected.length;
-        const numRows = this.user_dataSource.data.length;
-        return numSelected == numRows;
-    }
-
-    user_masterToggle() {
-        this.user_isAllSelected() ?
-            this.user_selection.clear() :
-            this.user_dataSource.data.forEach(row => this.user_selection.select(row));
-    }
-
     applyFilter(filterValue: string) {
         filterValue = filterValue.trim(); // Remove whitespace
         filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
         this.user_dataSource.filter = filterValue;
+    }
+
+    locationName(key: string) {
+        if (this.locations) {
+            let location = this.locations.find(x => x.$key == key);
+            return location ? location.name : '';
+        } else {
+            return '';
+        }
+    }
+
+    isRole(role: string) {
+        let found = false;
+        switch (role) {
+            case 'admin':
+                found = this.user_selection.selected[0].roles.admin;
+                break;
+            case 'volunteer':
+                found = this.user_selection.selected[0].roles.volunteer;
+                break;
+        }
+        return found;
     }
 
     volunteerDialog(add: boolean): void {
@@ -106,19 +125,19 @@ export class AdminComponent implements AfterViewInit {
 
         let dialogRef = this.dialog.open(ScheduleDialog, {
             width: '450px',
-            data: { schedule: target }
+            data: { schedule: target, locations: this.locations }
         });
 
         dialogRef.afterClosed().subscribe(result => {
             console.log('The dialog was closed');
             if (result) {
                 if (isNew) {
-                    this._scheduleService.addSchedule(result)
+                    this.scheduleService.addSchedule(result)
                         .then((data) => {
                             this.openSnackBar('Schedule Saved', 'OKAY');
                         });
                 } else {
-                    this._scheduleService.updateSchedule(this.schedule_selection.selected[0].$key, result)
+                    this.scheduleService.updateSchedule(this.schedule_selection.selected[0].$key, result)
                         .then((data) => {
                             this.openSnackBar('Schedule Saved', 'OKAY');
                         })
@@ -132,99 +151,61 @@ export class AdminComponent implements AfterViewInit {
         });
     }
 
+    articleDeleteDialog(): void {
+        let targets = this.schedule_selection.selected;
+
+        let dialogRef = this.dialog.open(ScheduleDeleteDialog, {
+            width: '400px',
+            data: { count: targets.length }
+        });
+
+        dialogRef.afterClosed().subscribe((result) => {
+            if (result) {
+                targets.forEach((target) => {
+                    this.scheduleService.deleteSchedule(target.$key);
+                });
+                this.openSnackBar(
+                    targets.length + ' schedule deleted',
+                    'OKAY'
+                );
+                this.schedule_selection.clear();
+            }
+        });
+    }
+
+    fetchLocations() {
+        this.locationService.getLocations().snapshotChanges()
+            .subscribe(data => {
+                let locations = [];
+                data.forEach(element => {
+                    var y = element.payload.toJSON();
+                    y["$key"] = element.key;
+                    locations.push(y as Location);
+                });
+
+                this.locations = locations;
+            });
+    }
+
     openSnackBar(message: string, action: string) {
         this.snackBar.open(message, action, {
             duration: 2000,
         });
     }
-}
 
-@Component({
-    selector: 'volunteer-dialog',
-    template: `<h1 mat-dialog-title>
-                <span *ngIf="data.add">Add Volunteer</span>
-                <span *ngIf="!data.add">Remove Volunteer</span>
-                </h1>
-             <div mat-dialog-content>
-               <p *ngIf="data.add">Are you sure you want to set user(s) to volunteer?</p>
-               <p *ngIf="!data.add">Are you sure you want to remove user(s) from volunteer?</p>
-             </div>
-             <div mat-dialog-actions align="end">
-               <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Ok</button>
-               <button mat-button [mat-dialog-close]="false">Cancel</button>
-             </div>`
-})
-export class VolunteerDialog {
+    createLocation() {
+        let now = new Date().toDateString();
 
-    constructor(
-        public dialogRef: MatDialogRef<VolunteerDialog>,
-        @Inject(MAT_DIALOG_DATA) public data: any) {
-    }
-}
-
-@Component({
-    selector: 'schedule-dialog',
-    template: `<h1 mat-dialog-title>
-                    <span *ngIf="create">Create Schedule</span>
-                    <span *ngIf="!create">Edit Schedule</span>
-                </h1>
-                <div mat-dialog-content>
-                <form [formGroup]="form">
-                    <mat-form-field class="full-width">
-                        <input matInput placeholder="Title" type="text" [formControl]="form.controls['title']" [(ngModel)]="data.schedule.title">
-                        <mat-error *ngIf="form.controls['title'].hasError('required')">
-                            Title is required
-                        </mat-error>
-                        <mat-error *ngIf="form.controls['title'].hasError('maxlength')">
-                            Title is cannot exceed 25 characters
-                        </mat-error>
-                    </mat-form-field>
-                    <mat-form-field class="full-width">
-                        <input matInput placeholder="Description" type="text" [formControl]="form.controls['description']" [(ngModel)]="data.schedule.description">
-                        <mat-error *ngIf="form.controls['description'].hasError('required')">
-                            Description is required
-                        </mat-error>
-                    </mat-form-field>
-                    <mat-form-field class="full-width">
-                        <input matInput placeholder="Color" type="text" [formControl]="form.controls['color']" [(ngModel)]="data.schedule.color">
-                        <mat-error *ngIf="form.controls['color'].hasError('required')">
-                            Color is required
-                        </mat-error>
-                    </mat-form-field>
-                </form>
-             </div>
-             <div mat-dialog-actions align="end">
-               <button mat-button (click)="saveSchedule()" [disabled]="!form.valid" color="primary">Ok</button>
-               <button mat-button [mat-dialog-close]="false">Cancel</button>
-             </div>`
-})
-export class ScheduleDialog {
-
-    create: boolean
-    form: FormGroup
-
-    constructor(public dialogRef: MatDialogRef<ScheduleDialog>, private fb: FormBuilder, @Inject(MAT_DIALOG_DATA) public data: any) {
-        this.create = data.schedule.$key == null;
-        this.form = this.fb.group({
-            'title': [data.schedule.title || null, Validators.compose([Validators.maxLength(25), Validators.required])],
-            'color': [data.schedule.color || null, Validators.required],
-            'description': [data.schedule.description || null, Validators.required]
-        })
-    }
-
-    saveSchedule() {
-        if (this.form.valid) {
-            let now = new Date().toDateString();
-
-            let schedule = {
-                title: this.data.schedule.title,
-                color: this.data.schedule.color,
-                description: this.data.schedule.description,
-                timeStamp: now,
-                active: true
-            }
-
-            this.dialogRef.close(schedule);
+        let location = {
+            name: 'Middletown: Women\'s Shelter',
+            address: '1300 Girard Ave, Middletown, OH 45044',
+            phone: '513-217-5056',
+            active: true
         }
+
+        this.locationService.addLocation(location)
+            .then((data) => {
+                this.openSnackBar('Location Saved', 'OKAY');
+            });
     }
 }

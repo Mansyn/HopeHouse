@@ -1,0 +1,40 @@
+<h1 mat-dialog-title>
+  <span *ngIf="create">Create Schedule</span>
+  <span *ngIf="!create">Edit Schedule</span>
+</h1>
+<div mat-dialog-content>
+  <form [formGroup]="form">
+    <mat-form-field class="full-width">
+      <mat-select placeholder="Select Location" [formControl]="form.controls['location']" [(ngModel)]="data.schedule.location">
+        <mat-option *ngFor="let location of data.locations" [value]="location.$key">
+          {{ location.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field class="full-width">
+      <input matInput placeholder="Title" type="text" [formControl]="form.controls['title']" [(ngModel)]="data.schedule.title">
+      <mat-error *ngIf="form.controls['title'].hasError('required')">
+        Title is required
+      </mat-error>
+      <mat-error *ngIf="form.controls['title'].hasError('maxlength')">
+        Title is cannot exceed 25 characters
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field class="full-width">
+      <input matInput placeholder="Description" type="text" [formControl]="form.controls['description']" [(ngModel)]="data.schedule.description">
+      <mat-error *ngIf="form.controls['description'].hasError('required')">
+        Description is required
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field class="full-width">
+      <input matInput placeholder="Color" type="color" [formControl]="form.controls['color']" [(ngModel)]="data.schedule.color" (change)="refresh.next()">
+      <mat-error *ngIf="form.controls['color'].hasError('required')">
+        Color is required
+      </mat-error>
+    </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-raised-button (click)="saveSchedule()" [disabled]="!form.valid" color="primary">Ok</button>
+  <button mat-button [mat-dialog-close]="false">Cancel</button>
+</div>

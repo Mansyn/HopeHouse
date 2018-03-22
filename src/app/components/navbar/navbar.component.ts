@@ -24,7 +24,7 @@ export class NavbarComponent {
         return this.matchingRole(allowed)
     }
 
-    canAccessServe() {
+    canAccessSchedule() {
         return this.isVolunteer;
     }
 
