@@ -10,6 +10,7 @@ const moment = _rollupMoment || _moment;
 import { colors } from "../shared/colors";
 import { AuthService } from "../../../core/auth.service";
 import { User } from "../../../core/user";
+import EventUtils from "../shared/event.utils";
 
 @Component({
     selector: 'event-dialog',
@@ -60,18 +61,7 @@ export class EventDialog {
 
     saveEvent() {
         if (this.form.valid) {
-            let now = new Date().toDateString();
-
-            let event = {
-                schedule_key: this.data.event.schedule_key,
-                title: this.data.event.title,
-                user: this.data.event.user,
-                start: moment(this.data.event.start).format(),
-                end: moment(this.data.event.end).format(),
-                primary: this.data.event.color.primary,
-                secondary: this.data.event.color.secondary,
-                timeStamp: now
-            }
+            let event = EventUtils.mapFromCalendarEvent(this.data.event, this.data.event.schedule_key, this.data.event.user);
 
             if (!this.create) {
                 event["id"] = this.data.event.id;

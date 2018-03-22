@@ -7,5 +7,5 @@ export class Event {
     end: string;
     primary: string;
     secondary: string;
-    timeStamp: number;
+    timeStamp: string;
 }

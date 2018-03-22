@@ -30,6 +30,7 @@ import { EventDialog } from './dialogs/event.component';
 import { EventDeleteDialog } from './dialogs/delete.component';
 import { AuthService } from '../../core/auth.service';
 import { User } from '../../core/user';
+import { CalendarEventTimesChangedEvent } from 'angular-calendar';
 
 @Component({
     selector: 'scheduler',
@@ -131,9 +132,22 @@ export class SchedulerComponent implements OnInit {
 
     refresh: Subject<any> = new Subject();
 
-    handleEditEvent(event: CalendarEvent): void {
-        event["schedule_key"] = this.lunchkey;
+    eventTimesChanged({ event, newStart, newEnd }: CalendarEventTimesChangedEvent, user): void {
+        event.start = newStart;
+        event.end = newEnd;
+        this.refresh.next();
+        let result = EventUtils.mapFromCalendarEvent(event, this.lunchkey, event["user"]);
+        delete result["$key"];
+        this.eventService.updateEvent(event.id, result)
+            .then((data) => {
+                this.openSnackBar('Schedule Updated', 'OKAY');
+            })
+            .catch((error) => {
+                this.openSnackBar(error, 'OKAY');
+            });
+    }
 
+    handleEditEvent(event: CalendarEvent): void {
         let dialogRef = this.dialog.open(EventDialog, {
             width: '650px',
             data: { event: event, volunteers: this.volunteers }
@@ -141,6 +155,8 @@ export class SchedulerComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
+                delete result["$key"];
+                result["schedule_key"] = this.lunchkey;
                 this.eventService.updateEvent(event.id, result)
                     .then((data) => {
                         this.openSnackBar('Schedule Saved', 'OKAY');
@@ -168,17 +184,15 @@ export class SchedulerComponent implements OnInit {
     }
 
     handleCreateEvent() {
-        let newEvent = {
-            schedule_key: this.lunchkey
-        }
-
         let dialogRef = this.dialog.open(EventDialog, {
             width: '650px',
-            data: { event: newEvent }
+            data: { event: {}, volunteers: this.volunteers }
         });
 
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
+                delete result["$key"];
+                result["schedule_key"] = this.lunchkey;
                 this.eventService.addEvent(result)
                     .then((data) => {
                         this.refresh.next();
