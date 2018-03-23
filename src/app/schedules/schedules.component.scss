@@ -29,8 +29,13 @@
     }
   }
 
+  .mat-card {
+    background: mat-color($candy-app-accent, 100);
+  }
+
   .mat-expansion-panel-header-title {
     font-weight: bold;
+    min-width: 200px;
   }
 
   .mat-expansion-panel-header-description {

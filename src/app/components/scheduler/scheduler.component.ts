@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Inject, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Inject, OnInit, Input } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
 import {
@@ -45,7 +45,7 @@ import EventUtils from './shared/event.utils';
 
 export class SchedulerComponent implements OnInit {
 
-    lunchkey: string = '-L7zRv9j24pHDAj_lIi3';
+    @Input() scheduleKey: string;
 
     loading = true;
     activeDayIsOpen: boolean = false;
@@ -84,7 +84,7 @@ export class SchedulerComponent implements OnInit {
     }
 
     fetchEvents() {
-        this.scheduleService.getSchedule(this.lunchkey)
+        this.scheduleService.getSchedule(this.scheduleKey)
             .snapshotChanges()
             .subscribe(data => {
                 var x = data.payload.toJSON();
@@ -138,7 +138,7 @@ export class SchedulerComponent implements OnInit {
         event.start = newStart;
         event.end = newEnd;
         this.refresh.next();
-        let result = EventUtils.mapFromCalendarEvent(event, this.lunchkey, event["user"]);
+        let result = EventUtils.mapFromCalendarEvent(event, this.scheduleKey, event["user"]);
         delete result["$key"];
         this.eventService.updateEvent(event.id, result)
             .then((data) => {
@@ -158,7 +158,7 @@ export class SchedulerComponent implements OnInit {
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 delete result["$key"];
-                result["schedule_key"] = this.lunchkey;
+                result["schedule_key"] = this.scheduleKey;
                 this.eventService.updateEvent(event.id, result)
                     .then((data) => {
                         this.openSnackBar('Schedule Saved', 'OKAY');
@@ -194,7 +194,7 @@ export class SchedulerComponent implements OnInit {
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 delete result["$key"];
-                result["schedule_key"] = this.lunchkey;
+                result["schedule_key"] = this.scheduleKey;
                 this.eventService.addEvent(result)
                     .then((data) => {
                         this.refresh.next();

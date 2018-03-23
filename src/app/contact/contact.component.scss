@@ -25,5 +25,10 @@
   }
 
   main {
-    padding: 2em 0 3em 0;
+    padding: 1.5em 0;
+  }
+
+  .mat-card {
+    margin: 1em;
+    background-color: mat-color($candy-app-accent, 200);
   }
