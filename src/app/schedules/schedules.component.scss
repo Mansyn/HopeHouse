@@ -33,6 +33,10 @@
     background: mat-color($candy-app-accent, 100);
   }
 
+  .mat-card-header .mat-icon {
+    font-size: 40px;
+  }
+
   .mat-expansion-panel-header-title {
     font-weight: bold;
     min-width: 200px;
