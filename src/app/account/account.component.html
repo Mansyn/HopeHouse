@@ -26,11 +26,13 @@
 
 <!-- User NOT logged in -->
 <ng-template #guest>
-  <h3>GUEST</h3>
   <p>Login to get started...</p>
 
   <button mat-raised-button (click)="auth.googleLogin()" color="primary">
-    <i class="fa fa-google"></i> Connect Google
+    Connect Google
+  </button>
+  <button mat-raised-button (click)="auth.facebookLogin()" color="primary">
+    Connect Facebook
   </button>
 </ng-template>
 
@@ -39,11 +41,12 @@
   <div *ngIf="auth.user$ | async as user">
     <div class="layout-column layout-gt-sm-row">
       <div class="flex-33">
-        <h3>{{ user.displayName }}</h3>
+        <h3>Name: {{ user.displayName }}</h3>
+        <h4>Email: {{ user.email }}</h4>
         <img [src]="user.photoURL || 'assets/avatar.svg'" style="max-width: 250px;" />
       </div>
       <div class="flex-66">
-        <h5>Roles</h5>
+        <h3>Roles</h3>
         <mat-chip-list>
           <mat-chip *ngIf="user.roles?.subscriber" color="accent" selected="true">Subscriber</mat-chip>
           <mat-chip *ngIf="user.roles?.volunteer" color="primary" selected="true">Volunteer</mat-chip>
