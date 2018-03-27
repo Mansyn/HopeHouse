@@ -1,65 +1,71 @@
 <div id="top" class="layout-row">
-  <div class="flex-5 flex-gt-xs-15"></div>
-  <div class="flex-90 flex-gt-xs-70 mat-elevation-z4">
-    <mat-toolbar>
-      <mat-toolbar-row>
-        <span *ngIf="auth.user$ | async; then account else login"></span>
-        <span class="spacer"></span>
-        <span *ngIf="auth.user$ | async as user">
-          <button mat-button *ngIf="user.roles?.admin" mat-mini-fab color="warn" [routerLink]="['/account/admin']" class="button">
-            <mat-icon aria-label="Admin" matTooltip="Admin" matTooltipPosition="before">settings</mat-icon>
-          </button>
-        </span>
-        <button mat-button *ngIf="auth.user$ | async" mat-mini-fab color="primary" (click)="auth.signOut()" class="button">
-          <mat-icon aria-label="Logout" matTooltip="Logout" matTooltipPosition="before">exit_to_app</mat-icon>
-        </button>
-      </mat-toolbar-row>
-    </mat-toolbar>
-    <div class="form-padding">
-      <div *ngIf="auth.user$ | async; then authenticated else guest">
-        <!-- template will replace this div -->
-      </div>
-    </div>
+  <div *ngIf="auth.user$ | async; then authenticated else guest">
+    <!-- template will replace this div -->
   </div>
-  <div class="flex-5 flex-gt-xs-15"></div>
 </div>
 
 <!-- User NOT logged in -->
 <ng-template #guest>
-  <p>Login to get started...</p>
-
-  <button mat-raised-button (click)="auth.googleLogin()" color="primary">
-    Connect Google
-  </button>
-  <button mat-raised-button (click)="auth.facebookLogin()" color="primary">
-    Connect Facebook
-  </button>
+  <div class="flex-5 flex-gt-xs-25"></div>
+  <div class="flex-90 flex-gt-xs-50">
+    <h1>Login to get started...</h1>
+    <button mat-raised-button (click)="auth.googleLogin()" color="primary">
+      Connect Google
+    </button>
+    <button mat-raised-button (click)="auth.facebookLogin()" color="primary">
+      Connect Facebook
+    </button>
+  </div>
+  <div class="flex-5 flex-gt-xs-25"></div>
 </ng-template>
 
 <!-- User logged in -->
 <ng-template #authenticated>
-  <div *ngIf="auth.user$ | async as user">
-    <div class="layout-column layout-gt-sm-row">
-      <div class="flex-33">
-        <h3>Name: {{ user.displayName }}</h3>
-        <h4>Email: {{ user.email }}</h4>
-        <img [src]="user.photoURL || 'assets/avatar.svg'" style="max-width: 250px;" />
-      </div>
-      <div class="flex-66">
-        <h3>Roles</h3>
-        <mat-chip-list>
-          <mat-chip *ngIf="user.roles?.subscriber" color="accent" selected="true">Subscriber</mat-chip>
-          <mat-chip *ngIf="user.roles?.volunteer" color="primary" selected="true">Volunteer</mat-chip>
-          <mat-chip *ngIf="user.roles?.admin" color="warn" selected="true">Admin</mat-chip>
-        </mat-chip-list>
+  <div class="flex-5 flex-gt-xs-15"></div>
+  <div class="flex-90 flex-gt-xs-70">
+    <div *ngIf="auth.user$ | async as user">
+      <div class="layout-row layout-align-start-start" style="min-width: 1100px">
+        <div class="flex-25">
+          <img [src]="user.photoURL || 'assets/avatar.svg'" width="250" class="photo" />
+          <h1 class="names">
+            <span class="fullname">{{ user.displayName }}</span>
+            <span class="email">{{ user.email }}</span>
+          </h1>
+          <div *ngIf="user.roles?.admin" class="signout">
+            <button mat-button [routerLink]="['/account/admin']" color="primary">
+              <span class="mat-button-wrapper">
+                <span>Admin</span>
+                <mat-icon aria-label="Contact">settings</mat-icon>
+              </span>
+            </button>
+          </div>
+          <div class="signout">
+            <button mat-button (click)="auth.signOut()" color="warn">
+              <span class="mat-button-wrapper">
+                <span>Sign Out</span>
+                <mat-icon aria-label="Contact">exit_to_app</mat-icon>
+              </span>
+            </button>
+          </div>
+        </div>
+        <div class="flex-75">
+          <h3>Roles</h3>
+          <mat-chip-list>
+            <mat-chip *ngIf="user.roles?.subscriber" color="accent" selected="true">Subscriber</mat-chip>
+            <mat-chip *ngIf="user.roles?.volunteer" color="primary" selected="true">Volunteer</mat-chip>
+            <mat-chip *ngIf="user.roles?.admin" color="warn" selected="true">Admin</mat-chip>
+          </mat-chip-list>
+        </div>
       </div>
     </div>
   </div>
+  <div class="flex-5 flex-gt-xs-15"></div>
 </ng-template>
-
-<ng-template #login>
-  <span>Login</span>
-</ng-template>
-<ng-template #account>
-  <span>Account</span>
-</ng-template>
+<!-- <span *ngIf="auth.user$ | async as user">
+    <button mat-button *ngIf="user.roles?.admin" mat-mini-fab color="warn" [routerLink]="['/account/admin']" class="button">
+      <mat-icon aria-label="Admin" matTooltip="Admin" matTooltipPosition="before">settings</mat-icon>
+    </button>
+  </span>
+  <button mat-button *ngIf="auth.user$ | async" mat-mini-fab color="primary" (click)="auth.signOut()" class="button">
+    <mat-icon aria-label="Logout" matTooltip="Logout" matTooltipPosition="before">exit_to_app</mat-icon>
+  </button> -->

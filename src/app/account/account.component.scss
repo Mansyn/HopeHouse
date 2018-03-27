@@ -13,15 +13,30 @@
   }
 }
 
-.form-padding {
-  padding: 2em;
-  background-color: mat-color($candy-app-accent, 100);
+.photo {
+  border-radius: 6px !important;
 }
 
-.mat-toolbar {
-  background-color: mat-color($candy-app-primary, 200);
+.names {
+  line-height: 1;
+  margin: 0;
+  padding: 16px 0;
+  max-width: 250px;
 }
 
-.mat-toolbar button {
-  margin: 0 8px;
+.fullname {
+  font-size: 26px;
+}
+
+.email {
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 300;
+  line-height: 24px;
+  color: #666;
+}
+
+.signout {
+  text-align: right;
+  max-width: 250px;
 }
