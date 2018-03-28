@@ -22,6 +22,11 @@ export class EventService {
         return this.events;
     }
 
+    getUserEvents(uid: string) {
+        this.events = this.db.list('events', ref => ref.orderByChild('user').equalTo(uid)) as AngularFireList<Event[]>;
+        return this.events;
+    }
+
     getEvent(key) {
         return this.db.object('/events/' + key);
     }

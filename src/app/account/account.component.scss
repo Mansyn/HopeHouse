@@ -13,6 +13,10 @@
   }
 }
 
+.mat-toolbar {
+  background-color: mat-color($candy-app-primary, 200);
+}
+
 .photo {
   border-radius: 6px !important;
 }
@@ -34,6 +38,13 @@
   font-weight: 300;
   line-height: 24px;
   color: #666;
+}
+
+.volunteer-msg {
+  font-size: 12px;
+  vertical-align: super;
+  font-weight: 300;
+  margin-left: 5px;
 }
 
 .signout {

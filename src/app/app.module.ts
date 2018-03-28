@@ -66,6 +66,9 @@ import { EventDialog } from './components/scheduler/dialogs/event.component';
 import { EventDeleteDialog } from './components/scheduler/dialogs/delete.component';
 import { SchedulesComponent } from './schedules/schedules.component';
 import { ScheduleComponent } from './schedule/schedule.component';
+import { RegisterComponent } from './account/register/register.component';
+
+import { DisableControlDirective } from './directives/disable-control';
 
 @NgModule({
   declarations: [
@@ -83,7 +86,9 @@ import { ScheduleComponent } from './schedule/schedule.component';
     EventDialog,
     EventDeleteDialog,
     SchedulesComponent,
-    ScheduleComponent
+    ScheduleComponent,
+    RegisterComponent,
+    DisableControlDirective
   ],
   imports: [
     BrowserModule,

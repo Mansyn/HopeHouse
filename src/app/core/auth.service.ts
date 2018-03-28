@@ -30,6 +30,17 @@ export class AuthService {
       })
   }
 
+  updateUser(response) {
+    const user: User = {
+      uid: response.uid,
+      displayName: response.displayName,
+      email: response.email,
+      photoURL: response.photoURL,
+      roles: {}
+    }
+    this.updateUserData(user);
+  }
+
   googleLogin() {
     const provider = new firebase.auth.GoogleAuthProvider()
     return this.oAuthLogin(provider);

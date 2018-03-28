@@ -1,0 +1,47 @@
+<div id="top" class="layout-row">
+  <div class="flex-5 flex-gt-xs-25"></div>
+  <div class="flex-90 flex-gt-xs-50">
+    <div class="layout-row">
+      <div class="flex-offset-gt-sm-20 flex-100 flex-gt-sm-60 mat-elevation-z4">
+        <mat-toolbar>
+          <mat-toolbar-row>
+            <span>Register</span>
+          </mat-toolbar-row>
+        </mat-toolbar>
+        <mat-progress-bar mode="indeterminate" *ngIf="working"></mat-progress-bar>
+        <form [formGroup]="form" class="p-20">
+          <mat-form-field class="full-width">
+            <input matInput placeholder="Email" type="email" [formControl]="form.controls['email']" [disableControl]="working" [(ngModel)]="email">
+            <mat-error *ngIf="form.controls['email'].hasError('required')">
+              Email is required
+            </mat-error>
+            <mat-error *ngIf="form.controls['email'].hasError('email')">
+              Email is formatted incorrectly
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field class="full-width m-v-15">
+            <input matInput placeholder="Password" type="password" [formControl]="form.controls['password']" [disableControl]="working" [(ngModel)]="password">
+            <mat-error *ngIf="form.controls['password'].hasError('required')">
+              Password is required
+            </mat-error>
+          </mat-form-field>
+          <div class="layout-row layout-align-end-center">
+            <button mat-raised-button (click)="register()" [disabled]="!form.valid || working" color="primary">Register</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="layout-row">
+      <div class="flex-offset-gt-sm-20 flex-100 flex-gt-sm-60 txt-center">
+        <h5>OR</h5>
+        <button mat-raised-button (click)="auth.googleLogin()" color="primary">
+          Link Google
+        </button>
+        <button mat-raised-button (click)="auth.facebookLogin()" color="primary">
+          Link Facebook
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="flex-5 flex-gt-xs-25"></div>
+</div>
