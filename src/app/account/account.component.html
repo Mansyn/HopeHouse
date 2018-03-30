@@ -84,7 +84,7 @@
           </div>
         </div>
         <div class="flex-75">
-          <h3>Roles
+          <h3>My Roles
             <span class="volunteer-msg" *ngIf="!user.roles?.volunteer">*contact us to become a volunteer</span>
           </h3>
           <mat-chip-list>
@@ -93,14 +93,20 @@
             <mat-chip *ngIf="user.roles?.admin" color="warn" selected="true">Admin</mat-chip>
           </mat-chip-list>
           <h3>My Events</h3>
-          <mat-list>
-            <mat-list-item *ngIf="events.length == 0">
-              You currently have no events scheduled
-            </mat-list-item>
-            <mat-list-item *ngFor="let event of events">
-              {{event.title}} - {{formatDateTime(event.start)}} to {{formatDateTime(event.end)}}
-            </mat-list-item>
-          </mat-list>
+          <p *ngIf="events.length == 0">
+            You currently have no events scheduled
+          </p>
+          <mat-tab-group *ngIf="events.length > 0" class="mat-elevation-z2">
+            <mat-tab *ngFor="let schedule of schedules" label="{{schedule.title}}">
+              <mat-list>
+                <mat-list-item *ngFor="let event of schedule.events">
+                  <mat-icon mat-list-icon>local_dining</mat-icon>
+                  <h4 mat-line>{{event.title}}</h4>
+                  <p mat-line>{{formatDateTime(event.start)}} to {{formatDateTime(event.end)}}</p>
+                </mat-list-item>
+              </mat-list>
+            </mat-tab>
+          </mat-tab-group>
         </div>
       </div>
     </div>
