@@ -67,6 +67,7 @@ import { EventDeleteDialog } from './components/scheduler/dialogs/delete.compone
 import { SchedulesComponent } from './schedules/schedules.component';
 import { ScheduleComponent } from './schedule/schedule.component';
 import { RegisterComponent } from './account/register/register.component';
+import { FileUploadComponent } from './components/file-upload/file-upload.component';
 
 import { DisableControlDirective } from './directives/disable-control';
 
@@ -88,6 +89,7 @@ import { DisableControlDirective } from './directives/disable-control';
     SchedulesComponent,
     ScheduleComponent,
     RegisterComponent,
+    FileUploadComponent,
     DisableControlDirective
   ],
   imports: [

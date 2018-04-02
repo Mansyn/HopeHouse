@@ -31,8 +31,6 @@ export default class EventUtils {
 
     static mapFromCalendarEvent(calendarevent: CalendarEvent, schedule_key: string, userid: string): Event {
 
-        let now = new Date().toDateString();
-
         let event = {
             $key: '',
             schedule_key: schedule_key,
@@ -42,7 +40,7 @@ export default class EventUtils {
             end: moment(calendarevent.end).format(),
             primary: calendarevent.color.primary,
             secondary: calendarevent.color.secondary,
-            timeStamp: now
+            timeStamp: moment().format()
         }
 
         return event;

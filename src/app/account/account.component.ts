@@ -63,7 +63,7 @@ export class AccountComponent {
           x["$key"] = element.key
           this.events.push(x as Event)
         })
-      })
+      }, )
   }
 
   fetchSchedules() {
@@ -74,11 +74,25 @@ export class AccountComponent {
         data.forEach(element => {
           var y = element.payload.toJSON()
           y['$key'] = element.key;
-          y['events'] = this.events.filter(x => x.schedule_key == element.key)
-          schedules.push(y as Schedule)
+          let userEvents = this.events.filter(x => x.schedule_key == element.key)
+          y['events'] = this.filterPastEvents(userEvents)
+          if (y['events'].length > 0) {
+            schedules.push(y as Schedule)
+          }
         })
         this.schedules = schedules
       });
+  }
+
+  filterPastEvents(events: Event[]) {
+    let now = moment().format()
+    let futureEvents = []
+    events.forEach(element => {
+      if (element.start > now) {
+        futureEvents.push(element)
+      }
+    })
+    return futureEvents
   }
 
   findSchedule(key) {

@@ -18,7 +18,8 @@ export class ScheduleDialog {
             'location': [data.schedule.location || null, Validators.required],
             'title': [data.schedule.title || null, Validators.compose([Validators.maxLength(25), Validators.required])],
             'color': [data.schedule.color || null, Validators.required],
-            'description': [data.schedule.description || null, Validators.required]
+            'description': [data.schedule.description || null, Validators.required],
+            'image': [data.schedule.image || null, Validators.required]
         })
     }
 
@@ -33,6 +34,7 @@ export class ScheduleDialog {
                 title: this.data.schedule.title,
                 color: this.data.schedule.color,
                 description: this.data.schedule.description,
+                image: this.data.schedule.image,
                 timeStamp: now,
                 active: true
             }

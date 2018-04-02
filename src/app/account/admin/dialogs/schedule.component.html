@@ -32,6 +32,9 @@
         Color is required
       </mat-error>
     </mat-form-field>
+    <div class="full-width">
+      <file-upload [showFileNameInput]="true" allowedTypes="image/*" uploadButtonText="Upload Image" [formControl]="form.controls['image']" [(ngModel)]="data.schedule.image"></file-upload>
+    </div>
   </form>
 </div>
 <div mat-dialog-actions align="end">

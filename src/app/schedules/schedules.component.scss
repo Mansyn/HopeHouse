@@ -37,6 +37,11 @@
     font-size: 40px;
   }
 
+  .mat-card-image {
+    max-width: 350px;
+    max-height: 350px;
+  }
+
   .mat-expansion-panel-header-title {
     font-weight: bold;
     min-width: 200px;

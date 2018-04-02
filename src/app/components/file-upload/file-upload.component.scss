@@ -1,0 +1,10 @@
+button {
+  margin: 5px 0;
+}
+
+.upload-file {
+  &.form-control {
+    width: 100%;
+    display: inherit;
+  }
+}
