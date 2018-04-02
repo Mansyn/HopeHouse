@@ -44,14 +44,3 @@ export class FileUploadComponent implements ControlValueAccessor {
         myReader.readAsDataURL(file);
     }
 }
-
-@NgModule({
-    declarations: [
-        FileUploadComponent
-    ],
-    imports: [FormsModule],
-    exports: [
-        FileUploadComponent
-    ]
-})
-export class FileUploadModule { }

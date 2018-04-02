@@ -22,7 +22,7 @@ import { ScheduleService } from '../schedule/shared/schedule.service'
   styleUrls: ['./account.component.scss'],
   providers: [EventService]
 })
-export class AccountComponent {
+export class AccountComponent implements OnInit {
 
   form: FormGroup
   email: string
@@ -45,43 +45,42 @@ export class AccountComponent {
       'email': ['', Validators.compose([Validators.email, Validators.required])],
       'password': ['', Validators.required]
     })
-    afAuth.authState.subscribe(user => {
-      console.log(user);
-      if (user) {
-        this.getUserEvents(user)
-        this.fetchSchedules()
+  }
+
+  ngOnInit(): void {
+    this.getUserEvents()
+  }
+
+  getUserEvents() {
+    this.auth.user$.subscribe(user => {
+      let isVolunteer = this.auth.canEdit(user)
+      if (isVolunteer) {
+        this.eventService.getUserEvents(user.uid)
+          .snapshotChanges()
+          .subscribe((data) => {
+            data.forEach(element => {
+              var x = element.payload.toJSON()
+              x["$key"] = element.key
+              this.events.push(x as Event)
+              this.scheduleService.getSchedules()
+                .snapshotChanges()
+                .subscribe(data => {
+                  let schedules = []
+                  data.forEach(element => {
+                    var y = element.payload.toJSON()
+                    y['$key'] = element.key;
+                    let userEvents = this.events.filter(x => x.schedule_key == element.key)
+                    y['events'] = this.filterPastEvents(userEvents)
+                    if (y['events'].length > 0) {
+                      schedules.push(y as Schedule)
+                    }
+                  })
+                  this.schedules = schedules
+                })
+            })
+          })
       }
     })
-  }
-
-  getUserEvents(user) {
-    this.eventService.getUserEvents(user.uid)
-      .snapshotChanges()
-      .subscribe((data) => {
-        data.forEach(element => {
-          var x = element.payload.toJSON()
-          x["$key"] = element.key
-          this.events.push(x as Event)
-        })
-      }, )
-  }
-
-  fetchSchedules() {
-    this.scheduleService.getSchedules()
-      .snapshotChanges()
-      .subscribe(data => {
-        let schedules = []
-        data.forEach(element => {
-          var y = element.payload.toJSON()
-          y['$key'] = element.key;
-          let userEvents = this.events.filter(x => x.schedule_key == element.key)
-          y['events'] = this.filterPastEvents(userEvents)
-          if (y['events'].length > 0) {
-            schedules.push(y as Schedule)
-          }
-        })
-        this.schedules = schedules
-      });
   }
 
   filterPastEvents(events: Event[]) {
