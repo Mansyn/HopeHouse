@@ -56,7 +56,7 @@ export class SchedulerComponent implements OnInit {
     calendarEvents: CalendarEvent[] = []
     events: Event[] = []
     volunteers: User[] = []
-    lunchSchedule: Schedule
+    schedule: Schedule
     userRef: User
 
     actions: CalendarEventAction[] = [
@@ -91,10 +91,10 @@ export class SchedulerComponent implements OnInit {
             this.scheduleService.getSchedule(this.scheduleKey)
                 .snapshotChanges()
                 .subscribe(data => {
-                    var x = data.payload.toJSON()
-                    x['$key'] = data.key
-                    this.lunchSchedule = x as Schedule
-                    this.eventService.getScheduleEvents(this.lunchSchedule.$key)
+                    let schedule = data.payload.toJSON()
+                    schedule['$key'] = data.key
+                    this.schedule = schedule as Schedule
+                    this.eventService.getScheduleEvents(this.schedule.$key)
                         .snapshotChanges()
                         .subscribe(data => {
                             this.calendarEvents = []

@@ -10,7 +10,7 @@ export class EventTitleFormatter extends CalendarEventTitleFormatter {
     // you can override any of the methods defined in the parent class
 
     month(event: CalendarEvent): string {
-        return `${event.title} &mdash; ${new DatePipe(this.locale).transform(
+        return `${event.title} &ndash; ${new DatePipe(this.locale).transform(
             event.start,
             'h:mm a',
             this.locale

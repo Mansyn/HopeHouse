@@ -1,4 +1,4 @@
-:host>div {
+:host>div>div {
   padding: 20px;
 }
 
@@ -20,6 +20,15 @@
 
 .views {
   text-align: right;
+}
+
+.mat-toolbar {
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+}
+
+h3.cream {
+  font-size: 28px;
 }
 
 @media (max-width:960px) {
@@ -49,7 +58,6 @@
   vertical-align: middle;
 }
 
-
 ::ng-deep .cal-month-view .cal-event-title:hover,
 ::ng-deep .cal-week-view .cal-event-title:hover,
 ::ng-deep .cal-day-view .cal-event-title:hover {
@@ -66,8 +74,8 @@
 ::ng-deep .cal-week-view .cal-event-action i,
 ::ng-deep .cal-day-view .cal-event-action i {
   font-size: 14px;
-    height: 14px;
-    width: 14px;
-    min-height: 14px;
-    min-width: 14px;
+  height: 14px;
+  width: 14px;
+  min-height: 14px;
+  min-width: 14px;
 }
