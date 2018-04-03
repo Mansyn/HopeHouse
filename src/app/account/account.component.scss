@@ -17,6 +17,10 @@
   background-color: mat-color($candy-app-primary, 200);
 }
 
+.mat-tab-group {
+  background-color: mat-color($candy-app-accent, 100);
+}
+
 .photo {
   border-radius: 6px !important;
 }

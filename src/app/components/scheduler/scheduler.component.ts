@@ -97,6 +97,8 @@ export class SchedulerComponent implements OnInit {
                     this.eventService.getScheduleEvents(this.lunchSchedule.$key)
                         .snapshotChanges()
                         .subscribe(data => {
+                            this.calendarEvents = []
+                            this.events = []
                             data.forEach(element => {
                                 var x = element.payload.toJSON()
                                 x['$key'] = element.key
