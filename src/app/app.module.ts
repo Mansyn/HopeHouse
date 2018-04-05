@@ -1,3 +1,5 @@
+import './polyfills';
+
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -50,6 +52,9 @@ import { environment } from '../environments/environment';
 import { ScheduleService } from './schedule/shared/schedule.service';
 import { LocationService } from './schedule/shared/location.service';
 
+/* Sub Components */
+import { DisableControlDirective } from './directives/disable-control';
+
 /* My Components */
 import { AppComponent } from './app.component';
 import { NavbarComponent } from './components/navbar/navbar.component'
@@ -68,8 +73,6 @@ import { SchedulesComponent } from './schedules/schedules.component';
 import { ScheduleComponent } from './schedule/schedule.component';
 import { RegisterComponent } from './account/register/register.component';
 import { FileUploadComponent } from './components/file-upload/file-upload.component';
-
-import { DisableControlDirective } from './directives/disable-control';
 
 @NgModule({
   declarations: [

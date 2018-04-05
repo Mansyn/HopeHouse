@@ -111,7 +111,7 @@ export class AdminComponent implements AfterViewInit {
             console.log('The dialog was closed');
             if (result) {
                 targets.forEach((target) => {
-                    this.auth.setUserVolunteer(target, add);
+                    this.auth.updateUser(target, add);
                 });
                 this.openSnackBar(add ? 'Volunteer Set' : 'Volunteer Removed', 'OKAY');
                 this.user_selection.clear();

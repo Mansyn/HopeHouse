@@ -9,9 +9,18 @@
           </mat-toolbar-row>
         </mat-toolbar>
         <mat-progress-bar mode="indeterminate" *ngIf="working"></mat-progress-bar>
-        <form [formGroup]="form" class="p-20">
-          <mat-form-field class="full-width">
-            <input matInput placeholder="Email" type="email" [formControl]="form.controls['email']" [disableControl]="working" [(ngModel)]="email">
+        <form [formGroup]="form" (ngSubmit)="onRegister(form)" class="p-20">
+          <mat-form-field>
+            <input matInput placeholder="Name" type="text" [formControl]="form.controls['displayName']" [disableControl]="working">
+            <mat-error *ngIf="form.controls['displayName'].hasError('required')">
+              Name is required
+            </mat-error>
+            <mat-error *ngIf="form.controls['displayName'].hasError('maxlength')">
+              Name cannot be longer than 30 characters
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field>
+            <input matInput placeholder="Email" type="email" [formControl]="form.controls['email']" [disableControl]="working">
             <mat-error *ngIf="form.controls['email'].hasError('required')">
               Email is required
             </mat-error>
@@ -19,14 +28,25 @@
               Email is formatted incorrectly
             </mat-error>
           </mat-form-field>
-          <mat-form-field class="full-width m-v-15">
-            <input matInput placeholder="Password" type="password" [formControl]="form.controls['password']" [disableControl]="working" [(ngModel)]="password">
+          <div class="layout-row">
+            <mat-form-field class="flex-30" floatLabel="never">
+              <input matInput placeholder="555" type="text" [formControl]="form.controls['area']" [disableControl]="working">
+            </mat-form-field>
+            <mat-form-field class="flex-30" floatLabel="never">
+              <input matInput placeholder="555" type="text" [formControl]="form.controls['prefix']" [disableControl]="working">
+            </mat-form-field>
+            <mat-form-field class="flex-40" floatLabel="never">
+              <input matInput placeholder="555" type="text" [formControl]="form.controls['line']" [disableControl]="working">
+            </mat-form-field>
+          </div>
+          <mat-form-field>
+            <input matInput placeholder="Password" type="password" [formControl]="form.controls['password']" [disableControl]="working">
             <mat-error *ngIf="form.controls['password'].hasError('required')">
               Password is required
             </mat-error>
           </mat-form-field>
           <div class="layout-row layout-align-end-center">
-            <button mat-raised-button (click)="register()" [disabled]="!form.valid || working" color="primary">Register</button>
+            <button mat-raised-button type="submit" [disabled]="!form.valid || working" color="primary">Register</button>
           </div>
         </form>
       </div>

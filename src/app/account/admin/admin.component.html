@@ -66,7 +66,6 @@
                   <mat-header-cell *matHeaderCellDef mat-sort-header> Roles </mat-header-cell>
                   <mat-cell *matCellDef="let element">
                     <mat-chip-list>
-                      <mat-chip *ngIf="element.roles?.subscriber" color="accent" selected="true">Subscriber</mat-chip>
                       <mat-chip *ngIf="element.roles?.volunteer" color="primary" selected="true">Volunteer</mat-chip>
                       <mat-chip *ngIf="element.roles?.admin" color="warn" selected="true">Admin</mat-chip>
                     </mat-chip-list>

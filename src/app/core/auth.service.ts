@@ -30,15 +30,16 @@ export class AuthService {
       })
   }
 
-  updateUser(response) {
+  updateUser(response, isVolunteer) {
     const user: User = {
       uid: response.uid,
       displayName: response.displayName,
       email: response.email,
+      phone: response.phone,
       photoURL: response.photoURL,
       roles: {}
     }
-    this.updateUserData(user);
+    this.updateUserData(user, isVolunteer);
   }
 
   googleLogin() {
@@ -54,7 +55,7 @@ export class AuthService {
   private oAuthLogin(provider) {
     return this.afAuth.auth.signInWithPopup(provider)
       .then((credential) => {
-        this.updateUserData(credential.user)
+        this.updateUserData(credential.user, true)
       })
   }
 
@@ -62,32 +63,18 @@ export class AuthService {
     this.afAuth.auth.signOut()
   }
 
-  private updateUserData(user) {
+  private updateUserData(user, volunteer) {
     // Sets user data to firestore on login
     const userRef: AngularFirestoreDocument<any> = this.afs.doc(`users/${user.uid}`);
     const data: User = {
       uid: user.uid,
       displayName: user.displayName,
       email: user.email,
-      photoURL: user.photoURL,
-      roles: {
-        subscriber: true
-      }
-    }
-    return userRef.set(data, { merge: true })
-  }
-
-  setUserVolunteer(user, isVolunteer) {
-    // Sets user data to firestore on login
-    const userRef: AngularFirestoreDocument<any> = this.afs.doc(`users/${user.uid}`);
-    const data: User = {
-      uid: user.uid,
-      displayName: user.displayName,
-      email: user.email,
+      phone: user.phone,
       photoURL: user.photoURL,
       roles: {
         subscriber: true,
-        volunteer: isVolunteer
+        volunteer: volunteer
       }
     }
     return userRef.set(data, { merge: true })
