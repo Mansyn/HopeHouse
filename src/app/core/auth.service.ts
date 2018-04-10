@@ -35,7 +35,19 @@ export class AuthService {
       uid: response.uid,
       displayName: response.displayName,
       email: response.email,
-      phone: response.phone,
+      phoneNumber: response.phoneNumber,
+      photoURL: response.photoURL,
+      roles: {}
+    }
+    this.updateUserData(user, isVolunteer);
+  }
+
+  registerUser(response, isVolunteer, displayName, phoneNumber) {
+    const user: User = {
+      uid: response.uid,
+      displayName: displayName,
+      email: response.email,
+      phoneNumber: phoneNumber,
       photoURL: response.photoURL,
       roles: {}
     }
@@ -70,7 +82,7 @@ export class AuthService {
       uid: user.uid,
       displayName: user.displayName,
       email: user.email,
-      phone: user.phone,
+      phoneNumber: user.phoneNumber,
       photoURL: user.photoURL,
       roles: {
         subscriber: true,

@@ -57,32 +57,28 @@ export class RegisterComponent implements OnInit {
   onRegister(form: FormGroup) {
     if (this.form.valid) {
       this.working = true
+      let self = this
       let form = this.form.value
-      let email = form.email
-      let password = form.password
-      let displayName = form.displayName
-      let phone = this.e164()
-      // this.afAuth.auth.createUserWithEmailAndPassword(form.value.email, form.value.password)
-      //   .then((response) => {
-      //     response.displayName = form.value.displayName
-      //     this.auth.updateUser(response, true)
-      //     this.router.navigate(['/account'])
-      //   })
-      //   .catch(function (error) {
-      //     // Handle Errors here.
-      //     var errorCode = error.code;
-      //     var errorMessage = error.message;
-      //     if (errorCode == 'auth/weak-password') {
-      //       this.openSnackBar('Password is too weak.', 'OKAY');
-      //     } else if (errorCode == 'auth/email-already-in-use') {
-      //       this.openSnackBar('Email already in use', 'OKAY');
-      //     }
-      //     else {
-      //       this.openSnackBar(errorMessage, 'OKAY');
-      //     }
-      //     this.working = false;
-      //     console.log(error);
-      //   });
+      this.afAuth.auth.createUserWithEmailAndPassword(form.email, form.password)
+        .then((response) => {
+          this.auth.registerUser(response, true, form.displayName, this.e164())
+          this.router.navigate(['/account'])
+        })
+        .catch(function (error) {
+          // Handle Errors here.
+          var errorCode = error.code
+          var errorMessage = error.message
+          if (errorCode == 'auth/weak-password') {
+            self.openSnackBar('Password is too weak.', 'OKAY')
+          } else if (errorCode == 'auth/email-already-in-use') {
+            self.openSnackBar('Email already in use', 'OKAY')
+          }
+          else {
+            self.openSnackBar(errorMessage, 'OKAY')
+          }
+          self.working = false
+          console.log(error)
+        });
     }
   }
 
