@@ -63,6 +63,16 @@ export class AuthService {
     this.updateUserData(user, isVolunteer);
   }
 
+  googleRegister() {
+    const provider = new firebase.auth.GoogleAuthProvider()
+    return this.oAuthRegister(provider);
+  }
+
+  facebookRegister() {
+    var provider = new firebase.auth.FacebookAuthProvider();
+    return this.oAuthRegister(provider);
+  }
+
   googleLogin() {
     const provider = new firebase.auth.GoogleAuthProvider()
     return this.oAuthLogin(provider);
@@ -71,6 +81,13 @@ export class AuthService {
   facebookLogin() {
     var provider = new firebase.auth.FacebookAuthProvider();
     return this.oAuthLogin(provider);
+  }
+
+  private oAuthRegister(provider) {
+    return this.afAuth.auth.signInWithPopup(provider)
+      .then((credential) => {
+        this.updateUserData(credential.user, true)
+      })
   }
 
   private oAuthLogin(provider) {
@@ -100,6 +117,23 @@ export class AuthService {
     }
     return userRef.set(data, { merge: true })
   }
+
+  // private loadUserData(user) {
+  //   // Sets user data to firestore on login
+  //   const userRef: AngularFirestoreDocument<any> = this.afs.doc(`users/${user.uid}`);
+  //   const data: User = {
+  //     uid: user.uid,
+  //     displayName: user.displayName,
+  //     email: user.email,
+  //     phoneNumber: user.phoneNumber,
+  //     photoURL: user.photoURL,
+  //     roles: {
+  //       subscriber: true,
+  //       volunteer: volunteer
+  //     }
+  //   }
+  //   return userRef.set(data, { merge: true })
+  // }
 
   ///// Role-based Authorization //////
 

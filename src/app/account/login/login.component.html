@@ -1,3 +1,49 @@
-<p>
-  login works!
-</p>
+<div id="top" class="layout-row">
+  <div class="flex-5 flex-gt-xs-25"></div>
+  <div class="flex-90 flex-gt-xs-50">
+    <div class="layout-row">
+      <div class="flex-offset-gt-sm-20 flex-100 flex-gt-sm-60 mat-elevation-z4">
+        <mat-toolbar>
+          <mat-toolbar-row>
+            <span>Login to get started...</span>
+          </mat-toolbar-row>
+        </mat-toolbar>
+        <mat-progress-bar mode="indeterminate" *ngIf="working"></mat-progress-bar>
+        <form [formGroup]="form" class="p-20">
+          <mat-form-field>
+            <input matInput placeholder="Email" type="email" [formControl]="form.controls['email']" [disableControl]="working" [(ngModel)]="email">
+            <mat-error *ngIf="form.controls['email'].hasError('required')">
+              Email is required
+            </mat-error>
+            <mat-error *ngIf="form.controls['email'].hasError('email')">
+              Email is formatted incorrectly
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field>
+            <input matInput placeholder="Password" type="password" [formControl]="form.controls['password']" [disableControl]="working"
+              [(ngModel)]="password">
+            <mat-error *ngIf="form.controls['password'].hasError('required')">
+              Password is required
+            </mat-error>
+          </mat-form-field>
+          <div class="layout-row layout-align-space-between-center">
+            <button mat-raised-button [routerLink]="['/account/register']" color="warn">Register</button>
+            <button mat-raised-button (click)="login()" [disabled]="!form.valid" color="primary">Login</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="layout-row">
+      <div class="flex-offset-gt-sm-20 flex-100 flex-gt-sm-60 txt-center">
+        <h5>OR</h5>
+        <button mat-raised-button (click)="auth.googleLogin()" color="primary">
+          Google Login
+        </button>
+        <button mat-raised-button (click)="auth.facebookLogin()" color="primary">
+          Facebook Login
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="flex-5 flex-gt-xs-25"></div>
+</div>

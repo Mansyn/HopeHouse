@@ -16,6 +16,9 @@ import { User } from '../core/user'
 import { Schedule } from '../schedule/shared/schedule'
 import { ScheduleService } from '../schedule/shared/schedule.service'
 
+import { Subject } from 'rxjs/Subject'
+import 'rxjs/add/operator/takeUntil'
+
 @Component({
   selector: 'account',
   templateUrl: './account.component.html',
@@ -24,8 +27,8 @@ import { ScheduleService } from '../schedule/shared/schedule.service'
 })
 export class AccountComponent implements OnInit {
 
-  form: FormGroup
-  working: boolean
+  private unsubscribe = new Subject<void>()
+
   events: Event[] = []
   schedules: Schedule[] = []
 
@@ -38,19 +41,13 @@ export class AccountComponent implements OnInit {
   displayNameRef: string
   phoneNumberRef: string
 
-  constructor(private afAuth: AngularFireAuth,
+  constructor(private fb: FormBuilder,
     private router: Router,
     public renderer: Renderer,
     public auth: AuthService,
     private eventService: EventService,
     private scheduleService: ScheduleService,
-    private fb: FormBuilder,
     public snackBar: MatSnackBar) {
-    this.working = false
-    this.form = this.fb.group({
-      'email': ['', Validators.compose([Validators.email, Validators.required])],
-      'password': ['', Validators.required]
-    })
   }
 
   ngOnInit(): void {
@@ -80,15 +77,17 @@ export class AccountComponent implements OnInit {
   }
 
   getUserEvents() {
-    this.auth.user$.subscribe(user => {
-      this.userRef = user
-      if (user) {
+    this.auth.user$
+      .takeUntil(this.unsubscribe)
+      .subscribe(user => {
+        this.userRef = user
         this.displayNameRef = user.displayName || ''
         this.phoneNumberRef = user.phoneNumber || ''
         let isVolunteer = this.auth.canEdit(user)
         if (isVolunteer) {
           this.eventService.getUserEvents(user.uid)
             .snapshotChanges()
+            .takeUntil(this.unsubscribe)
             .subscribe((data) => {
               this.events = []
               data.forEach(element => {
@@ -97,6 +96,7 @@ export class AccountComponent implements OnInit {
                 this.events.push(x as Event)
                 this.scheduleService.getSchedules()
                   .snapshotChanges()
+                  .takeUntil(this.unsubscribe)
                   .subscribe(data => {
                     this.schedules = []
                     let schedules = []
@@ -118,8 +118,7 @@ export class AccountComponent implements OnInit {
           'displayName': [this.userRef.displayName, Validators.compose([Validators.maxLength(30), Validators.required])],
           'phoneNumber': [this.userRef.phoneNumber, Validators.compose([Validators.maxLength(10), Validators.required])]
         })
-      }
-    })
+      })
   }
 
   filterPastEvents(events: Event[]) {
@@ -144,30 +143,21 @@ export class AccountComponent implements OnInit {
     return moment(mom).format('lll')
   }
 
-  login() {
-    if (this.form.valid) {
-      this.working = true
-      let form = this.form.value
-      this.afAuth.auth.signInWithEmailAndPassword(form.email, form.password)
-        .then((response) => {
-          this.working = false
-        })
-        .catch(function (error) {
-          // Handle Errors here.
-          this.openSnackBar(error.message, 'OKAY')
-          this.working = false
-          console.log(error)
-        });
-    }
-  }
-
   signout() {
+    this.unsubscribe.next()
+    this.unsubscribe.complete()
     this.auth.signOut()
+    this.router.navigate(['/account/login'])
   }
 
   openSnackBar(message: string, action: string) {
     this.snackBar.open(message, action, {
       duration: 2000,
     });
+  }
+
+  public ngOnDestroy() {
+    this.unsubscribe.next()
+    this.unsubscribe.complete()
   }
 }
