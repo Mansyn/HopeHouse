@@ -7,6 +7,7 @@ import { RegisterComponent } from './account/register/register.component';
 import { AdminComponent } from './account/admin/admin.component';
 import { ContactComponent } from './contact/contact.component'
 import { SchedulesComponent } from './schedules/schedules.component';
+import { LoginComponent } from './account/login/login.component';
 
 import { AdminGuard } from './core/admin.guard';
 import { VolunteerGuard } from './core/volunteer.guard';
@@ -19,6 +20,7 @@ const routes: Routes = [
   { path: 'account', component: AccountComponent },
   { path: 'contact', component: ContactComponent },
   { path: 'account/register', component: RegisterComponent },
+  { path: 'account/login', component: LoginComponent },
   { path: 'account/admin', component: AdminComponent, canActivate: [AdminGuard] },
   { path: 'schedules', component: SchedulesComponent, canActivate: [VolunteerGuard] },
   { path: 'schedule/:id', component: ScheduleComponent, canActivate: [VolunteerGuard] },

@@ -7,7 +7,10 @@
         <span class="spacer"></span>
 
         <!-- User Functions -->
-        <button mat-raised-button *ngIf="tabIndex == 0 && user_selection.selected.length > 0 && !isRole('volunteer')" color="primary" (click)="volunteerDialog(true)">
+        <button mat-raised-button *ngIf="tabIndex == 0 && user_selection.selected.length > 0" color="primary" (click)="userDialog()">
+          Edit
+        </button>
+        <button mat-raised-button *ngIf="tabIndex == 0 && user_selection.selected.length > 0 && !isRole('volunteer')" color="accent" (click)="volunteerDialog(true)">
           Set Volunteer
         </button>
         <button mat-raised-button *ngIf="tabIndex == 0 && user_selection.selected.length > 0 && isRole('volunteer')" color="warn" (click)="volunteerDialog(false)">
@@ -59,6 +62,12 @@
                 <ng-container matColumnDef="email">
                   <mat-header-cell *matHeaderCellDef mat-sort-header> Email </mat-header-cell>
                   <mat-cell *matCellDef="let element"> {{element.email}} </mat-cell>
+                </ng-container>
+
+                <!-- Phone Column -->
+                <ng-container matColumnDef="phoneNumber">
+                  <mat-header-cell *matHeaderCellDef mat-sort-header> Phone </mat-header-cell>
+                  <mat-cell *matCellDef="let element"> {{element.phoneNumber | phone}} </mat-cell>
                 </ng-container>
 
                 <!-- Email Column -->

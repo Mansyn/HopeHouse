@@ -53,7 +53,9 @@ import { ScheduleService } from './schedule/shared/schedule.service';
 import { LocationService } from './schedule/shared/location.service';
 
 /* Sub Components */
-import { DisableControlDirective } from './directives/disable-control';
+import { DisableControlDirective } from './utilities/directives/disable-control.directive';
+import { FocusDirective } from './utilities/directives/focus.directive'
+import { PhonePipe } from './utilities/pipes/phone.pipe'
 
 /* My Components */
 import { AppComponent } from './app.component';
@@ -63,6 +65,7 @@ import { HomeComponent } from './home/home.component';
 import { AccountComponent } from './account/account.component';
 import { AdminComponent } from './account/admin/admin.component';
 import { VolunteerDialog } from './account/admin/dialogs/volunteer.component';
+import { UserDialog } from './account/admin/dialogs/user.component';
 import { ScheduleDialog } from './account/admin/dialogs/schedule.component';
 import { ScheduleDeleteDialog } from './account/admin/dialogs/schedule-delete.component';
 import { ContactComponent } from './contact/contact.component';
@@ -73,6 +76,7 @@ import { SchedulesComponent } from './schedules/schedules.component';
 import { ScheduleComponent } from './schedule/schedule.component';
 import { RegisterComponent } from './account/register/register.component';
 import { FileUploadComponent } from './components/file-upload/file-upload.component';
+import { LoginComponent } from './account/login/login.component';
 
 @NgModule({
   declarations: [
@@ -86,6 +90,7 @@ import { FileUploadComponent } from './components/file-upload/file-upload.compon
     SchedulerComponent,
     ScheduleDeleteDialog,
     VolunteerDialog,
+    UserDialog,
     ScheduleDialog,
     EventDialog,
     EventDeleteDialog,
@@ -93,7 +98,10 @@ import { FileUploadComponent } from './components/file-upload/file-upload.compon
     ScheduleComponent,
     RegisterComponent,
     FileUploadComponent,
-    DisableControlDirective
+    DisableControlDirective,
+    FocusDirective,
+    PhonePipe,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
@@ -132,7 +140,7 @@ import { FileUploadComponent } from './components/file-upload/file-upload.compon
     AngularFireDatabaseModule,
     AngularFireAuthModule
   ],
-  entryComponents: [VolunteerDialog, ScheduleDialog, EventDialog, EventDeleteDialog],
+  entryComponents: [VolunteerDialog, UserDialog, ScheduleDialog, EventDialog, EventDeleteDialog],
   providers: [AngularFirestore, ScheduleService, ScheduleDeleteDialog, LocationService],
   bootstrap: [AppComponent]
 })

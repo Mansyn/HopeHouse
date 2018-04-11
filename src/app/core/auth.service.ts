@@ -42,6 +42,15 @@ export class AuthService {
     this.updateUserData(user, isVolunteer);
   }
 
+  updateUserProfile(user) {
+    const userRef: AngularFirestoreDocument<any> = this.afs.doc(`users/${user.uid}`);
+    let targetUser: User = user
+    targetUser.displayName = user.displayName
+    targetUser.phoneNumber = user.phoneNumber
+
+    return userRef.set(targetUser, { merge: true })
+  }
+
   registerUser(response, isVolunteer, displayName, phoneNumber) {
     const user: User = {
       uid: response.uid,

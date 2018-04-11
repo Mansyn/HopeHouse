@@ -51,7 +51,7 @@ export class RegisterComponent implements OnInit {
   e164() {
     let form = this.form.value
     let num = form.area + form.prefix + form.line
-    return `+${num}`
+    return `${num}`
   }
 
   onRegister(form: FormGroup) {

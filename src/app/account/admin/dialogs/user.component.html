@@ -1,0 +1,47 @@
+<h1 mat-dialog-title>
+  <span>Edit User</span>
+</h1>
+<div mat-dialog-content>
+  <form [formGroup]="form">
+    <mat-form-field class="full-width">
+      <input matInput placeholder="Name" type="text" [formControl]="form.controls['displayName']">
+      <mat-error *ngIf="form.controls['displayName'].hasError('required')">
+        Name is required
+      </mat-error>
+      <mat-error *ngIf="form.controls['displayName'].hasError('maxlength')">
+        Name is cannot exceed 30 characters
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field class="full-width">
+      <input matInput placeholder="Email" type="text" [formControl]="form.controls['email']">
+      <mat-error *ngIf="form.controls['email'].hasError('required')">
+        Email is required
+      </mat-error>
+      <mat-error *ngIf="form.controls['email'].hasError('email')">
+        Email must be a valid format
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field class="full-width">
+      <input matInput placeholder="Phone" type="phone" [formControl]="form.controls['phoneNumber']">
+      <mat-error *ngIf="form.controls['phoneNumber'].hasError('required')">
+        Phone is required
+      </mat-error>
+      <mat-error *ngIf="form.controls['phoneNumber'].hasError('pattern')">
+        Phone must be numeric
+      </mat-error>
+      <mat-error *ngIf="form.controls['phoneNumber'].hasError('maxlength')">
+        Phone must be 10 digits
+      </mat-error>
+      <mat-error *ngIf="form.controls['phoneNumber'].hasError('minlength')">
+        Phone must be 10 digits
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field class="full-width">
+      <input matInput placeholder="Photo URL" type="url" [formControl]="form.controls['photoURL']">
+    </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-raised-button (click)="saveUser()" [disabled]="!form.valid" color="primary">Ok</button>
+  <button mat-button [mat-dialog-close]="false">Cancel</button>
+</div>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core'
+import { Component, OnInit, Renderer } from '@angular/core'
 import { FormGroup, FormBuilder, Validators } from '@angular/forms'
 import { MatSnackBar } from '@angular/material'
 import { Router } from '@angular/router'
@@ -25,16 +25,22 @@ import { ScheduleService } from '../schedule/shared/schedule.service'
 export class AccountComponent implements OnInit {
 
   form: FormGroup
-  email: string
-  password: string
   working: boolean
   events: Event[] = []
   schedules: Schedule[] = []
 
-  user: Observable<User>;
+  user: Observable<User>
+  userRef: User
+  settingsform: FormGroup
+  nameEditing: boolean = false
+  phoneEditing: boolean = false
+
+  displayNameRef: string
+  phoneNumberRef: string
 
   constructor(private afAuth: AngularFireAuth,
     private router: Router,
+    public renderer: Renderer,
     public auth: AuthService,
     private eventService: EventService,
     private scheduleService: ScheduleService,
@@ -51,34 +57,67 @@ export class AccountComponent implements OnInit {
     this.getUserEvents()
   }
 
+  toggleName(showInput) {
+    this.nameEditing = !this.nameEditing
+    if (!this.nameEditing) {
+      if (this.userRef.displayName.length) {
+        this.auth.updateUserProfile(this.userRef)
+      } else {
+        this.userRef.displayName = this.displayNameRef
+      }
+    }
+  }
+
+  togglePhone(showInput) {
+    this.phoneEditing = !this.phoneEditing
+    if (!this.phoneEditing) {
+      if (this.userRef.phoneNumber.length == 10) {
+        this.auth.updateUserProfile(this.userRef)
+      } else {
+        this.userRef.phoneNumber = this.phoneNumberRef
+      }
+    }
+  }
+
   getUserEvents() {
     this.auth.user$.subscribe(user => {
-      let isVolunteer = this.auth.canEdit(user)
-      if (isVolunteer) {
-        this.eventService.getUserEvents(user.uid)
-          .snapshotChanges()
-          .subscribe((data) => {
-            data.forEach(element => {
-              var x = element.payload.toJSON()
-              x["$key"] = element.key
-              this.events.push(x as Event)
-              this.scheduleService.getSchedules()
-                .snapshotChanges()
-                .subscribe(data => {
-                  let schedules = []
-                  data.forEach(element => {
-                    var y = element.payload.toJSON()
-                    y['$key'] = element.key;
-                    let userEvents = this.events.filter(x => x.schedule_key == element.key)
-                    y['events'] = this.filterPastEvents(userEvents)
-                    if (y['events'].length > 0) {
-                      schedules.push(y as Schedule)
-                    }
+      this.userRef = user
+      if (user) {
+        this.displayNameRef = user.displayName || ''
+        this.phoneNumberRef = user.phoneNumber || ''
+        let isVolunteer = this.auth.canEdit(user)
+        if (isVolunteer) {
+          this.eventService.getUserEvents(user.uid)
+            .snapshotChanges()
+            .subscribe((data) => {
+              this.events = []
+              data.forEach(element => {
+                var x = element.payload.toJSON()
+                x["$key"] = element.key
+                this.events.push(x as Event)
+                this.scheduleService.getSchedules()
+                  .snapshotChanges()
+                  .subscribe(data => {
+                    this.schedules = []
+                    let schedules = []
+                    data.forEach(element => {
+                      var y = element.payload.toJSON()
+                      y['$key'] = element.key;
+                      let userEvents = this.events.filter(x => x.schedule_key == element.key)
+                      y['events'] = this.filterPastEvents(userEvents)
+                      if (y['events'].length > 0) {
+                        schedules.push(y as Schedule)
+                      }
+                    })
+                    this.schedules = schedules
                   })
-                  this.schedules = schedules
-                })
+              })
             })
-          })
+        }
+        this.settingsform = this.fb.group({
+          'displayName': [this.userRef.displayName, Validators.compose([Validators.maxLength(30), Validators.required])],
+          'phoneNumber': [this.userRef.phoneNumber, Validators.compose([Validators.maxLength(10), Validators.required])]
+        })
       }
     })
   }
@@ -107,8 +146,9 @@ export class AccountComponent implements OnInit {
 
   login() {
     if (this.form.valid) {
-      this.working = true;
-      this.afAuth.auth.signInWithEmailAndPassword(this.email, this.password)
+      this.working = true
+      let form = this.form.value
+      this.afAuth.auth.signInWithEmailAndPassword(form.email, form.password)
         .then((response) => {
           this.working = false
         })
@@ -119,6 +159,10 @@ export class AccountComponent implements OnInit {
           console.log(error)
         });
     }
+  }
+
+  signout() {
+    this.auth.signOut()
   }
 
   openSnackBar(message: string, action: string) {

@@ -1,17 +1,18 @@
-import { Component, Inject, AfterViewInit, ViewChild } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { MatTableDataSource, MatSort, MatPaginator, MatDialog, MatTabChangeEvent, MatDialogRef, MAT_DIALOG_DATA, MatSnackBar } from '@angular/material';
+import { Component, Inject, AfterViewInit, ViewChild } from '@angular/core'
+import { Observable } from 'rxjs/Observable'
+import { MatTableDataSource, MatSort, MatPaginator, MatDialog, MatTabChangeEvent, MatDialogRef, MAT_DIALOG_DATA, MatSnackBar } from '@angular/material'
 
-import { User } from '../../core/user';
-import { AuthService } from '../../core/auth.service';
-import { Schedule } from '../../schedule/shared/schedule';
-import { ScheduleService } from '../../schedule/shared/schedule.service';
-import { Location } from '../../schedule/shared/location';
-import { LocationService } from '../../schedule/shared/location.service';
-import { SelectionModel } from '@angular/cdk/collections';
-import { VolunteerDialog } from './dialogs/volunteer.component';
-import { ScheduleDialog } from './dialogs/schedule.component';
-import { ScheduleDeleteDialog } from './dialogs/schedule-delete.component';
+import { User } from '../../core/user'
+import { AuthService } from '../../core/auth.service'
+import { Schedule } from '../../schedule/shared/schedule'
+import { ScheduleService } from '../../schedule/shared/schedule.service'
+import { Location } from '../../schedule/shared/location'
+import { LocationService } from '../../schedule/shared/location.service'
+import { SelectionModel } from '@angular/cdk/collections'
+import { VolunteerDialog } from './dialogs/volunteer.component'
+import { UserDialog } from './dialogs/user.component'
+import { ScheduleDialog } from './dialogs/schedule.component'
+import { ScheduleDeleteDialog } from './dialogs/schedule-delete.component'
 
 @Component({
     selector: 'admin',
@@ -20,19 +21,19 @@ import { ScheduleDeleteDialog } from './dialogs/schedule-delete.component';
 })
 export class AdminComponent implements AfterViewInit {
 
-    @ViewChild(MatSort) user_sort: MatSort;
-    @ViewChild(MatPaginator) user_paginator: MatPaginator;
-    @ViewChild(MatSort) schedule_sort: MatSort;
-    @ViewChild(MatPaginator) schedule_paginator: MatPaginator;
+    @ViewChild(MatSort) user_sort: MatSort
+    @ViewChild(MatPaginator) user_paginator: MatPaginator
+    @ViewChild(MatSort) schedule_sort: MatSort
+    @ViewChild(MatPaginator) schedule_paginator: MatPaginator
 
-    tabIndex = 0;
-    user_displayedColumns = ['select', 'displayName', 'email', 'roles'];
-    user_dataSource = new MatTableDataSource<User>();
-    user_selection = new SelectionModel<User>(false, []);
-    schedule_displayedColumns = ['select', 'title', 'location', 'color'];
-    schedule_dataSource = new MatTableDataSource<Schedule>();
-    schedule_selection = new SelectionModel<Schedule>(false, []);
-    locations: Location[];
+    tabIndex = 0
+    user_displayedColumns = ['select', 'displayName', 'email', 'phoneNumber', 'roles']
+    user_dataSource = new MatTableDataSource<User>()
+    user_selection = new SelectionModel<User>(false, [])
+    schedule_displayedColumns = ['select', 'title', 'location', 'color']
+    schedule_dataSource = new MatTableDataSource<Schedule>()
+    schedule_selection = new SelectionModel<Schedule>(false, [])
+    locations: Location[]
 
     constructor(public auth: AuthService,
         public dialog: MatDialog,
@@ -115,6 +116,24 @@ export class AdminComponent implements AfterViewInit {
                 });
                 this.openSnackBar(add ? 'Volunteer Set' : 'Volunteer Removed', 'OKAY');
                 this.user_selection.clear();
+            }
+        });
+    }
+
+    userDialog(): void {
+        let target = this.user_selection.selected[0]
+
+        let dialogRef = this.dialog.open(UserDialog, {
+            width: '450px',
+            data: { user: target }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                result.uid = target.uid
+                this.auth.updateUser(result, this.isRole('volunteer'))
+                this.openSnackBar('User Saved', 'OKAY')
+                this.user_selection.clear()
             }
         });
     }
