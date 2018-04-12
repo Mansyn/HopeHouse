@@ -13,3 +13,10 @@ export interface User {
     photoURL: string;
     roles: Roles;
 }
+
+export interface Profile {
+    uid: string;
+    user_uid: string;
+    name: string;
+    phoneNumber: string;
+}

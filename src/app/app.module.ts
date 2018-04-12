@@ -51,6 +51,7 @@ import { environment } from '../environments/environment';
 /* Services */
 import { ScheduleService } from './schedule/shared/schedule.service';
 import { LocationService } from './schedule/shared/location.service';
+import { ProfileService } from './core/profile.service';
 
 /* Sub Components */
 import { DisableControlDirective } from './utilities/directives/disable-control.directive';
@@ -141,7 +142,7 @@ import { LoginComponent } from './account/login/login.component';
     AngularFireAuthModule
   ],
   entryComponents: [VolunteerDialog, UserDialog, ScheduleDialog, EventDialog, EventDeleteDialog],
-  providers: [AngularFirestore, ScheduleService, ScheduleDeleteDialog, LocationService],
+  providers: [AngularFirestore, ScheduleService, ScheduleDeleteDialog, LocationService, ProfileService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

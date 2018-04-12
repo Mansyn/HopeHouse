@@ -24,29 +24,13 @@ export class LoginComponent {
       'email': ['', Validators.compose([Validators.email, Validators.required])],
       'password': ['', Validators.required]
     })
-    afAuth.auth.onAuthStateChanged(function (user) {
-      // onAuthStateChanged listener triggers every time the user ID token changes.  
-      // This could happen when a new user signs in or signs out.  
-      // It could also happen when the current user ID token expires and is refreshed.  
-      if (user && user.uid != this.currentUid) {
-        // Update the UI when a new user signs in.  
-        // Otherwise ignore if this is a token refresh.  
-        // Update the current user UID.  
-        this.router.navigate(['/account'])
-      } else {
-        // Sign out operation. Reset the current user UID.  
-        this.currentUid = null;
-        console.log("no user signed in");
-      }
-    }
-
-    // this.auth.user$
-    //   .takeUntil(this.unsubscribe)
-    //   .subscribe(user => {
-    //     if (user) {
-    //       this.router.navigate(['/account'])
-    //     }
-    //   })
+    this.auth.user$
+      .takeUntil(this.unsubscribe)
+      .subscribe(user => {
+        if (user) {
+          this.router.navigate(['/account'])
+        }
+      })
   }
 
   login() {

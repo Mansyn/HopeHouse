@@ -11,11 +11,11 @@
         <mat-progress-bar mode="indeterminate" *ngIf="working"></mat-progress-bar>
         <form [formGroup]="form" (ngSubmit)="onRegister(form)" class="p-20">
           <mat-form-field>
-            <input matInput placeholder="Name" type="text" [formControl]="form.controls['displayName']" [disableControl]="working">
-            <mat-error *ngIf="form.controls['displayName'].hasError('required')">
+            <input matInput placeholder="Name" type="text" [formControl]="form.controls['name']" [disableControl]="working">
+            <mat-error *ngIf="form.controls['name'].hasError('required')">
               Name is required
             </mat-error>
-            <mat-error *ngIf="form.controls['displayName'].hasError('maxlength')">
+            <mat-error *ngIf="form.controls['name'].hasError('maxlength')">
               Name cannot be longer than 30 characters
             </mat-error>
           </mat-form-field>

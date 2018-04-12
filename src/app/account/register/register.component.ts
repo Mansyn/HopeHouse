@@ -5,6 +5,7 @@ import { AngularFireAuth } from 'angularfire2/auth';
 
 import { AuthService } from '../../core/auth.service';
 import { Router } from '@angular/router';
+import { ProfileService } from '../../core/profile.service';
 
 @Component({
   selector: 'register',
@@ -19,6 +20,7 @@ export class RegisterComponent implements OnInit {
   constructor(private afAuth: AngularFireAuth,
     private router: Router,
     public auth: AuthService,
+    private profileService: ProfileService,
     private fb: FormBuilder,
     public snackBar: MatSnackBar) {
   }
@@ -30,7 +32,7 @@ export class RegisterComponent implements OnInit {
 
   buildForm() {
     this.form = this.fb.group({
-      'displayName': ['', Validators.compose([Validators.maxLength(30), Validators.required])],
+      'name': ['', Validators.compose([Validators.maxLength(30), Validators.required])],
       'email': ['', Validators.compose([Validators.email, Validators.required])],
       'password': ['', Validators.required],
       'area': this.validateMinMax(3, 3),
@@ -60,9 +62,18 @@ export class RegisterComponent implements OnInit {
       let self = this
       let form = this.form.value
       this.afAuth.auth.createUserWithEmailAndPassword(form.email, form.password)
-        .then((response) => {
-          this.auth.registerUser(response, true, form.displayName, this.e164())
-          this.router.navigate(['/account'])
+        .then((user) => {
+          this.auth.registerUser(user, form.name, this.e164())
+          let profile = {
+            user_uid: user.uid,
+            name: form.email,
+            phoneNumber: this.e164()
+          }
+          this.profileService.addProfile(profile)
+            .then(response => {
+              this.working = false
+              this.router.navigate(['/account'])
+            })
         })
         .catch(function (error) {
           // Handle Errors here.

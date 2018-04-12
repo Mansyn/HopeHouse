@@ -42,25 +42,16 @@ export class AuthService {
     this.updateUserData(user, isVolunteer);
   }
 
-  updateUserProfile(user) {
-    const userRef: AngularFirestoreDocument<any> = this.afs.doc(`users/${user.uid}`);
-    let targetUser: User = user
-    targetUser.displayName = user.displayName
-    targetUser.phoneNumber = user.phoneNumber
-
-    return userRef.set(targetUser, { merge: true })
-  }
-
-  registerUser(response, isVolunteer, displayName, phoneNumber) {
+  registerUser(response, name, phoneNumber) {
     const user: User = {
       uid: response.uid,
-      displayName: displayName,
+      displayName: name,
       email: response.email,
       phoneNumber: phoneNumber,
       photoURL: response.photoURL,
       roles: {}
     }
-    this.updateUserData(user, isVolunteer);
+    this.updateUserData(user, true);
   }
 
   googleRegister() {
@@ -118,32 +109,15 @@ export class AuthService {
     return userRef.set(data, { merge: true })
   }
 
-  // private loadUserData(user) {
-  //   // Sets user data to firestore on login
-  //   const userRef: AngularFirestoreDocument<any> = this.afs.doc(`users/${user.uid}`);
-  //   const data: User = {
-  //     uid: user.uid,
-  //     displayName: user.displayName,
-  //     email: user.email,
-  //     phoneNumber: user.phoneNumber,
-  //     photoURL: user.photoURL,
-  //     roles: {
-  //       subscriber: true,
-  //       volunteer: volunteer
-  //     }
-  //   }
-  //   return userRef.set(data, { merge: true })
-  // }
-
   ///// Role-based Authorization //////
 
   canRead(user: User): boolean {
-    const allowed = ['admin', 'editor', 'subscriber']
+    const allowed = ['admin', 'volunteer', 'subscriber']
     return this.checkAuthorization(user, allowed)
   }
 
   canEdit(user: User): boolean {
-    const allowed = ['admin', 'editor']
+    const allowed = ['admin', 'volunteer']
     return this.checkAuthorization(user, allowed)
   }
 

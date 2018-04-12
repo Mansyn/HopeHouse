@@ -12,9 +12,10 @@ import { AuthService } from '../core/auth.service'
 import { Event } from '../components/scheduler/shared/event'
 import { EventService } from '../components/scheduler/shared/event.service'
 import { Observable } from 'rxjs/Observable'
-import { User } from '../core/user'
+import { User, Profile } from '../core/user'
 import { Schedule } from '../schedule/shared/schedule'
 import { ScheduleService } from '../schedule/shared/schedule.service'
+import { ProfileService } from '../core/profile.service'
 
 import { Subject } from 'rxjs/Subject'
 import 'rxjs/add/operator/takeUntil'
@@ -33,34 +34,35 @@ export class AccountComponent implements OnInit {
   schedules: Schedule[] = []
 
   user: Observable<User>
-  userRef: User
-  settingsform: FormGroup
   nameEditing: boolean = false
   phoneEditing: boolean = false
 
-  displayNameRef: string
+  userRef: User
+  profileRef: Profile
+  nameRef: string
   phoneNumberRef: string
 
   constructor(private fb: FormBuilder,
     private router: Router,
     public renderer: Renderer,
     public auth: AuthService,
+    private profileService: ProfileService,
     private eventService: EventService,
     private scheduleService: ScheduleService,
     public snackBar: MatSnackBar) {
   }
 
   ngOnInit(): void {
-    this.getUserEvents()
+    this.getUser()
   }
 
   toggleName(showInput) {
     this.nameEditing = !this.nameEditing
     if (!this.nameEditing) {
-      if (this.userRef.displayName.length) {
-        this.auth.updateUserProfile(this.userRef)
+      if (this.profileRef.name.length) {
+        this.profileService.updateProfile(this.profileRef.uid, this.profileRef)
       } else {
-        this.userRef.displayName = this.displayNameRef
+        this.profileRef.name = this.nameRef
       }
     }
   }
@@ -68,21 +70,27 @@ export class AccountComponent implements OnInit {
   togglePhone(showInput) {
     this.phoneEditing = !this.phoneEditing
     if (!this.phoneEditing) {
-      if (this.userRef.phoneNumber.length == 10) {
-        this.auth.updateUserProfile(this.userRef)
+      if (this.profileRef.phoneNumber.length == 10) {
+        this.profileService.updateProfile(this.profileRef.uid, this.profileRef)
       } else {
         this.userRef.phoneNumber = this.phoneNumberRef
       }
     }
   }
 
-  getUserEvents() {
+  getUser() {
     this.auth.user$
       .takeUntil(this.unsubscribe)
       .subscribe(user => {
         this.userRef = user
-        this.displayNameRef = user.displayName || ''
-        this.phoneNumberRef = user.phoneNumber || ''
+        this.profileService.getUserProfile(user.uid)
+          .snapshotChanges()
+          .takeUntil(this.unsubscribe)
+          .subscribe(profile => {
+            var p = profile[0].payload.toJSON()
+            p['$key'] = profile[0].key
+            this.profileRef = p as Profile
+          })
         let isVolunteer = this.auth.canEdit(user)
         if (isVolunteer) {
           this.eventService.getUserEvents(user.uid)
@@ -114,10 +122,6 @@ export class AccountComponent implements OnInit {
               })
             })
         }
-        this.settingsform = this.fb.group({
-          'displayName': [this.userRef.displayName, Validators.compose([Validators.maxLength(30), Validators.required])],
-          'phoneNumber': [this.userRef.phoneNumber, Validators.compose([Validators.maxLength(10), Validators.required])]
-        })
       })
   }
 
