@@ -16,7 +16,6 @@ export class ScheduleComponent implements OnInit {
   ngOnInit() {
     this.sub = this.route.params.subscribe(params => {
       this.id = params['id'];
-
     });
   }
 

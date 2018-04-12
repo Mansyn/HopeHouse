@@ -32,6 +32,8 @@ import { User } from '../../core/user';
 import { EventTitleFormatter } from './event-title-formatter.provider';
 import EventUtils from './shared/event.utils';
 
+import 'rxjs/add/operator/takeUntil';
+
 @Component({
     selector: 'scheduler',
     styleUrls: [
@@ -46,6 +48,8 @@ import EventUtils from './shared/event.utils';
 export class SchedulerComponent implements OnInit {
 
     @Input() scheduleKey: string
+
+    private unsubscribe = new Subject<void>()
 
     loading = true
     isAdmin = false
@@ -90,12 +94,14 @@ export class SchedulerComponent implements OnInit {
             this.isAdmin = this.auth.isAdmin(user)
             this.scheduleService.getSchedule(this.scheduleKey)
                 .snapshotChanges()
+                .takeUntil(this.unsubscribe)
                 .subscribe(data => {
                     let schedule = data.payload.toJSON()
                     schedule['$key'] = data.key
                     this.schedule = schedule as Schedule
                     this.eventService.getScheduleEvents(this.schedule.$key)
                         .snapshotChanges()
+                        .takeUntil(this.unsubscribe)
                         .subscribe(data => {
                             this.calendarEvents = []
                             this.events = []
@@ -222,5 +228,10 @@ export class SchedulerComponent implements OnInit {
         this.snackBar.open(message, action, {
             duration: 2000,
         });
+    }
+
+    public ngOnDestroy() {
+        this.unsubscribe.next()
+        this.unsubscribe.complete()
     }
 }

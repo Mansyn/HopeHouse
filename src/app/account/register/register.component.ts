@@ -6,6 +6,7 @@ import { AngularFireAuth } from 'angularfire2/auth';
 import { AuthService } from '../../core/auth.service';
 import { Router } from '@angular/router';
 import { ProfileService } from '../../core/profile.service';
+import { Subject } from 'rxjs/Subject';
 
 @Component({
   selector: 'register',
@@ -16,6 +17,7 @@ export class RegisterComponent implements OnInit {
 
   form: FormGroup
   working: boolean
+  private unsubscribe = new Subject<void>()
 
   constructor(private afAuth: AngularFireAuth,
     private router: Router,
@@ -23,6 +25,13 @@ export class RegisterComponent implements OnInit {
     private profileService: ProfileService,
     private fb: FormBuilder,
     public snackBar: MatSnackBar) {
+    this.auth.user$
+      .takeUntil(this.unsubscribe)
+      .subscribe(user => {
+        if (user) {
+          this.router.navigate(['/account'])
+        }
+      })
   }
 
   ngOnInit() {
@@ -66,7 +75,7 @@ export class RegisterComponent implements OnInit {
           this.auth.registerUser(user, form.name, this.e164())
           let profile = {
             user_uid: user.uid,
-            name: form.email,
+            name: form.name,
             phoneNumber: this.e164()
           }
           this.profileService.addProfile(profile)
@@ -91,6 +100,14 @@ export class RegisterComponent implements OnInit {
           console.log(error)
         });
     }
+  }
+
+  googleRegister() {
+    this.auth.googleLogin()
+  }
+
+  facebookRegister() {
+    this.auth.facebookLogin()
   }
 
   openSnackBar(message: string, action: string) {

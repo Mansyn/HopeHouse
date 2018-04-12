@@ -9,7 +9,7 @@
           </mat-toolbar-row>
         </mat-toolbar>
         <mat-progress-bar mode="indeterminate" *ngIf="working"></mat-progress-bar>
-        <form [formGroup]="form" class="p-20">
+        <form [formGroup]="form" (ngSubmit)="login()" class="p-20">
           <mat-form-field>
             <input matInput placeholder="Email" type="email" [formControl]="form.controls['email']" [disableControl]="working" [(ngModel)]="email">
             <mat-error *ngIf="form.controls['email'].hasError('required')">
@@ -27,8 +27,8 @@
             </mat-error>
           </mat-form-field>
           <div class="layout-row layout-align-space-between-center">
-            <button mat-raised-button [routerLink]="['/account/register']" color="warn">Register</button>
-            <button mat-raised-button (click)="login()" [disabled]="!form.valid" color="primary">Login</button>
+            <button mat-raised-button [routerLink]="['/account/register']" type="button" color="warn">Register</button>
+            <button mat-raised-button type="submit" [disabled]="!form.valid" color="primary">Login</button>
           </div>
         </form>
       </div>

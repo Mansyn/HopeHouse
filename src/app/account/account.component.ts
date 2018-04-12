@@ -1,4 +1,4 @@
-import { Component, OnInit, Renderer } from '@angular/core'
+import { Component, Renderer } from '@angular/core'
 import { FormGroup, FormBuilder, Validators } from '@angular/forms'
 import { MatSnackBar } from '@angular/material'
 import { Router } from '@angular/router'
@@ -26,7 +26,7 @@ import 'rxjs/add/operator/takeUntil'
   styleUrls: ['./account.component.scss'],
   providers: [EventService]
 })
-export class AccountComponent implements OnInit {
+export class AccountComponent {
 
   private unsubscribe = new Subject<void>()
 
@@ -39,8 +39,8 @@ export class AccountComponent implements OnInit {
 
   userRef: User
   profileRef: Profile
-  nameRef: string
-  phoneNumberRef: string
+  nameRef: string = ''
+  phoneNumberRef: string = ''
 
   constructor(private fb: FormBuilder,
     private router: Router,
@@ -50,10 +50,13 @@ export class AccountComponent implements OnInit {
     private eventService: EventService,
     private scheduleService: ScheduleService,
     public snackBar: MatSnackBar) {
-  }
-
-  ngOnInit(): void {
-    this.getUser()
+    this.auth.user$
+      .takeUntil(this.unsubscribe)
+      .subscribe(user => {
+        if (user) {
+          this.getUser()
+        }
+      })
   }
 
   toggleName(showInput) {
@@ -73,7 +76,7 @@ export class AccountComponent implements OnInit {
       if (this.profileRef.phoneNumber.length == 10) {
         this.profileService.updateProfile(this.profileRef.uid, this.profileRef)
       } else {
-        this.userRef.phoneNumber = this.phoneNumberRef
+        this.profileRef.phoneNumber = this.phoneNumberRef
       }
     }
   }
@@ -88,8 +91,10 @@ export class AccountComponent implements OnInit {
           .takeUntil(this.unsubscribe)
           .subscribe(profile => {
             var p = profile[0].payload.toJSON()
-            p['$key'] = profile[0].key
+            p['uid'] = profile[0].key
             this.profileRef = p as Profile
+            this.nameRef = this.profileRef.name
+            this.phoneNumberRef = this.profileRef.phoneNumber
           })
         let isVolunteer = this.auth.canEdit(user)
         if (isVolunteer) {

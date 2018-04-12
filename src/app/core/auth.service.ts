@@ -6,6 +6,8 @@ import { AngularFirestore, AngularFirestoreDocument, AngularFirestoreCollection 
 import { Observable } from 'rxjs/Observable';
 import { switchMap } from 'rxjs/operators';
 import { User } from './user';
+import { ProfileService } from './profile.service';
+import 'rxjs/add/operator/take'
 
 @Injectable()
 export class AuthService {
@@ -18,7 +20,8 @@ export class AuthService {
 
   constructor(private afAuth: AngularFireAuth,
     private afs: AngularFirestore,
-    private router: Router) {
+    private router: Router,
+    private profileService: ProfileService) {
     //// Get auth data, then get firestore user document || null
     this.user$ = this.afAuth.authState
       .switchMap(user => {
@@ -54,16 +57,6 @@ export class AuthService {
     this.updateUserData(user, true);
   }
 
-  googleRegister() {
-    const provider = new firebase.auth.GoogleAuthProvider()
-    return this.oAuthRegister(provider);
-  }
-
-  facebookRegister() {
-    var provider = new firebase.auth.FacebookAuthProvider();
-    return this.oAuthRegister(provider);
-  }
-
   googleLogin() {
     const provider = new firebase.auth.GoogleAuthProvider()
     return this.oAuthLogin(provider);
@@ -74,17 +67,25 @@ export class AuthService {
     return this.oAuthLogin(provider);
   }
 
-  private oAuthRegister(provider) {
-    return this.afAuth.auth.signInWithPopup(provider)
-      .then((credential) => {
-        this.updateUserData(credential.user, true)
-      })
-  }
-
   private oAuthLogin(provider) {
     return this.afAuth.auth.signInWithPopup(provider)
       .then((credential) => {
         this.updateUserData(credential.user, true)
+        this.updateOauthUserProfile(credential.user)
+      })
+  }
+
+  private updateOauthUserProfile(user) {
+    let profile = {
+      user_uid: user.uid,
+      name: user.displayName || '',
+      phoneNumber: user.phoneNumber || ''
+    }
+    this.profileService.getUserProfile(user.uid).snapshotChanges().take(1)
+      .subscribe(response => {
+        if (response.length == 0) {
+          this.profileService.addProfile(profile)
+        }
       })
   }
 

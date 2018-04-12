@@ -2,6 +2,7 @@ import { Component } from '@angular/core'
 import { FormGroup, FormBuilder, Validators } from '@angular/forms'
 import { AuthService } from '../../core/auth.service'
 import { AngularFireAuth } from 'angularfire2/auth'
+import { MatSnackBar } from '@angular/material'
 import { Router } from '@angular/router'
 
 import { Subject } from 'rxjs/Subject'
@@ -19,7 +20,12 @@ export class LoginComponent {
   working: boolean = false
   private unsubscribe = new Subject<void>()
 
-  constructor(private fb: FormBuilder, private router: Router, public auth: AuthService, private afAuth: AngularFireAuth) {
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    public auth: AuthService,
+    private afAuth: AngularFireAuth,
+    public snackBar: MatSnackBar) {
     this.form = this.fb.group({
       'email': ['', Validators.compose([Validators.email, Validators.required])],
       'password': ['', Validators.required]
@@ -49,6 +55,20 @@ export class LoginComponent {
           console.log(error)
         });
     }
+  }
+
+  googleLogin() {
+    this.auth.googleLogin()
+  }
+
+  facebookLogin() {
+    this.auth.facebookLogin()
+  }
+
+  openSnackBar(message: string, action: string) {
+    this.snackBar.open(message, action, {
+      duration: 2000,
+    });
   }
 
   public ngOnDestroy() {
