@@ -11,7 +11,7 @@
         <mat-progress-bar mode="indeterminate" *ngIf="working"></mat-progress-bar>
         <form [formGroup]="form" (ngSubmit)="login()" class="p-20">
           <mat-form-field>
-            <input matInput placeholder="Email" type="email" [formControl]="form.controls['email']" [disableControl]="working" [(ngModel)]="email">
+            <input matInput placeholder="Email" type="email" [formControl]="form.controls['email']" [disableControl]="working">
             <mat-error *ngIf="form.controls['email'].hasError('required')">
               Email is required
             </mat-error>
@@ -20,8 +20,7 @@
             </mat-error>
           </mat-form-field>
           <mat-form-field>
-            <input matInput placeholder="Password" type="password" [formControl]="form.controls['password']" [disableControl]="working"
-              [(ngModel)]="password">
+            <input matInput placeholder="Password" type="password" [formControl]="form.controls['password']" [disableControl]="working">
             <mat-error *ngIf="form.controls['password'].hasError('required')">
               Password is required
             </mat-error>
