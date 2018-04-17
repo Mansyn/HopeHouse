@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material';
 import { AngularFireAuth } from 'angularfire2/auth';
@@ -13,29 +13,27 @@ import { Subject } from 'rxjs/Subject';
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss']
 })
-export class RegisterComponent implements OnInit {
+export class RegisterComponent implements OnInit, OnDestroy {
 
   form: FormGroup
-  working: boolean
-  private unsubscribe = new Subject<void>()
+  working: boolean = false
+  destroy$: Subject<boolean> = new Subject<boolean>()
 
   constructor(private afAuth: AngularFireAuth,
     private router: Router,
     public auth: AuthService,
     private profileService: ProfileService,
     private fb: FormBuilder,
-    public snackBar: MatSnackBar) {
+    public snackBar: MatSnackBar) { }
+
+  ngOnInit() {
     this.auth.user$
-      .takeUntil(this.unsubscribe)
+      .takeUntil(this.destroy$)
       .subscribe(user => {
         if (user) {
           this.router.navigate(['/account'])
         }
       })
-  }
-
-  ngOnInit() {
-    this.working = false
     this.buildForm()
   }
 
@@ -114,5 +112,10 @@ export class RegisterComponent implements OnInit {
     this.snackBar.open(message, action, {
       duration: 2000,
     });
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next(true)
+    this.destroy$.unsubscribe()
   }
 }

@@ -1,4 +1,4 @@
-import { Component, Renderer } from '@angular/core'
+import { Component, Renderer, OnInit, OnDestroy } from '@angular/core'
 import { FormGroup, FormBuilder, Validators } from '@angular/forms'
 import { MatSnackBar } from '@angular/material'
 import { Router } from '@angular/router'
@@ -26,9 +26,9 @@ import 'rxjs/add/operator/takeUntil'
   styleUrls: ['./account.component.scss'],
   providers: [EventService]
 })
-export class AccountComponent {
+export class AccountComponent implements OnInit, OnDestroy {
 
-  private unsubscribe = new Subject<void>()
+  destroy$: Subject<boolean> = new Subject<boolean>()
 
   events: Event[] = []
   schedules: Schedule[] = []
@@ -49,9 +49,11 @@ export class AccountComponent {
     private profileService: ProfileService,
     private eventService: EventService,
     private scheduleService: ScheduleService,
-    public snackBar: MatSnackBar) {
+    public snackBar: MatSnackBar) { }
+
+  ngOnInit() {
     this.auth.user$
-      .takeUntil(this.unsubscribe)
+      .takeUntil(this.destroy$)
       .subscribe(user => {
         if (user) {
           this.getUser()
@@ -83,12 +85,12 @@ export class AccountComponent {
 
   getUser() {
     this.auth.user$
-      .takeUntil(this.unsubscribe)
+      .takeUntil(this.destroy$)
       .subscribe(user => {
         this.userRef = user
         this.profileService.getUserProfile(user.uid)
           .snapshotChanges()
-          .takeUntil(this.unsubscribe)
+          .takeUntil(this.destroy$)
           .subscribe(profile => {
             var p = profile[0].payload.toJSON()
             p['uid'] = profile[0].key
@@ -100,7 +102,7 @@ export class AccountComponent {
         if (isVolunteer) {
           this.eventService.getUserEvents(user.uid)
             .snapshotChanges()
-            .takeUntil(this.unsubscribe)
+            .takeUntil(this.destroy$)
             .subscribe((data) => {
               this.events = []
               data.forEach(element => {
@@ -109,7 +111,7 @@ export class AccountComponent {
                 this.events.push(x as Event)
                 this.scheduleService.getSchedules()
                   .snapshotChanges()
-                  .takeUntil(this.unsubscribe)
+                  .takeUntil(this.destroy$)
                   .subscribe(data => {
                     this.schedules = []
                     let schedules = []
@@ -153,8 +155,6 @@ export class AccountComponent {
   }
 
   signout() {
-    this.unsubscribe.next()
-    this.unsubscribe.complete()
     this.auth.signOut()
     this.router.navigate(['/account/login'])
   }
@@ -165,8 +165,8 @@ export class AccountComponent {
     });
   }
 
-  public ngOnDestroy() {
-    this.unsubscribe.next()
-    this.unsubscribe.complete()
+  ngOnDestroy() {
+    this.destroy$.next(true)
+    this.destroy$.unsubscribe()
   }
 }

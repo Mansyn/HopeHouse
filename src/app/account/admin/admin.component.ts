@@ -1,4 +1,4 @@
-import { Component, Inject, AfterViewInit, ViewChild } from '@angular/core'
+import { Component, Inject, AfterViewInit, ViewChild, OnDestroy } from '@angular/core'
 import { Observable } from 'rxjs/Observable'
 import { MatTableDataSource, MatSort, MatPaginator, MatDialog, MatTabChangeEvent, MatDialogRef, MAT_DIALOG_DATA, MatSnackBar } from '@angular/material'
 
@@ -13,13 +13,16 @@ import { VolunteerDialog } from './dialogs/volunteer.component'
 import { UserDialog } from './dialogs/user.component'
 import { ScheduleDialog } from './dialogs/schedule.component'
 import { ScheduleDeleteDialog } from './dialogs/schedule-delete.component'
+import { Subject } from 'rxjs/Subject'
 
 @Component({
     selector: 'admin',
     templateUrl: './admin.component.html',
     styleUrls: ['./admin.component.scss']
 })
-export class AdminComponent implements AfterViewInit {
+export class AdminComponent implements AfterViewInit, OnDestroy {
+
+    destroy$: Subject<boolean> = new Subject<boolean>()
 
     @ViewChild(MatSort) user_sort: MatSort
     @ViewChild(MatPaginator) user_paginator: MatPaginator
@@ -42,7 +45,7 @@ export class AdminComponent implements AfterViewInit {
         private locationService: LocationService) { }
 
     ngAfterViewInit() {
-        this.auth.getAllUsers().subscribe(data => {
+        this.auth.getAllUsers().takeUntil(this.destroy$).subscribe(data => {
             this.user_dataSource.data = data;
         });
         this.user_dataSource.paginator = this.user_paginator;
@@ -50,6 +53,7 @@ export class AdminComponent implements AfterViewInit {
 
         this.scheduleService.getSchedules()
             .snapshotChanges()
+            .takeUntil(this.destroy$)
             .subscribe(data => {
                 let schedules = [];
                 data.forEach(element => {
@@ -193,7 +197,9 @@ export class AdminComponent implements AfterViewInit {
     }
 
     fetchLocations() {
-        this.locationService.getLocations().snapshotChanges()
+        this.locationService.getLocations()
+            .snapshotChanges()
+            .takeUntil(this.destroy$)
             .subscribe(data => {
                 let locations = [];
                 data.forEach(element => {
@@ -226,5 +232,10 @@ export class AdminComponent implements AfterViewInit {
             .then((data) => {
                 this.openSnackBar('Location Saved', 'OKAY');
             });
+    }
+
+    ngOnDestroy() {
+        this.destroy$.next(true)
+        this.destroy$.unsubscribe()
     }
 }

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core'
+import { Component, OnInit, OnDestroy } from '@angular/core'
 import { FormGroup, FormBuilder, Validators } from '@angular/forms'
 import { AuthService } from '../../core/auth.service'
 import { AngularFireAuth } from 'angularfire2/auth'
@@ -13,30 +13,36 @@ import 'rxjs/add/operator/takeUntil'
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit, OnDestroy {
 
   currentUid: string
   form: FormGroup
   working: boolean = false
-  private unsubscribe = new Subject<void>()
+  destroy$: Subject<boolean> = new Subject<boolean>()
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
     public auth: AuthService,
     private afAuth: AngularFireAuth,
-    public snackBar: MatSnackBar) {
-    this.form = this.fb.group({
-      'email': ['', Validators.compose([Validators.email, Validators.required])],
-      'password': ['', Validators.required]
-    })
+    public snackBar: MatSnackBar) { }
+
+  ngOnInit() {
     this.auth.user$
-      .takeUntil(this.unsubscribe)
+      .takeUntil(this.destroy$)
       .subscribe(user => {
         if (user) {
           this.router.navigate(['/account'])
         }
       })
+    this.buildForm()
+  }
+
+  buildForm() {
+    this.form = this.fb.group({
+      'email': ['', Validators.compose([Validators.email, Validators.required])],
+      'password': ['', Validators.required]
+    })
   }
 
   login() {
@@ -71,8 +77,8 @@ export class LoginComponent {
     });
   }
 
-  public ngOnDestroy() {
-    this.unsubscribe.next()
-    this.unsubscribe.complete()
+  ngOnDestroy() {
+    this.destroy$.next(true)
+    this.destroy$.unsubscribe()
   }
 }

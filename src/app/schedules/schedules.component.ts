@@ -1,23 +1,27 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { ScheduleService } from '../schedule/shared/schedule.service';
 import { Schedule } from '../schedule/shared/schedule';
 import { LocationService } from '../schedule/shared/location.service';
+import { Subject } from 'rxjs/Subject';
 
 @Component({
   selector: 'schedule',
   templateUrl: './schedules.component.html',
   styleUrls: ['./schedules.component.scss']
 })
-export class SchedulesComponent implements AfterViewInit {
+export class SchedulesComponent implements AfterViewInit, OnDestroy {
 
-  locations: any;
-  schedules: Schedule[];
+  locations: any
+  schedules: Schedule[]
+
+  destroy$: Subject<boolean> = new Subject<boolean>()
 
   constructor(private scheduleService: ScheduleService, private locationService: LocationService) { }
 
   ngAfterViewInit() {
     this.scheduleService.getSchedules()
       .snapshotChanges()
+      .takeUntil(this.destroy$)
       .subscribe(data => {
         let schedules = [];
         data.forEach(element => {
@@ -42,7 +46,9 @@ export class SchedulesComponent implements AfterViewInit {
 
 
   fetchLocations() {
-    this.locationService.getLocations().snapshotChanges()
+    this.locationService.getLocations()
+      .snapshotChanges()
+      .takeUntil(this.destroy$)
       .subscribe(data => {
         let locations = [];
         data.forEach(element => {
@@ -55,4 +61,8 @@ export class SchedulesComponent implements AfterViewInit {
       });
   }
 
+  ngOnDestroy() {
+    this.destroy$.next(true)
+    this.destroy$.unsubscribe()
+  }
 }
