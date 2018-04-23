@@ -20,3 +20,13 @@ export interface Profile {
     name: string;
     phoneNumber: string;
 }
+
+export interface UserProfile {
+    uid: string;
+    displayName: string;
+    email: string;
+    phoneNumber: string;
+    photoURL: string;
+    roles: Roles;
+    profile: Profile;
+}

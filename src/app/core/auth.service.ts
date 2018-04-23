@@ -81,7 +81,7 @@ export class AuthService {
       name: user.displayName || '',
       phoneNumber: user.phoneNumber || ''
     }
-    this.profileService.getUserProfile(user.uid).snapshotChanges().take(1)
+    this.profileService.getUserProfile(user.uid)
       .subscribe(response => {
         if (response.length == 0) {
           this.profileService.addProfile(profile)
@@ -144,8 +144,8 @@ export class AuthService {
   }
 
   getAllUsers() {
-    this.usersCollection = this.afs.collection<User>('users');
-    this.users = this.usersCollection.valueChanges();
+    this.usersCollection = this.afs.collection<User>('users')
+    this.users = this.usersCollection.valueChanges()
     return this.users;
   }
 

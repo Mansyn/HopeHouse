@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
 import { Schedule } from './schedule';
 import 'rxjs/add/operator/map';
+import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class ScheduleService {
@@ -13,8 +14,16 @@ export class ScheduleService {
     }
 
     getSchedules() {
-        this.schedules = this.db.list('schedules') as AngularFireList<Schedule[]>;
-        return this.schedules;
+        this.schedules = this.db.list('schedules') as AngularFireList<Schedule[]>
+        return this.schedules
+    }
+
+    getScheduleSnapShot(): Observable<any> {
+        return this.db.list('schedules').snapshotChanges()
+    }
+
+    getScheduleValue(): Observable<any> {
+        return this.db.list('schedules').valueChanges()
     }
 
     getSchedule(key) {

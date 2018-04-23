@@ -1,28 +1,28 @@
 <nav class="docs-navbar-header">
-  <a aria-label="Hope House" mat-button [routerLink]="['/']" tabindex="0" aria-disabled="false">
+  <a aria-label="Hope House" mat-button [routerLink]="['/']">
     <span class="mat-button-wrapper">
       <img alt="hope house" class="docs-hope-logo" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAADICAYAAACtWK6eAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAZdEVYdFNvZnR3YXJlAHBhaW50Lm5ldCA0LjAuMjHxIGmVAAAEuUlEQVR4Xu3c23HdVhAFUYXiUByKQ3FoDsWZyLxVPLIeI4nkweACe1ZX9fdgF9C/+AQAAAAAAAAAAAAAAAAAQBh/vArgOx5h/PuqSICvWHF8flUkwCvfxyES4JWfxbEUCcbyuziWIsE43hrHUiQYw3vjWIoE8Xw0jqVIEMtuHEuRII6j4liKBDEcHcdSJLg9XXEsRYLb0h3HUiS4HWfFsRQJbsPZcSxFgsvzrDiWIsFleXYcS5HgclwljqVIcBmuFsdSJHg6V41jKRI8javHsRQJTucucSxFgtO4WxxLkaCdu8axFAnauHscS5HgcFLiWIoEh5EWx1Ik2CY1jqVI8GHS41iKBO9mShxLkeDNTItjKRL8lqlxLEWCnzI9jqVI8APi+FaR4AviqBUJxPEbRTIYcbxNkQxEHO9TJIMQx8cUyQDEsadIghHHMYokEHEcq0iCEEePIglAHL2K5MaI4xxFckPEca4iuRHieI4iuQHieK4iuTDiuIYiuSDiuJYiuRDiuKYiuQDiuLYieSLiuIcieQLiuJciORFx3FORnIA47q1IGhFHhiJpQBxZiuRAxJGpSA5AHNmKZANxzFAkH0AcsxTJOxDHTEXyBsQxW5H8AnHwoUgKxMGvFclXiIOVInlBHPyVoyMRB9/iyEjEwfc4KhJx8COOiEQc3DE6EnHwCCMjEQePNCoScbDDiEjEwU5vHYk4eIa3jEQcPNNbRSIOPsNbRCIOPtNLRyIOXsFLRiIOXslLRSIOXtFLRCIOXtmnRiIO3sGnRCIO3slTIxEH7+gpkYiDd7Y1EnEwwZZIxMEkD41EHEz0kEjEwWS3IhEHJ/ihSMTBSb4rEnFwom+KRByc7C8jEQf5k0jEQf7vN5GIg/zRL5H89eLfzVYPQO5afWtH+mjjFKpx5K4xVOPIXWOoxpG7xlCNI3eNoRpH7hpDNY7cNYZqHLlrDNU4ctcYqnHkrjFU48hdY6jGkbvGUI0jd42hGkfuGkM1jtw1hmocuWsM1Thy1xiqceSuMVTjyF1jqMaRu8ZQjSN3jaEaR+4aQzWO3DWGahy5awzVOHLXGKpxE/znxeqHZEf6uFHdnmAM1bgJPj7gbh43qtsTjKEaN0GB9BpDNW6CAuk1hmrcBAXSawzVuAkKpNcYqnETFEivMVTjJiiQXmOoxk1QIL3GUI2boEB6jaEaN0GB9BpDNW6CAuk1hmrcBAXSawzVuAkKpNcYqnETFEivMVTjJiiQXmOoxk1QIL3GUI2boEB6jaEaN0GB9BpDNW6CAuk1hmrcBAXSawzVuAkKpNcYqnETFEivMVTjJiiQXmOoxk1QIL3GUI2boEB6jaEaN0GB9BpDNW6CAuk1hmrcBAXSawzVuAkKpNcYqnETFEivMVTjJiiQXmOoxk1QIL3GUI2boEB6jaEaN0GB9BpDNW6CAuk1hmrcBAXSawzVuAkKpNcYqnETFEivMVTjJiiQXmOoxk1QIL3GUI2boEB6jaEaN0GB9BpDNW6CAuk1hmrcBAXSawzVuAkKpNcYqnETFEivMVTjJiiQXmOoxk1QIL3GUI2boEB6jeHxEif654vdPG5UtycIAAAAAAAAAAAAAAAAALg8nz79B0OX18A+cLDPAAAAAElFTkSuQmCC">
       <span>Hope House</span>
     </span>
   </a>
-  <a *ngIf="canAccessSchedule()" class="docs-navbar-hide-small" mat-button tabindex="0" aria-disabled="false" [routerLink]="['/schedules']">
+  <a *ngIf="canAccessSchedule()" class="docs-navbar-hide-small" mat-button [routerLink]="['/schedules']">
     <span class="mat-button-wrapper">Schedules</span>
   </a>
   <div class="flex-spacer"></div>
-  <a class="docs-navbar-hide-small" mat-button tabindex="0" aria-disabled="false" [routerLink]="['/contact']">
+  <a class="docs-navbar-hide-small" mat-button [routerLink]="['/contact']">
     <span class="mat-button-wrapper">
       <mat-icon aria-label="Contact">mail_outline</mat-icon>
       <span>Contact</span>
     </span>
   </a>
-  <a class="docs-navbar-show-small" mat-button tabindex="0" aria-disabled="false" [routerLink]="['/contact']">
+  <a class="docs-navbar-show-small" mat-icon-button [routerLink]="['/contact']">
     <mat-icon aria-label="Contact">mail_outline</mat-icon>
   </a>
   <span *ngIf="auth.user$ | async; then accountBig else loginBig"></span>
   <span *ngIf="auth.user$ | async; then accountSmall else loginSmall"></span>
 </nav>
 <nav class="docs-navbar docs-navbar-show-small">
-  <a *ngIf="canAccessSchedule()" class="docs-navbar-link" mat-button tabindex="0" aria-disabled="false" [routerLink]="['/schedules']">
+  <a *ngIf="canAccessSchedule()" class="docs-navbar-link" mat-button [routerLink]="['/schedules']">
     <span class="mat-button-wrapper">Schedules</span>
   </a>
 </nav>
@@ -43,14 +43,13 @@
     </span>
   </a>
 </ng-template>
-
 <ng-template #loginSmall>
-  <a class="docs-navbar-show-small" mat-button [routerLink]="['/account/login']">
+  <a class="docs-navbar-show-small" mat-fab [routerLink]="['/account/login']">
     <mat-icon aria-label="Contact">account_circle</mat-icon>
   </a>
 </ng-template>
 <ng-template #accountSmall>
-  <a class="docs-navbar-show-small" mat-button [routerLink]="['/account']">
+  <a class="docs-navbar-show-small" mat-icon-button [routerLink]="['/account']">
     <mat-icon aria-label="Contact">account_circle</mat-icon>
   </a>
 </ng-template>

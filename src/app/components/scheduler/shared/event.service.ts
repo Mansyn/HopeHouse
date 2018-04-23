@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
 import { Event } from './event';
 import 'rxjs/add/operator/map';
+import { Observable } from 'rxjs/Observable';
+import { Schedule } from '../../../schedule/shared/schedule';
 
 @Injectable()
 export class EventService {
@@ -25,6 +27,11 @@ export class EventService {
     getUserEvents(uid: string) {
         this.events = this.db.list('events', ref => ref.orderByChild('user').equalTo(uid)) as AngularFireList<Event[]>;
         return this.events;
+    }
+
+    getUserEventsData(uid: string): Observable<any> {
+        let userevents = this.db.list('events', ref => ref.orderByChild('user').equalTo(uid)).snapshotChanges()
+        return userevents
     }
 
     getEvent(key) {

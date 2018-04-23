@@ -9,7 +9,7 @@
     <div class="flex-90 flex-gt-sm-60">
       <div class="layout-column layout-gt-sm-row layout-align-space-around-center">
         <div *ngFor="let schedule of schedules">
-          <mat-card class="m-15">
+          <mat-card class="m-15" [style.background]="schedule.color">
             <mat-card-header>
               <div mat-card-avatar>
                 <mat-icon>assignment</mat-icon>
@@ -22,7 +22,7 @@
               <p>{{schedule.description}}</p>
             </mat-card-content>
             <mat-card-actions>
-              <button mat-button [style.background]="schedule.color" [routerLink]="['/schedule/' + schedule.$key]">GO</button>
+              <button mat-raised-button [routerLink]="['/schedule/' + schedule.$key]" color="accent">GO</button>
             </mat-card-actions>
           </mat-card>
         </div>

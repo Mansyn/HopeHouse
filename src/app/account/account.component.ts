@@ -6,7 +6,6 @@ import { AngularFireAuth } from 'angularfire2/auth'
 import * as _moment from 'moment'
 import { default as _rollupMoment } from 'moment'
 const moment = _rollupMoment || _moment
-import * as _ from 'lodash'
 
 import { AuthService } from '../core/auth.service'
 import { Event } from '../components/scheduler/shared/event'
@@ -19,6 +18,7 @@ import { ProfileService } from '../core/profile.service'
 
 import { Subject } from 'rxjs/Subject'
 import 'rxjs/add/operator/takeUntil'
+import { combineLatest } from 'rxjs/observable/combineLatest'
 
 @Component({
   selector: 'account',
@@ -42,23 +42,63 @@ export class AccountComponent implements OnInit, OnDestroy {
   nameRef: string = ''
   phoneNumberRef: string = ''
 
-  constructor(private fb: FormBuilder,
+  constructor(
+    private afAuth: AngularFireAuth,
+    private fb: FormBuilder,
     private router: Router,
     public renderer: Renderer,
     public auth: AuthService,
     private profileService: ProfileService,
     private eventService: EventService,
     private scheduleService: ScheduleService,
-    public snackBar: MatSnackBar) { }
+    public snackBar: MatSnackBar
+  ) { }
 
   ngOnInit() {
     this.auth.user$
       .takeUntil(this.destroy$)
       .subscribe(user => {
-        if (user) {
-          this.getUser()
+        if (user && user.uid) {
+          this.getUserData(user)
         }
       })
+  }
+
+  getUserData(user) {
+    const userProfile$ = this.profileService.getUserProfile(user.uid)
+    const schedules$ = this.scheduleService.getScheduleSnapShot()
+    const userEvents$ = this.eventService.getUserEventsData(user.uid)
+
+    combineLatest(
+      userProfile$, schedules$, userEvents$,
+      (profileData, scheduleData, eventsData) => {
+        // profile
+        let _profile = profileData[0]
+        this.profileRef = _profile as Profile
+        this.nameRef = this.profileRef.name
+        this.phoneNumberRef = this.profileRef.phoneNumber
+
+        // events
+        this.events = []
+        this.schedules = []
+        let _schedules = []
+        eventsData.forEach(_event => {
+          var event = _event.payload.toJSON()
+          event["$key"] = _event.key
+          this.events.push(event as Event)
+        })
+        scheduleData.forEach(_schedule => {
+          let schedule = _schedule.payload.toJSON()
+          schedule['$key'] = _schedule.key
+          let userEvents = this.events.filter(x => x.schedule_key == _schedule.key)
+          schedule['events'] = this.filterPastEvents(userEvents)
+          if (schedule['events'].length > 0) {
+            _schedules.push(schedule as Schedule)
+          }
+        })
+        this.schedules = _schedules
+      }
+    ).takeUntil(this.destroy$).subscribe()
   }
 
   toggleName(showInput) {
@@ -81,55 +121,6 @@ export class AccountComponent implements OnInit, OnDestroy {
         this.profileRef.phoneNumber = this.phoneNumberRef
       }
     }
-  }
-
-  getUser() {
-    this.auth.user$
-      .takeUntil(this.destroy$)
-      .subscribe(user => {
-        this.userRef = user
-        this.profileService.getUserProfile(user.uid)
-          .snapshotChanges()
-          .takeUntil(this.destroy$)
-          .subscribe(profile => {
-            var p = profile[0].payload.toJSON()
-            p['uid'] = profile[0].key
-            this.profileRef = p as Profile
-            this.nameRef = this.profileRef.name
-            this.phoneNumberRef = this.profileRef.phoneNumber
-          })
-        let isVolunteer = this.auth.canEdit(user)
-        if (isVolunteer) {
-          this.eventService.getUserEvents(user.uid)
-            .snapshotChanges()
-            .takeUntil(this.destroy$)
-            .subscribe((data) => {
-              this.events = []
-              data.forEach(element => {
-                var x = element.payload.toJSON()
-                x["$key"] = element.key
-                this.events.push(x as Event)
-                this.scheduleService.getSchedules()
-                  .snapshotChanges()
-                  .takeUntil(this.destroy$)
-                  .subscribe(data => {
-                    this.schedules = []
-                    let schedules = []
-                    data.forEach(element => {
-                      var y = element.payload.toJSON()
-                      y['$key'] = element.key;
-                      let userEvents = this.events.filter(x => x.schedule_key == element.key)
-                      y['events'] = this.filterPastEvents(userEvents)
-                      if (y['events'].length > 0) {
-                        schedules.push(y as Schedule)
-                      }
-                    })
-                    this.schedules = schedules
-                  })
-              })
-            })
-        }
-      })
   }
 
   filterPastEvents(events: Event[]) {
@@ -155,8 +146,10 @@ export class AccountComponent implements OnInit, OnDestroy {
   }
 
   signout() {
-    this.auth.signOut()
-    this.router.navigate(['/account/login'])
+    let that = this
+    this.afAuth.auth.signOut().then(function () {
+      that.router.navigate(['/home'])
+    })
   }
 
   openSnackBar(message: string, action: string) {

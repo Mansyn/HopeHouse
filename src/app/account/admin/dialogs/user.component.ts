@@ -14,9 +14,9 @@ export class UserDialog {
 
     constructor(public dialogRef: MatDialogRef<UserDialog>, private fb: FormBuilder, @Inject(MAT_DIALOG_DATA) public data: any) {
         this.form = this.fb.group({
-            'displayName': [data.user.displayName || null, Validators.compose([Validators.maxLength(30), Validators.required])],
+            'displayName': [data.user.profile.name || null, Validators.compose([Validators.maxLength(30), Validators.required])],
             'email': [data.user.email || null, Validators.compose([Validators.email, Validators.required])],
-            'phoneNumber': [data.user.phoneNumber || null, Validators.compose([Validators.pattern('[0-9]+'), Validators.maxLength(10), Validators.minLength(10), Validators.required])],
+            'phoneNumber': [data.user.profile.phoneNumber || null, Validators.compose([Validators.pattern('[0-9]+'), Validators.maxLength(10), Validators.minLength(10), Validators.required])],
             'photoURL': [data.user.photoURL || null]
         })
     }

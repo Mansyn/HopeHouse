@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
 import { Location } from './location';
 import 'rxjs/add/operator/map';
+import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class LocationService {
@@ -15,6 +16,14 @@ export class LocationService {
     getLocations() {
         this.locations = this.db.list('locations') as AngularFireList<Location[]>;
         return this.locations;
+    }
+
+    getLocationsSnapShot(): Observable<any> {
+        return this.db.list('locations').snapshotChanges()
+    }
+
+    getLocationsValue(): Observable<any> {
+        return this.db.list('locations').valueChanges()
     }
 
     getLocation(key) {

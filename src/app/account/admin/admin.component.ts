@@ -2,7 +2,11 @@ import { Component, Inject, AfterViewInit, ViewChild, OnDestroy } from '@angular
 import { Observable } from 'rxjs/Observable'
 import { MatTableDataSource, MatSort, MatPaginator, MatDialog, MatTabChangeEvent, MatDialogRef, MAT_DIALOG_DATA, MatSnackBar } from '@angular/material'
 
-import { User } from '../../core/user'
+import { Subject } from 'rxjs/Subject'
+import 'rxjs/add/operator/takeUntil'
+import { combineLatest } from 'rxjs/observable/combineLatest'
+
+import { UserProfile } from '../../core/user'
 import { AuthService } from '../../core/auth.service'
 import { Schedule } from '../../schedule/shared/schedule'
 import { ScheduleService } from '../../schedule/shared/schedule.service'
@@ -13,7 +17,7 @@ import { VolunteerDialog } from './dialogs/volunteer.component'
 import { UserDialog } from './dialogs/user.component'
 import { ScheduleDialog } from './dialogs/schedule.component'
 import { ScheduleDeleteDialog } from './dialogs/schedule-delete.component'
-import { Subject } from 'rxjs/Subject'
+import { ProfileService } from '../../core/profile.service'
 
 @Component({
     selector: 'admin',
@@ -31,23 +35,42 @@ export class AdminComponent implements AfterViewInit, OnDestroy {
 
     tabIndex = 0
     user_displayedColumns = ['select', 'displayName', 'email', 'phoneNumber', 'roles']
-    user_dataSource = new MatTableDataSource<User>()
-    user_selection = new SelectionModel<User>(false, [])
+    user_dataSource = new MatTableDataSource<UserProfile>()
+    user_selection = new SelectionModel<UserProfile>(false, [])
     schedule_displayedColumns = ['select', 'title', 'location', 'color']
     schedule_dataSource = new MatTableDataSource<Schedule>()
     schedule_selection = new SelectionModel<Schedule>(false, [])
     locations: Location[]
 
-    constructor(public auth: AuthService,
+    constructor(
+        public auth: AuthService,
         public dialog: MatDialog,
         public snackBar: MatSnackBar,
         private scheduleService: ScheduleService,
-        private locationService: LocationService) { }
+        private profileService: ProfileService,
+        private locationService: LocationService
+    ) { }
 
     ngAfterViewInit() {
-        this.auth.getAllUsers().takeUntil(this.destroy$).subscribe(data => {
-            this.user_dataSource.data = data;
-        });
+        const userProfiles$ = this.profileService.getProfilesData()
+        const users$ = this.auth.getAllUsers()
+
+        combineLatest(
+            userProfiles$, users$,
+            (userProfilesData, usersData) => {
+                let users = usersData.map((user) => {
+                    return {
+                        uid: user.uid,
+                        displayName: user.displayName,
+                        email: user.email,
+                        phoneNumber: user.phoneNumber,
+                        photoURL: user.photoURL,
+                        roles: user.roles,
+                        profile: userProfilesData.find(p => p.user_uid == user.uid)
+                    } as UserProfile
+                })
+                this.user_dataSource.data = users
+            }).takeUntil(this.destroy$).subscribe()
         this.user_dataSource.paginator = this.user_paginator;
         this.user_dataSource.sort = this.user_sort;
 
@@ -136,6 +159,8 @@ export class AdminComponent implements AfterViewInit, OnDestroy {
             if (result) {
                 result.uid = target.uid
                 this.auth.updateUser(result, this.isRole('volunteer'))
+                let updatedProfile = { user_uid: target.uid, name: result.displayName, phoneNumber: result.phoneNumber }
+                this.profileService.updateProfile(target.profile.uid, updatedProfile)
                 this.openSnackBar('User Saved', 'OKAY')
                 this.user_selection.clear()
             }

@@ -1,38 +1,50 @@
-import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
-import { ScheduleService } from '../schedule/shared/schedule.service';
-import { Schedule } from '../schedule/shared/schedule';
-import { LocationService } from '../schedule/shared/location.service';
-import { Subject } from 'rxjs/Subject';
+import { Component, OnInit, OnDestroy } from '@angular/core'
+
+import { Subject } from 'rxjs/Subject'
+import 'rxjs/add/operator/takeUntil'
+import { combineLatest } from 'rxjs/observable/combineLatest'
+
+import { ScheduleService } from '../schedule/shared/schedule.service'
+import { LocationService } from '../schedule/shared/location.service'
+import { Schedule } from '../schedule/shared/schedule'
+import { Location } from '../schedule/shared/location'
 
 @Component({
   selector: 'schedule',
   templateUrl: './schedules.component.html',
   styleUrls: ['./schedules.component.scss']
 })
-export class SchedulesComponent implements AfterViewInit, OnDestroy {
+export class SchedulesComponent implements OnInit, OnDestroy {
 
-  locations: any
-  schedules: Schedule[]
+  locations: Location[] = []
+  schedules: Schedule[] = []
 
   destroy$: Subject<boolean> = new Subject<boolean>()
 
-  constructor(private scheduleService: ScheduleService, private locationService: LocationService) { }
+  constructor(
+    private scheduleService: ScheduleService,
+    private locationService: LocationService
+  ) { }
 
-  ngAfterViewInit() {
-    this.scheduleService.getSchedules()
-      .snapshotChanges()
-      .takeUntil(this.destroy$)
-      .subscribe(data => {
-        let schedules = [];
-        data.forEach(element => {
-          var y = element.payload.toJSON();
-          y["$key"] = element.key;
-          schedules.push(y as Schedule);
-        });
+  ngOnInit() {
+    this.getData()
+  }
 
-        this.schedules = schedules;
-      });
-    this.fetchLocations();
+  getData() {
+    const schedules$ = this.scheduleService.getScheduleValue()
+    const locations$ = this.locationService.getLocationsSnapShot()
+
+    combineLatest(
+      schedules$, locations$,
+      (schedulesData, locationsData) => {
+        this.schedules = schedulesData
+        locationsData.forEach(_location => {
+          var location = _location.payload.toJSON()
+          location["$key"] = _location.key
+          this.locations.push(location as Location)
+        })
+      }
+    ).takeUntil(this.destroy$).subscribe()
   }
 
   locationName(key: string) {
@@ -42,23 +54,6 @@ export class SchedulesComponent implements AfterViewInit, OnDestroy {
     } else {
       return '';
     }
-  }
-
-
-  fetchLocations() {
-    this.locationService.getLocations()
-      .snapshotChanges()
-      .takeUntil(this.destroy$)
-      .subscribe(data => {
-        let locations = [];
-        data.forEach(element => {
-          var y = element.payload.toJSON();
-          y["$key"] = element.key;
-          locations.push(y as Location);
-        });
-
-        this.locations = locations;
-      });
   }
 
   ngOnDestroy() {

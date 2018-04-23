@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
 import { Profile } from './user';
 import 'rxjs/add/operator/map';
+import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class ProfileService {
@@ -17,13 +18,16 @@ export class ProfileService {
         return this.profiles;
     }
 
+    getProfilesData(): Observable<any> {
+        return this.db.list('profiles').valueChanges()
+    }
+
     getProfile(key) {
         return this.db.object('/profiles/' + key);
     }
 
-    getUserProfile(user_uid) {
-        this.profiles = this.db.list('profiles', ref => ref.orderByChild('user_uid').equalTo(user_uid)) as AngularFireList<Profile[]>;
-        return this.profiles;
+    getUserProfile(user_uid): Observable<any> {
+        return this.db.list('profiles', ref => ref.orderByChild('user_uid').equalTo(user_uid)).valueChanges()
     }
 
     addProfile(newProfile) {
