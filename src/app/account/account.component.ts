@@ -60,6 +60,8 @@ export class AccountComponent implements OnInit, OnDestroy {
       .subscribe(user => {
         if (user && user.uid) {
           this.getUserData(user)
+        } else {
+          this.router.navigate(['/account/login'])
         }
       })
   }
@@ -73,7 +75,8 @@ export class AccountComponent implements OnInit, OnDestroy {
       userProfile$, schedules$, userEvents$,
       (profileData, scheduleData, eventsData) => {
         // profile
-        let _profile = profileData[0]
+        let _profile = profileData[0].payload.toJSON()
+        _profile["$key"] = profileData[0].key
         this.profileRef = _profile as Profile
         this.nameRef = this.profileRef.name
         this.phoneNumberRef = this.profileRef.phoneNumber
@@ -105,7 +108,7 @@ export class AccountComponent implements OnInit, OnDestroy {
     this.nameEditing = !this.nameEditing
     if (!this.nameEditing) {
       if (this.profileRef.name.length) {
-        this.profileService.updateProfile(this.profileRef.uid, this.profileRef)
+        this.updateProfile()
       } else {
         this.profileRef.name = this.nameRef
       }
@@ -116,11 +119,17 @@ export class AccountComponent implements OnInit, OnDestroy {
     this.phoneEditing = !this.phoneEditing
     if (!this.phoneEditing) {
       if (this.profileRef.phoneNumber.length == 10) {
-        this.profileService.updateProfile(this.profileRef.uid, this.profileRef)
+        this.updateProfile()
       } else {
         this.profileRef.phoneNumber = this.phoneNumberRef
       }
     }
+  }
+
+  private updateProfile() {
+    let targetProfile = Object.assign({}, this.profileRef)
+    delete targetProfile['$key']
+    this.profileService.updateProfile(this.profileRef['$key'], targetProfile)
   }
 
   filterPastEvents(events: Event[]) {

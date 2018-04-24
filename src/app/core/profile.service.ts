@@ -27,6 +27,10 @@ export class ProfileService {
     }
 
     getUserProfile(user_uid): Observable<any> {
+        return this.db.list('profiles', ref => ref.orderByChild('user_uid').equalTo(user_uid)).snapshotChanges()
+    }
+
+    getUserProfileData(user_uid): Observable<any> {
         return this.db.list('profiles', ref => ref.orderByChild('user_uid').equalTo(user_uid)).valueChanges()
     }
 

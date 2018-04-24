@@ -70,16 +70,16 @@ export class RegisterComponent implements OnInit, OnDestroy {
       let form = this.form.value
       this.afAuth.auth.createUserWithEmailAndPassword(form.email, form.password)
         .then((user) => {
-          this.auth.registerUser(user, form.name, this.e164())
+          self.auth.registerUser(user, form.name, this.e164())
           let profile = {
             user_uid: user.uid,
             name: form.name,
-            phoneNumber: this.e164()
+            phoneNumber: self.e164()
           }
           this.profileService.addProfile(profile)
             .then(response => {
-              this.working = false
-              this.router.navigate(['/account'])
+              self.working = false
+              self.router.navigate(['/account'])
             })
         })
         .catch(function (error) {

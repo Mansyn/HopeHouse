@@ -5,7 +5,7 @@ import { AngularFireAuth } from 'angularfire2/auth';
 import { AngularFirestore, AngularFirestoreDocument, AngularFirestoreCollection } from 'angularfire2/firestore';
 import { Observable } from 'rxjs/Observable';
 import { switchMap } from 'rxjs/operators';
-import { User } from './user';
+import { User, Profile } from './user';
 import { ProfileService } from './profile.service';
 import 'rxjs/add/operator/take'
 
@@ -18,11 +18,12 @@ export class AuthService {
   private usersCollection: AngularFirestoreCollection<User>;
   users: Observable<User[]>;
 
-  constructor(private afAuth: AngularFireAuth,
+  constructor(
+    private afAuth: AngularFireAuth,
     private afs: AngularFirestore,
     private router: Router,
-    private profileService: ProfileService) {
-    //// Get auth data, then get firestore user document || null
+    private profileService: ProfileService
+  ) {
     this.user$ = this.afAuth.authState
       .switchMap(user => {
         if (user) {
@@ -85,6 +86,14 @@ export class AuthService {
       .subscribe(response => {
         if (response.length == 0) {
           this.profileService.addProfile(profile)
+        } else {
+          let _profile = response[0].payload.toJSON()
+          let targetProfile = _profile as Profile
+
+          targetProfile.name = targetProfile.name ? targetProfile.name : (user.displayName || '')
+          targetProfile.phoneNumber = targetProfile.phoneNumber ? targetProfile.phoneNumber : (user.phoneNumber || '')
+
+          this.profileService.updateProfile(response[0].key, targetProfile)
         }
       })
   }
