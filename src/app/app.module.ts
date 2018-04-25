@@ -31,8 +31,6 @@ import {
   MatTabsModule,
   MatTooltipModule
 } from '@angular/material'
-import { MatDatetimepickerModule } from '@mat-datetimepicker/core';
-import { MatMomentDatetimeModule } from '@mat-datetimepicker/moment';
 
 /* Angular Calendar */
 import { CalendarModule } from 'angular-calendar';
@@ -134,8 +132,6 @@ import { LoginComponent } from './account/login/login.component';
     MatTableModule,
     MatTabsModule,
     MatTooltipModule,
-    MatMomentDatetimeModule,
-    MatDatetimepickerModule,
     CalendarModule.forRoot(),
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireDatabaseModule,
