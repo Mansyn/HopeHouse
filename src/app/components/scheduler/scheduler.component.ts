@@ -129,9 +129,6 @@ export class SchedulerComponent implements OnInit {
                     event['$key'] = _event.key
                     this.events.push(event as Event)
                 })
-                this.events.forEach((event) => {
-                    this.calendarEvents.push(EventUtils.mapToCalendarEvent(event))
-                })
                 this.calendarEvents.forEach((event) => {
                     let target = this.events.find(e => e.$key == event.id)
                     event['actions'] = (this.isAdmin || target.user == this.userRef.uid) ? this.actions : []
@@ -148,6 +145,9 @@ export class SchedulerComponent implements OnInit {
                         roles: user.roles,
                         profile: userProfilesData.find(p => p.user_uid == user.uid)
                     } as UserProfile
+                })
+                this.events.forEach((event) => {
+                    this.calendarEvents.push(EventUtils.mapToCalendarEvent(event, users.find(u => u.uid == event.user)))
                 })
                 if (this.isAdmin) {
                     this.volunteers = users
@@ -195,13 +195,12 @@ export class SchedulerComponent implements OnInit {
         if (this.isAdmin || target.user == this.userRef.uid) {
             let dialogRef = this.dialog.open(EventDialog, {
                 width: '650px',
-                data: { event: event, volunteers: this.volunteers }
+                data: { event: event, volunteers: this.volunteers, scheduleKey: this.scheduleKey }
             });
 
             dialogRef.afterClosed().subscribe(result => {
                 if (result) {
-                    delete result["$key"];
-                    result["schedule_key"] = this.scheduleKey;
+                    delete result["$key"]
                     this.eventService.updateEvent(event.id, result)
                         .then((data) => {
                             this.openSnackBar('Schedule Saved', 'OKAY');

@@ -14,23 +14,11 @@ export class EventTitleFormatter extends CalendarEventTitleFormatter {
             event.start,
             'h:mm a',
             this.locale
-        )} to ${new DatePipe(this.locale).transform(
-            event.end,
-            'h:mm a',
-            this.locale
         )}`;
     }
 
     week(event: CalendarEvent): string {
-        return `${event.title} &mdash; ${new DatePipe(this.locale).transform(
-            event.start,
-            'h:mm a',
-            this.locale
-        )} to ${new DatePipe(this.locale).transform(
-            event.end,
-            'h:mm a',
-            this.locale
-        )}`;
+        return `${event.title}`;
     }
 
     day(event: CalendarEvent): string {

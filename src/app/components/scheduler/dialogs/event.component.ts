@@ -15,59 +15,62 @@ import EventUtils from "../shared/event.utils";
 @Component({
     selector: 'event-dialog',
     templateUrl: 'event.component.html',
+    styleUrls: ['./event.component.scss']
 })
 export class EventDialog {
 
-    today = new Date();
+    refresh: Subject<any> = new Subject()
+    today = moment()
 
-    minStartDate;
-    maxStartDate;
-    minEndDate;
-    maxEndDate;
+    slots = []
 
     create: boolean
     form: FormGroup
+
+    filterSunday = (d: Date): boolean => {
+        const day = moment(d).day()
+        // Prevent Sunday from being selected.
+        return day !== 0
+    }
 
     constructor(public auth: AuthService,
         public dialogRef: MatDialogRef<EventDialog>,
         private fb: FormBuilder,
         @Inject(MAT_DIALOG_DATA) public data: any) {
-        this.create = data.event.$key == null;
+        this.buildForm(data)
+    }
+
+    buildForm(data: any) {
+        this.create = data.event.$key == null
         if (!data.event.color) {
             data.event.color = {
                 'primary': colors.red.primary,
                 'secondary': colors.red.secondary
             }
         }
+        let eventDay = moment(data.event.start)
+        this.slots = EventUtils.formSlots(eventDay)
         this.form = this.fb.group({
-            'title': [data.event.title || null, Validators.compose([Validators.maxLength(25), Validators.required])],
             'user': [data.event.user || null, Validators.required],
-            'start': [data.event.start || null, Validators.required],
-            'end': [data.event.end || null, Validators.required],
+            'date': [data.event.start || null, Validators.required],
+            'slot': [eventDay.format('hh:mm') || null, Validators.required],
             'primary': [data.event.color.primary, Validators.required],
             'secondary': [data.event.color.secondary, Validators.required]
         })
     }
 
-    refresh: Subject<any> = new Subject();
 
-    changeStart(type: string, event: MatDatepickerInputEvent<Date>) {
-        this.minEndDate = event.value;
-    }
-
-    changeEnd(type: string, event: MatDatepickerInputEvent<Date>) {
-        this.maxStartDate = event.value;
-    }
 
     saveEvent() {
         if (this.form.valid) {
-            let event = EventUtils.mapFromCalendarEvent(this.data.event, this.data.event.schedule_key, this.data.event.user);
+            let form = this.form.value
+            let event = EventUtils.mapFromFormToEvent(form, this.data.scheduleKey)
 
             if (!this.create) {
-                event["id"] = this.data.event.id;
+                event["id"] = this.data.event.id
             }
 
-            this.dialogRef.close(event);
+            this.dialogRef.close(event)
         }
     }
 }

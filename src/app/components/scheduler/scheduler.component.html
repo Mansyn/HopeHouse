@@ -9,7 +9,7 @@
       <span>Serving Schedule</span>
       <span class="spacer"></span>
       <button mat-mini-fab color="primary" (click)="handleCreateEvent()" class="lose-outline">
-        <mat-icon aria-label="Add" matTooltip="Add" matTooltipPosition="before">add</mat-icon>
+        <mat-icon aria-label="Serve Meal" matTooltip="Serve Meal" matTooltipPosition="before">add</mat-icon>
       </button>
     </mat-toolbar-row>
   </mat-toolbar>
@@ -48,11 +48,11 @@
     <br>
     <div>
       <div [ngSwitch]="view">
-        <mwl-calendar-month-view *ngSwitchCase="'month'" [viewDate]="viewDate" [events]="calendarEvents" [activeDayIsOpen]="activeDayIsOpen" (dayClicked)="dayClicked($event.day)">
+        <mwl-calendar-month-view *ngSwitchCase="'month'" [viewDate]="viewDate" [events]="calendarEvents" [activeDayIsOpen]="activeDayIsOpen" (dayClicked)="dayClicked($event.day)" (eventClicked)="handleEditEvent($event.event)" (eventTimesChanged)="eventTimesChanged($event, $event.user)">
         </mwl-calendar-month-view>
-        <mwl-calendar-week-view *ngSwitchCase="'week'" [viewDate]="viewDate" [events]="calendarEvents" (eventClicked)="handleEditEvent($event.event)" (eventTimesChanged)="eventTimesChanged($event)">
+        <mwl-calendar-week-view *ngSwitchCase="'week'" [viewDate]="viewDate" [events]="calendarEvents" (eventClicked)="handleEditEvent($event.event)" (eventTimesChanged)="eventTimesChanged($event, $event.user)">
         </mwl-calendar-week-view>
-        <mwl-calendar-day-view *ngSwitchCase="'day'" [viewDate]="viewDate" [events]="calendarEvents" (eventClicked)="handleEditEvent($event.event)" (eventTimesChanged)="eventTimesChanged($event, $event.user)">
+        <mwl-calendar-day-view *ngSwitchCase="'day'" [viewDate]="viewDate" [events]="calendarEvents" (eventClicked)="handleEditEvent($event.event)" (eventTimesChanged)="eventTimesChanged($event, $event.user)" [dayStartHour]="12" [dayEndHour]="19">
         </mwl-calendar-day-view>
       </div>
     </div>
