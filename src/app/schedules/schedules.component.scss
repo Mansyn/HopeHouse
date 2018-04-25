@@ -19,14 +19,8 @@
     text-shadow: mat-color($candy-app-accent) 1px 1px 4px;
   }
 
-  #top {
-    margin-top: 3rem;
-  }
-
-  @media (max-width:720px) {
-    #top {
-      margin-top: 4rem;
-    }
+  .content {
+    margin-top: 2rem;
   }
 
   .mat-card {

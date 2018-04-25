@@ -18,6 +18,7 @@ export class SchedulesComponent implements OnInit, OnDestroy {
 
   locations: Location[] = []
   schedules: Schedule[] = []
+  loaded: boolean = false
 
   destroy$: Subject<boolean> = new Subject<boolean>()
 
@@ -31,18 +32,23 @@ export class SchedulesComponent implements OnInit, OnDestroy {
   }
 
   getData() {
-    const schedules$ = this.scheduleService.getScheduleValue()
+    const schedules$ = this.scheduleService.getScheduleSnapShot()
     const locations$ = this.locationService.getLocationsSnapShot()
 
     combineLatest(
       schedules$, locations$,
       (schedulesData, locationsData) => {
-        this.schedules = schedulesData
+        schedulesData.forEach(_schedule => {
+          var schedule = _schedule.payload.toJSON()
+          schedule["$key"] = _schedule.key
+          this.schedules.push(schedule as Schedule)
+        })
         locationsData.forEach(_location => {
           var location = _location.payload.toJSON()
           location["$key"] = _location.key
           this.locations.push(location as Location)
         })
+        this.loaded = true
       }
     ).takeUntil(this.destroy$).subscribe()
   }

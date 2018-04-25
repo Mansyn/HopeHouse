@@ -31,4 +31,9 @@
   .mat-card {
     margin: 1em;
     background-color: mat-color($candy-app-accent, 200);
+    min-width: 400px;
+  }
+
+  .mat-card-content iframe {
+    width: 100%;
   }

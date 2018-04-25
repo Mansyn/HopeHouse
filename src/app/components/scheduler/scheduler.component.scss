@@ -2,6 +2,14 @@
   padding: 20px;
 }
 
+::ng-deep a.cal-event-title {
+  outline: 0 !important;
+}
+
+::ng-deep a.cal-event-title a:hover {
+  text-decoration: none !important;
+}
+
 .spacer {
   flex: 1 1 auto;
 }

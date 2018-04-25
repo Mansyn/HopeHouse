@@ -16,7 +16,7 @@
     <mat-form-field class="full-width m-b-20">
       <mat-select placeholder="Select User" [(ngModel)]="data.event.user" [formControl]="form.controls['user']">
         <mat-option *ngFor="let user of data.volunteers" [value]="user.uid">
-          {{ user.displayName }}
+          {{ user.profile.name }}
         </mat-option>
       </mat-select>
     </mat-form-field>
@@ -24,8 +24,7 @@
       <mat-placeholder>Start</mat-placeholder>
       <mat-datetimepicker-toggle [for]="startDatetimePicker" matSuffix></mat-datetimepicker-toggle>
       <mat-datetimepicker #startDatetimePicker type="datetime" openOnFocus="true" timeInterval="5"></mat-datetimepicker>
-      <input matInput [min]="minStartDate" [max]="maxStartDate" [formControl]="form.controls['start']" [(ngModel)]="data.event.start"
-        [matDatetimepicker]="startDatetimePicker" required autocomplete="false" (dateChange)="changeStart('change', $event)">
+      <input matInput [min]="minStartDate" [max]="maxStartDate" [formControl]="form.controls['start']" [(ngModel)]="data.event.start" [matDatetimepicker]="startDatetimePicker" required autocomplete="false" (dateChange)="changeStart('change', $event)">
       <mat-error *ngIf="form.controls['start'].hasError('required')">
         Start Date is required
       </mat-error>
@@ -34,22 +33,19 @@
       <mat-placeholder>End</mat-placeholder>
       <mat-datetimepicker-toggle [for]="endDatetimePicker" matSuffix></mat-datetimepicker-toggle>
       <mat-datetimepicker #endDatetimePicker type="datetime" openOnFocus="true" timeInterval="5"></mat-datetimepicker>
-      <input matInput [min]="minEndDate" [max]="maxEndDate" [formControl]="form.controls['end']" [(ngModel)]="data.event.end" [matDatetimepicker]="endDatetimePicker"
-        required autocomplete="false" (dateChange)="changeEnd('change', $event)">
+      <input matInput [min]="minEndDate" [max]="maxEndDate" [formControl]="form.controls['end']" [(ngModel)]="data.event.end" [matDatetimepicker]="endDatetimePicker" required autocomplete="false" (dateChange)="changeEnd('change', $event)">
       <mat-error *ngIf="form.controls['end'].hasError('required')">
         End Date is required
       </mat-error>
     </mat-form-field>
     <mat-form-field class="half-width m-b-20">
-      <input matInput placeholder="Primary Color" type="color" [formControl]="form.controls['primary']" [(ngModel)]="data.event.color.primary"
-        (change)="refresh.next()">
+      <input matInput placeholder="Primary Color" type="color" [formControl]="form.controls['primary']" [(ngModel)]="data.event.color.primary" (change)="refresh.next()">
       <mat-error *ngIf="form.controls['primary'].hasError('required')">
         Primary Color is required
       </mat-error>
     </mat-form-field>
     <mat-form-field class="half-width m-b-20">
-      <input matInput placeholder="Secondary Color" type="color" [formControl]="form.controls['secondary']" [(ngModel)]="data.event.color.secondary"
-        (change)="refresh.next()">
+      <input matInput placeholder="Secondary Color" type="color" [formControl]="form.controls['secondary']" [(ngModel)]="data.event.color.secondary" (change)="refresh.next()">
       <mat-error *ngIf="form.controls['secondary'].hasError('required')">
         Secondary Color is required
       </mat-error>

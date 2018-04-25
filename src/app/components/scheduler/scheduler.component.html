@@ -1,5 +1,5 @@
 <div *ngIf="loading">
-  <div class="layout-row layout-align-center-center">
+  <div class="layout-row layout-align-center-center p-20">
     <mat-spinner></mat-spinner>
   </div>
 </div>
@@ -13,7 +13,7 @@
       </button>
     </mat-toolbar-row>
   </mat-toolbar>
-  <div>
+  <div class="p-20">
     <div class="layout-column layout-gt-sm-row header">
       <div class="flex-30 txt-left direction">
         <mat-button-toggle-group #group="matButtonToggleGroup">
@@ -33,10 +33,10 @@
       </div>
       <div class="flex-30 txt-right views">
         <mat-button-toggle-group #group="matButtonToggleGroup">
-          <mat-button-toggle value="prev" (click)="view = 'month'" [class.active]="view === 'month'" checked="true">
+          <mat-button-toggle value="prev" (click)="view = 'month'" [class.active]="view === 'month'">
             Month
           </mat-button-toggle>
-          <mat-button-toggle value="today" (click)="view = 'week'" [class.active]="view === 'week'">
+          <mat-button-toggle value="today" (click)="view = 'week'" [class.active]="view === 'week'" checked="true">
             Week
           </mat-button-toggle>
           <mat-button-toggle value="next" (click)="view = 'day'" [class.active]="view === 'day'">
@@ -48,14 +48,11 @@
     <br>
     <div>
       <div [ngSwitch]="view">
-        <mwl-calendar-month-view *ngSwitchCase="'month'" [viewDate]="viewDate" [events]="calendarEvents" [activeDayIsOpen]="activeDayIsOpen"
-          (dayClicked)="dayClicked($event.day)" (eventClicked)="handleEditEvent($event.event)" (eventTimesChanged)="eventTimesChanged($event)">
+        <mwl-calendar-month-view *ngSwitchCase="'month'" [viewDate]="viewDate" [events]="calendarEvents" [activeDayIsOpen]="activeDayIsOpen" (dayClicked)="dayClicked($event.day)">
         </mwl-calendar-month-view>
-        <mwl-calendar-week-view *ngSwitchCase="'week'" [viewDate]="viewDate" [events]="calendarEvents" (eventClicked)="handleEditEvent($event.event)"
-          (eventTimesChanged)="eventTimesChanged($event)">
+        <mwl-calendar-week-view *ngSwitchCase="'week'" [viewDate]="viewDate" [events]="calendarEvents" (eventClicked)="handleEditEvent($event.event)" (eventTimesChanged)="eventTimesChanged($event)">
         </mwl-calendar-week-view>
-        <mwl-calendar-day-view *ngSwitchCase="'day'" [viewDate]="viewDate" [events]="calendarEvents" (eventClicked)="handleEditEvent($event.event)"
-          (eventTimesChanged)="eventTimesChanged($event, $event.user)">
+        <mwl-calendar-day-view *ngSwitchCase="'day'" [viewDate]="viewDate" [events]="calendarEvents" (eventClicked)="handleEditEvent($event.event)" (eventTimesChanged)="eventTimesChanged($event, $event.user)">
         </mwl-calendar-day-view>
       </div>
     </div>
