@@ -1,16 +1,16 @@
-import { Component, Inject } from "@angular/core";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { MAT_DIALOG_DATA, MatDialogRef, MatDatepickerInputEvent } from "@angular/material";
-import { Subject } from "rxjs/Subject";
+import { Component, Inject } from "@angular/core"
+import { FormBuilder, FormGroup, Validators } from "@angular/forms"
+import { MAT_DIALOG_DATA, MatDialogRef, MatDatepickerInputEvent } from "@angular/material"
+import { Subject } from "rxjs/Subject"
 
-import * as _moment from 'moment';
-import { default as _rollupMoment } from 'moment';
-const moment = _rollupMoment || _moment;
+import * as _moment from 'moment'
+import { default as _rollupMoment } from 'moment'
+const moment = _rollupMoment || _moment
 
-import { colors } from "../shared/colors";
-import { AuthService } from "../../../core/auth.service";
-import { User } from "../../../core/user";
-import EventUtils from "../shared/event.utils";
+import { colors } from "../shared/colors"
+import { AuthService } from "../../../core/auth.service"
+import { User } from "../../../core/user"
+import EventUtils from "../shared/event.utils"
 
 @Component({
     selector: 'event-dialog',
