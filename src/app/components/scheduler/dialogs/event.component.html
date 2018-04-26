@@ -12,16 +12,17 @@
       </mat-select>
     </mat-form-field>
     <mat-form-field class="half-width">
-      <input matInput [matDatepickerFilter]="filterSunday" [min]="today" [matDatepicker]="date" placeholder="Date" [formControl]="form.controls['date']" required>
+      <input matInput [matDatepickerFilter]="filterSunday" [min]="today" (dateInput)="inputDate($event)" [matDatepicker]="date" placeholder="Date" [formControl]="form.controls['date']" required>
       <mat-datepicker-toggle matSuffix [for]="date"></mat-datepicker-toggle>
       <mat-datepicker #date></mat-datepicker>
     </mat-form-field>
     <mat-form-field class="half-width">
-      <mat-select placeholder="Meal" [formControl]="form.controls['slot']" required>
+      <mat-select placeholder="Meal" [formControl]="form.controls['slot']" [(ngModel)]="slotValue" required>
         <mat-option *ngFor="let slot of slots" [value]="slot.value">
           {{slot.viewValue}}
         </mat-option>
       </mat-select>
+      <mat-hint align="end">Select meal you will be serving</mat-hint>
     </mat-form-field>
     <mat-form-field class="half-width">
       <input matInput placeholder="Primary Color" type="color" [formControl]="form.controls['primary']" (change)="refresh.next()">

@@ -20,12 +20,13 @@ import EventUtils from "../shared/event.utils"
 export class EventDialog {
 
     refresh: Subject<any> = new Subject()
-    today = moment()
+    today = new Date()
 
     slots = []
 
     create: boolean
     form: FormGroup
+    slotValue: any
 
     filterSunday = (d: Date): boolean => {
         const day = moment(d).day()
@@ -48,18 +49,21 @@ export class EventDialog {
                 'secondary': colors.red.secondary
             }
         }
-        let eventDay = moment(data.event.start)
-        this.slots = EventUtils.formSlots(eventDay)
+        this.slots = EventUtils.formSlots(data.event.start ? moment(data.event.start) : moment())
+        this.slotValue = data.event.start ? moment(data.event.start).format('hh:mm') : null
         this.form = this.fb.group({
             'user': [data.event.user || null, Validators.required],
             'date': [data.event.start || null, Validators.required],
-            'slot': [eventDay.format('hh:mm') || null, Validators.required],
+            'slot': [this.slotValue, Validators.required],
             'primary': [data.event.color.primary, Validators.required],
             'secondary': [data.event.color.secondary, Validators.required]
         })
     }
 
-
+    inputDate(event: MatDatepickerInputEvent<Date>) {
+        this.slots = EventUtils.formSlots(moment(event.value))
+        this.slotValue = null
+    }
 
     saveEvent() {
         if (this.form.valid) {

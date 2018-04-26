@@ -147,7 +147,10 @@ export class SchedulerComponent implements OnInit {
                     } as UserProfile
                 })
                 this.events.forEach((event) => {
-                    this.calendarEvents.push(EventUtils.mapToCalendarEvent(event, users.find(u => u.uid == event.user)))
+                    let targetUser = users.find(u => u.uid == event.user)
+                    if (targetUser) {
+                        this.calendarEvents.push(EventUtils.mapToCalendarEvent(event, targetUser))
+                    }
                 })
                 if (this.isAdmin) {
                     this.volunteers = users
