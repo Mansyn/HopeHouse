@@ -68,12 +68,12 @@ export class SchedulerComponent implements OnInit {
     userRef: User
 
     actions: CalendarEventAction[] = [
-        // {
-        //     label: '<i class="material-icons md-18">edit</i>',
-        //     onClick: ({ event }: { event: CalendarEvent }): void => {
-        //         this.handleEditEvent(event)
-        //     }
-        // },
+        {
+            label: '<i class="material-icons md-18">edit</i>',
+            onClick: ({ event }: { event: CalendarEvent }): void => {
+                this.handleEditEvent(event)
+            }
+        },
         {
             label: '<i class="material-icons md-18">close</i>',
             onClick: ({ event }: { event: CalendarEvent }): void => {
@@ -129,10 +129,6 @@ export class SchedulerComponent implements OnInit {
                     event['$key'] = _event.key
                     this.events.push(event as Event)
                 })
-                this.calendarEvents.forEach((event) => {
-                    let target = this.events.find(e => e.$key == event.id)
-                    event['actions'] = (this.isAdmin || target.user == this.userRef.uid) ? this.actions : []
-                })
                 this.refresh.next()
                 this.loading = false
                 let users = usersData.map((user) => {
@@ -151,6 +147,10 @@ export class SchedulerComponent implements OnInit {
                     if (targetUser) {
                         this.calendarEvents.push(EventUtils.mapToCalendarEvent(event, targetUser))
                     }
+                })
+                this.calendarEvents.forEach((event) => {
+                    let target = this.events.find(e => e.$key == event.id)
+                    event['actions'] = (this.isAdmin || target.user == this.userRef.uid) ? this.actions : []
                 })
                 if (this.isAdmin) {
                     this.volunteers = users

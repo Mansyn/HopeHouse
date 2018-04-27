@@ -7,6 +7,7 @@ import { AuthService } from '../../core/auth.service';
 import { Router } from '@angular/router';
 import { ProfileService } from '../../core/profile.service';
 import { Subject } from 'rxjs/Subject';
+import { colors } from '../../components/scheduler/shared/colors';
 
 @Component({
   selector: 'register',
@@ -17,6 +18,8 @@ export class RegisterComponent implements OnInit, OnDestroy {
 
   form: FormGroup
   working: boolean = false
+  password: string
+  regError: string
   destroy$: Subject<boolean> = new Subject<boolean>()
 
   constructor(private afAuth: AngularFireAuth,
@@ -74,7 +77,8 @@ export class RegisterComponent implements OnInit, OnDestroy {
           let profile = {
             user_uid: user.uid,
             name: form.name,
-            phoneNumber: self.e164()
+            phoneNumber: self.e164(),
+            color: colors.red.secondary
           }
           this.profileService.addProfile(profile)
             .then(response => {
@@ -83,11 +87,13 @@ export class RegisterComponent implements OnInit, OnDestroy {
             })
         })
         .catch(function (error) {
-          // Handle Errors here.
+          // Registration Errors
+          self.password = ''
           var errorCode = error.code
           var errorMessage = error.message
           if (errorCode == 'auth/weak-password') {
             self.openSnackBar('Password is too weak.', 'OKAY')
+            self.regError = 'Password is too weak'
           } else if (errorCode == 'auth/email-already-in-use') {
             self.openSnackBar('Email already in use', 'OKAY')
           }

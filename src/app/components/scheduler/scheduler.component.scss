@@ -2,8 +2,19 @@
   padding: 20px;
 }
 
-::ng-deep a.cal-event-title {
+::ng-deep .cal-day-view .cal-event-title:link,
+::ng-deep .cal-week-view .cal-event-title:link,
+::ng-deep .cal-week-view .cal-event-action i,
+::ng-deep .cal-day-view .cal-event-action i {
+  color: #000 !important;
+}
+
+::ng-deep .cal-month-view .cal-event-action:link {
   outline: 0 !important;
+}
+
+::ng-deep .cal-month-view .cal-event-action i {
+  color: white;
 }
 
 .spacer {

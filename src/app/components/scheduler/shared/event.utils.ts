@@ -67,7 +67,7 @@ export default class EventUtils {
             case 2:
                 slots = [
                     { value: '12:00', viewValue: 'Lunch' },
-                    { value: '04:00', viewValue: 'Dinner' }
+                    { value: '16:00', viewValue: 'Dinner' }
                 ]
                 break
             case 1:
@@ -77,7 +77,7 @@ export default class EventUtils {
             case 6:
                 slots = [
                     { value: '12:00', viewValue: 'Lunch' },
-                    { value: '05:30', viewValue: 'Dinner' }
+                    { value: '17:30', viewValue: 'Dinner' }
                 ]
                 break
             default:

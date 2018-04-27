@@ -4,7 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { AccountComponent } from './account/account.component';
 import { RegisterComponent } from './account/register/register.component';
-import { AdminComponent } from './account/admin/admin.component';
+import { AdminComponent } from './admin/admin.component';
 import { ContactComponent } from './contact/contact.component'
 import { SchedulesComponent } from './schedules/schedules.component';
 import { LoginComponent } from './account/login/login.component';
@@ -21,7 +21,7 @@ const routes: Routes = [
   { path: 'contact', component: ContactComponent },
   { path: 'account/register', component: RegisterComponent },
   { path: 'account/login', component: LoginComponent },
-  { path: 'account/admin', component: AdminComponent, canActivate: [AdminGuard] },
+  { path: 'admin', component: AdminComponent, canActivate: [AdminGuard] },
   { path: 'schedules', component: SchedulesComponent, canActivate: [VolunteerGuard] },
   { path: 'schedule/:id', component: ScheduleComponent, canActivate: [VolunteerGuard] },
   { path: '*', redirectTo: 'home' }

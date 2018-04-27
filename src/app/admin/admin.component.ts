@@ -6,18 +6,19 @@ import { Subject } from 'rxjs/Subject'
 import 'rxjs/add/operator/takeUntil'
 import { combineLatest } from 'rxjs/observable/combineLatest'
 
-import { UserProfile } from '../../core/user'
-import { AuthService } from '../../core/auth.service'
-import { Schedule } from '../../schedule/shared/schedule'
-import { ScheduleService } from '../../schedule/shared/schedule.service'
-import { Location } from '../../schedule/shared/location'
-import { LocationService } from '../../schedule/shared/location.service'
+import { UserProfile, Profile } from '../core/user'
+import { AuthService } from '../core/auth.service'
+import { Schedule } from '../schedule/shared/schedule'
+import { ScheduleService } from '../schedule/shared/schedule.service'
+import { Location } from '../schedule/shared/location'
+import { LocationService } from '../schedule/shared/location.service'
 import { SelectionModel } from '@angular/cdk/collections'
 import { VolunteerDialog } from './dialogs/volunteer.component'
 import { UserDialog } from './dialogs/user.component'
 import { ScheduleDialog } from './dialogs/schedule.component'
 import { ScheduleDeleteDialog } from './dialogs/schedule-delete.component'
-import { ProfileService } from '../../core/profile.service'
+import { ProfileService } from '../core/profile.service'
+import { ViewScheduleDialog } from './dialogs/schedule-view.component'
 
 @Component({
     selector: 'admin',
@@ -52,12 +53,18 @@ export class AdminComponent implements AfterViewInit, OnDestroy {
     ) { }
 
     ngAfterViewInit() {
-        const userProfiles$ = this.profileService.getProfilesData()
+        const userProfiles$ = this.profileService.getProfilesSnapshot()
         const users$ = this.auth.getAllUsers()
 
         combineLatest(
             userProfiles$, users$,
             (userProfilesData, usersData) => {
+                let userProfiles = []
+                userProfilesData.forEach((_profile) => {
+                    var profile = _profile.payload.toJSON()
+                    profile.uid = _profile.key
+                    userProfiles.push(profile as Profile)
+                })
                 let users = usersData.map((user) => {
                     return {
                         uid: user.uid,
@@ -66,7 +73,7 @@ export class AdminComponent implements AfterViewInit, OnDestroy {
                         phoneNumber: user.phoneNumber,
                         photoURL: user.photoURL,
                         roles: user.roles,
-                        profile: userProfilesData.find(p => p.user_uid == user.uid)
+                        profile: userProfiles.find(p => p.user_uid == user.uid)
                     } as UserProfile
                 })
                 this.user_dataSource.data = users
@@ -100,17 +107,17 @@ export class AdminComponent implements AfterViewInit, OnDestroy {
     }
 
     applyFilter(filterValue: string) {
-        filterValue = filterValue.trim(); // Remove whitespace
-        filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
-        this.user_dataSource.filter = filterValue;
+        filterValue = filterValue.trim()
+        filterValue = filterValue.toLowerCase()
+        this.user_dataSource.filter = filterValue
     }
 
     locationName(key: string) {
         if (this.locations) {
-            let location = this.locations.find(x => x.$key == key);
-            return location ? location.name : '';
+            let location = this.locations.find(x => x.$key == key)
+            return location ? location.name : ''
         } else {
-            return '';
+            return ''
         }
     }
 
@@ -125,6 +132,21 @@ export class AdminComponent implements AfterViewInit, OnDestroy {
                 break;
         }
         return found;
+    }
+
+    viewScheduleDialog(): void {
+        let target = this.schedule_selection.selected[0];
+
+        let dialogRef = this.dialog.open(ViewScheduleDialog, {
+            width: '400px',
+            data: { schedule: target }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result) {
+                this.user_selection.clear();
+            }
+        });
     }
 
     volunteerDialog(add: boolean): void {

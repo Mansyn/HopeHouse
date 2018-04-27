@@ -68,9 +68,9 @@
             </mat-form-field>
           </div>
           <mat-form-field>
-            <input matInput placeholder="Password" type="password" [formControl]="form.controls['password']" [disableControl]="working">
+            <input matInput placeholder="Password" minlength="6" type="password" [formControl]="form.controls['password']" [ngModel]="password" [disableControl]="working">
             <mat-error *ngIf="form.controls['password'].hasError('required')">
-              Password is required
+              {{regError}}
             </mat-error>
           </mat-form-field>
           <div class="layout-row layout-align-end-center">

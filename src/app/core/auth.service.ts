@@ -8,6 +8,7 @@ import { switchMap } from 'rxjs/operators';
 import { User, Profile } from './user';
 import { ProfileService } from './profile.service';
 import 'rxjs/add/operator/take'
+import { colors } from '../components/scheduler/shared/colors';
 
 @Injectable()
 export class AuthService {
@@ -80,7 +81,8 @@ export class AuthService {
     let profile = {
       user_uid: user.uid,
       name: user.displayName || '',
-      phoneNumber: user.phoneNumber || ''
+      phoneNumber: user.phoneNumber || '',
+      color: colors.red.secondary
     }
     this.profileService.getUserProfile(user.uid)
       .subscribe(response => {

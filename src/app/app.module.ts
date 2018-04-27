@@ -63,11 +63,12 @@ import { NavbarComponent } from './components/navbar/navbar.component'
 import { FooterComponent } from './components/footer/footer.component';
 import { HomeComponent } from './home/home.component';
 import { AccountComponent } from './account/account.component';
-import { AdminComponent } from './account/admin/admin.component';
-import { VolunteerDialog } from './account/admin/dialogs/volunteer.component';
-import { UserDialog } from './account/admin/dialogs/user.component';
-import { ScheduleDialog } from './account/admin/dialogs/schedule.component';
-import { ScheduleDeleteDialog } from './account/admin/dialogs/schedule-delete.component';
+import { AdminComponent } from './admin/admin.component';
+import { VolunteerDialog } from './admin/dialogs/volunteer.component';
+import { UserDialog } from './admin/dialogs/user.component';
+import { ViewScheduleDialog } from './admin/dialogs/schedule-view.component';
+import { ScheduleDialog } from './admin/dialogs/schedule.component';
+import { ScheduleDeleteDialog } from './admin/dialogs/schedule-delete.component';
 import { ContactComponent } from './contact/contact.component';
 import { SchedulerComponent } from './components/scheduler/scheduler.component';
 import { EventDialog } from './components/scheduler/dialogs/event.component';
@@ -91,6 +92,7 @@ import { LoginComponent } from './account/login/login.component';
     ScheduleDeleteDialog,
     VolunteerDialog,
     UserDialog,
+    ViewScheduleDialog,
     ScheduleDialog,
     EventDialog,
     EventDeleteDialog,
@@ -139,7 +141,7 @@ import { LoginComponent } from './account/login/login.component';
     AngularFireDatabaseModule,
     AngularFireAuthModule
   ],
-  entryComponents: [VolunteerDialog, UserDialog, ScheduleDialog, EventDialog, EventDeleteDialog],
+  entryComponents: [VolunteerDialog, UserDialog, ViewScheduleDialog, ScheduleDialog, EventDialog, EventDeleteDialog],
   providers: [AngularFirestore, ScheduleService, ScheduleDeleteDialog, LocationService, ProfileService],
   bootstrap: [AppComponent]
 })

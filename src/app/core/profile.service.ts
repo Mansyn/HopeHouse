@@ -18,6 +18,10 @@ export class ProfileService {
         return this.profiles;
     }
 
+    getProfilesSnapshot(): Observable<any> {
+        return this.db.list('profiles').snapshotChanges()
+    }
+
     getProfilesData(): Observable<any> {
         return this.db.list('profiles').valueChanges()
     }

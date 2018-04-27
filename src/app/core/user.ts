@@ -19,6 +19,7 @@ export interface Profile {
     user_uid: string;
     name: string;
     phoneNumber: string;
+    color: string;
 }
 
 export interface UserProfile {
