@@ -151,7 +151,7 @@ export class AccountComponent implements OnInit, OnDestroy {
   }
 
   formatDateDisplay(start, end) {
-    return moment(start).format('dddd - MMMM Do h:mm a') + ' to ' + moment(end).format('h:mm a')
+    return moment(start).format('dddd - MMMM Do h:mm A') + ' to ' + moment(end).format('h:mm A')
   }
 
   signout() {

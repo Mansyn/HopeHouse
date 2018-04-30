@@ -34,6 +34,10 @@ export class ScheduleService {
         return this.db.object('/schedules/' + key).snapshotChanges()
     }
 
+    getScheduleOnce(key): any {
+        return this.db.object('/schedules/' + key).snapshotChanges().take(1)
+    }
+
     addSchedule(newSchedule) {
         return this.schedules.push(newSchedule);
     }

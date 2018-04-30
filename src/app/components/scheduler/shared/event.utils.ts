@@ -42,6 +42,17 @@ export default class EventUtils {
         return event;
     }
 
+    static filterPastEvents(events: Event[]) {
+        let now = moment().format()
+        let futureEvents = []
+        events.forEach(element => {
+            if (element.start > now) {
+                futureEvents.push(element)
+            }
+        })
+        return futureEvents
+    }
+
     static mapFromFormToEvent(form: any, schedule_key: string): Event {
 
         let slotMoment = moment(form.slot, 'HH:mm')

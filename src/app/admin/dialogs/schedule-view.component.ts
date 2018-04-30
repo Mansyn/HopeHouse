@@ -9,6 +9,7 @@ import { EventService } from "../../components/scheduler/shared/event.service"
 import { Schedule } from "../../schedule/shared/schedule"
 import { Event } from "../../components/scheduler/shared/event"
 import { User } from "../../core/user"
+import EventUtils from "../../components/scheduler/shared/event.utils"
 
 import { Subject } from 'rxjs/Subject'
 import 'rxjs/add/operator/takeUntil'
@@ -52,7 +53,7 @@ export class ViewScheduleDialog {
                 let schedule = scheduleData.payload.toJSON()
                 schedule['$key'] = scheduleData.key
                 let userEvents = _events.filter(x => x.schedule_key == scheduleData.key)
-                schedule['events'] = this.filterPastEvents(userEvents)
+                schedule['events'] = EventUtils.filterPastEvents(userEvents)
                 if (schedule['events'].length > 0) {
                     _schedules.push(schedule as Schedule)
                 }
@@ -65,18 +66,7 @@ export class ViewScheduleDialog {
         return this.users.find(u => u.uid == userId)
     }
 
-    filterPastEvents(events: Event[]) {
-        let now = moment().format()
-        let futureEvents = []
-        events.forEach(element => {
-            if (element.start > now) {
-                futureEvents.push(element)
-            }
-        })
-        return futureEvents
-    }
-
     formatDateDisplay(start, end) {
-        return moment(start).format('dddd, MMMM Do h:mm a') + ' to ' + moment(end).format('h:mm a')
+        return moment(start).format('dddd, MMMM Do h:mm A') + ' to ' + moment(end).format('h:mm A')
     }
 }

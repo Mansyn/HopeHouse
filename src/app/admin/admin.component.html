@@ -4,8 +4,11 @@
     <mat-toolbar>
       <mat-toolbar-row>
         <span>Admin</span>
-        <button mat-icon-button matTooltip="View Schedule" matTooltipPosition="after" *ngIf="tabIndex == 0 && schedule_selection.selected.length == 1" (click)="viewScheduleDialog()">
+        <button mat-icon-button matTooltip="View Schedule" matTooltipPosition="below" *ngIf="tabIndex == 0 && schedule_selection.selected.length == 1" (click)="viewScheduleDialog()">
           <mat-icon aria-label="View Schedule">assignment</mat-icon>
+        </button>
+        <button mat-icon-button matTooltip="Download Schedule" matTooltipPosition="after" *ngIf="tabIndex == 0 && schedule_selection.selected.length == 1" (click)="downloadSchedule()">
+          <mat-icon aria-label="View Schedule">file_download</mat-icon>
         </button>
         <span class="spacer"></span>
 

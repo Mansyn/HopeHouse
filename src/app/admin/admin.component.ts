@@ -1,24 +1,31 @@
 import { Component, Inject, AfterViewInit, ViewChild, OnDestroy } from '@angular/core'
-import { Observable } from 'rxjs/Observable'
+import { ResponseContentType } from '@angular/http'
 import { MatTableDataSource, MatSort, MatPaginator, MatDialog, MatTabChangeEvent, MatDialogRef, MAT_DIALOG_DATA, MatSnackBar } from '@angular/material'
+import * as _moment from 'moment'
+import { default as _rollupMoment } from 'moment'
+const moment = _rollupMoment || _moment
 
+import { Observable } from 'rxjs/Observable'
 import { Subject } from 'rxjs/Subject'
 import 'rxjs/add/operator/takeUntil'
 import { combineLatest } from 'rxjs/observable/combineLatest'
+import { SelectionModel } from '@angular/cdk/collections'
 
-import { UserProfile, Profile } from '../core/user'
+import { UserProfile, Profile, User } from '../core/user'
 import { AuthService } from '../core/auth.service'
 import { Schedule } from '../schedule/shared/schedule'
 import { ScheduleService } from '../schedule/shared/schedule.service'
 import { Location } from '../schedule/shared/location'
 import { LocationService } from '../schedule/shared/location.service'
-import { SelectionModel } from '@angular/cdk/collections'
 import { VolunteerDialog } from './dialogs/volunteer.component'
 import { UserDialog } from './dialogs/user.component'
 import { ScheduleDialog } from './dialogs/schedule.component'
 import { ScheduleDeleteDialog } from './dialogs/schedule-delete.component'
 import { ProfileService } from '../core/profile.service'
 import { ViewScheduleDialog } from './dialogs/schedule-view.component'
+import { ExcelService } from '../utilities/services/excel.service'
+import { EventService } from '../components/scheduler/shared/event.service'
+import EventUtils from "../components/scheduler/shared/event.utils"
 
 @Component({
     selector: 'admin',
@@ -48,8 +55,10 @@ export class AdminComponent implements AfterViewInit, OnDestroy {
         public dialog: MatDialog,
         public snackBar: MatSnackBar,
         private scheduleService: ScheduleService,
+        private eventService: EventService,
         private profileService: ProfileService,
-        private locationService: LocationService
+        private locationService: LocationService,
+        private excelService: ExcelService
     ) { }
 
     ngAfterViewInit() {
@@ -147,6 +156,34 @@ export class AdminComponent implements AfterViewInit, OnDestroy {
                 this.user_selection.clear();
             }
         });
+    }
+
+    downloadSchedule() {
+        let targetSchedule = this.schedule_selection.selected[0];
+
+        this.eventService.getScheduleEventsValue(targetSchedule.$key)
+            .subscribe(_events => {
+                let events: any[] = []
+
+                EventUtils.filterPastEvents(_events).forEach(_event => {
+                    let event = {
+                        Volunteer: this.findUser(_event.user).profile.name,
+                        Date: this.formatDateDisplay(_event.start, _event.end)
+                    }
+                    events.push(event)
+                })
+
+                this.excelService.exportAsExcelFile(events, targetSchedule.title)
+            })
+
+    }
+
+    formatDateDisplay(start, end) {
+        return moment(start).format('MMMM Do h:mm A') + ' to ' + moment(end).format('h:mm A')
+    }
+
+    findUser(userId: string): UserProfile {
+        return this.user_dataSource.data.find(u => u.uid == userId)
     }
 
     volunteerDialog(add: boolean): void {
