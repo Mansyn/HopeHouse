@@ -50,7 +50,7 @@ export class EventDialog {
             }
         }
         this.slots = EventUtils.formSlots(data.event.start ? moment(data.event.start) : moment())
-        this.slotValue = data.event.start ? moment(data.event.start).format('hh:mm') : null
+        this.slotValue = data.event.start ? moment(data.event.start).format('HH:mm') : null
         this.form = this.fb.group({
             'user': [data.event.user || null, Validators.required],
             'date': [data.event.start || null, Validators.required],

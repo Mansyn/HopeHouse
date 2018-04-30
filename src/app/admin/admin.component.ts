@@ -138,8 +138,8 @@ export class AdminComponent implements AfterViewInit, OnDestroy {
         let target = this.schedule_selection.selected[0];
 
         let dialogRef = this.dialog.open(ViewScheduleDialog, {
-            width: '400px',
-            data: { schedule: target }
+            width: '600px',
+            data: { schedule: target, users: this.user_dataSource.data }
         });
 
         dialogRef.afterClosed().subscribe(result => {

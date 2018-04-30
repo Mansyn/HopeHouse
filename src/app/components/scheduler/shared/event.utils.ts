@@ -89,12 +89,12 @@ export default class EventUtils {
 
     static getSlot(day) {
         let slot = ''
-        switch (moment(day).format('hh:mm')) {
+        switch (moment(day).format('HH:mm')) {
             case '12:00':
                 slot = 'Lunch'
                 break
-            case '04:00':
-            case '05:30':
+            case '16:00':
+            case '17:30':
                 slot = 'Dinner'
                 break
         }

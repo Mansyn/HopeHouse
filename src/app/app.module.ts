@@ -49,6 +49,7 @@ import { environment } from '../environments/environment';
 
 /* Services */
 import { ScheduleService } from './schedule/shared/schedule.service';
+import { EventService } from './components/scheduler/shared/event.service';
 import { LocationService } from './schedule/shared/location.service';
 import { ProfileService } from './core/profile.service';
 
@@ -142,7 +143,7 @@ import { LoginComponent } from './account/login/login.component';
     AngularFireAuthModule
   ],
   entryComponents: [VolunteerDialog, UserDialog, ViewScheduleDialog, ScheduleDialog, EventDialog, EventDeleteDialog],
-  providers: [AngularFirestore, ScheduleService, ScheduleDeleteDialog, LocationService, ProfileService],
+  providers: [AngularFirestore, ScheduleService, EventService, ScheduleDeleteDialog, LocationService, ProfileService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

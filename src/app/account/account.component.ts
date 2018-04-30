@@ -150,8 +150,8 @@ export class AccountComponent implements OnInit, OnDestroy {
     return this.schedules.find(x => x.$key == key)
   }
 
-  formatDateTime(mom) {
-    return moment(mom).format('lll')
+  formatDateDisplay(start, end) {
+    return moment(start).format('dddd - MMMM Do h:mm a') + ' to ' + moment(end).format('h:mm a')
   }
 
   signout() {

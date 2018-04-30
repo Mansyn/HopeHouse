@@ -19,6 +19,10 @@ export class EventService {
         return this.events;
     }
 
+    getEventsSnapshot(): Observable<any> {
+        return this.db.list('events').snapshotChanges()
+    }
+
     getScheduleEvents(schedule_key: string) {
         this.events = this.db.list('events', ref => ref.orderByChild('schedule_key').equalTo(schedule_key)) as AngularFireList<Event[]>;
         return this.events;

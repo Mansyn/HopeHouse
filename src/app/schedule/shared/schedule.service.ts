@@ -30,7 +30,7 @@ export class ScheduleService {
         return this.db.object('/schedules/' + key)
     }
 
-    getScheduleSnapshot(key) {
+    getScheduleSnapshot(key): Observable<any> {
         return this.db.object('/schedules/' + key).snapshotChanges()
     }
 
