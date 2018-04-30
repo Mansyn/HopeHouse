@@ -173,9 +173,22 @@ export class AdminComponent implements AfterViewInit, OnDestroy {
                     events.push(event)
                 })
 
-                this.excelService.exportAsExcelFile(events, targetSchedule.title)
+                this.excelService.exportAsScheduleExcelFile(events, targetSchedule.title, 'schedule')
             })
 
+    }
+
+    downloadUsers() {
+        let users: any[] = []
+        this.user_dataSource.data.forEach(_user => {
+            let user = {
+                Name: _user.profile.name,
+                Email: _user.email,
+                Phone: _user.profile.phoneNumber,
+            }
+            users.push(user)
+        })
+        this.excelService.exportAsUsersExcelFile(users, 'Users', 'users')
     }
 
     formatDateDisplay(start, end) {

@@ -10,6 +10,9 @@
         <button mat-icon-button matTooltip="Download Schedule" matTooltipPosition="after" *ngIf="tabIndex == 0 && schedule_selection.selected.length == 1" (click)="downloadSchedule()">
           <mat-icon aria-label="View Schedule">file_download</mat-icon>
         </button>
+        <button mat-icon-button matTooltip="Download Users" matTooltipPosition="after" *ngIf="tabIndex == 1" (click)="downloadUsers()">
+          <mat-icon aria-label="View Schedule">file_download</mat-icon>
+        </button>
         <span class="spacer"></span>
 
         <!-- User Functions -->
