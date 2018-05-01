@@ -166,11 +166,14 @@ export class AdminComponent implements AfterViewInit, OnDestroy {
                 let events: any[] = []
 
                 EventUtils.filterPastEvents(_events).forEach(_event => {
-                    let event = {
-                        Volunteer: this.findUser(_event.user).profile.name,
-                        Date: this.formatDateDisplay(_event.start, _event.end)
+                    let user = this.findUser(_event.user)
+                    if (user.roles['volunteer']) {
+                        let event = {
+                            Volunteer: user.profile.name,
+                            Date: this.formatDateDisplay(_event.start, _event.end)
+                        }
+                        events.push(event)
                     }
-                    events.push(event)
                 })
 
                 this.excelService.exportAsScheduleExcelFile(events, targetSchedule.title, 'schedule')
@@ -231,7 +234,7 @@ export class AdminComponent implements AfterViewInit, OnDestroy {
             if (result) {
                 result.uid = target.uid
                 this.auth.updateUser(result, this.isRole('volunteer'))
-                let updatedProfile = { user_uid: target.uid, name: result.displayName, phoneNumber: result.phoneNumber }
+                let updatedProfile = { user_uid: target.uid, name: result.displayName, phoneNumber: result.phoneNumber, color: result.color }
                 this.profileService.updateProfile(target.profile.uid, updatedProfile)
                 this.openSnackBar('User Saved', 'OKAY')
                 this.user_selection.clear()

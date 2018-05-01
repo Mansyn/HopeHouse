@@ -17,25 +17,27 @@ export class UserDialog {
             'displayName': [data.user.profile.name || null, Validators.compose([Validators.maxLength(30), Validators.required])],
             'email': [data.user.email || null, Validators.compose([Validators.email, Validators.required])],
             'phoneNumber': [data.user.profile.phoneNumber || null, Validators.compose([Validators.pattern('[0-9]+'), Validators.maxLength(10), Validators.minLength(10), Validators.required])],
+            'color': [data.user.profile.color || null, Validators.required],
             'photoURL': [data.user.photoURL || null]
         })
     }
 
-    refresh: Subject<any> = new Subject();
+    refresh: Subject<any> = new Subject()
 
     saveUser() {
         if (this.form.valid) {
             let form = this.form.value
-            let now = new Date().toDateString();
+            let now = new Date().toDateString()
 
             let user = {
                 displayName: form.displayName,
                 email: form.email,
                 phoneNumber: form.phoneNumber,
+                color: form.color,
                 photoURL: form.photoURL
             }
 
-            this.dialogRef.close(user);
+            this.dialogRef.close(user)
         }
     }
 }

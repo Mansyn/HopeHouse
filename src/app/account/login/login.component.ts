@@ -48,16 +48,17 @@ export class LoginComponent implements OnInit, OnDestroy {
   login() {
     if (this.form.valid) {
       this.working = true
+      let self = this
       let form = this.form.value
       this.afAuth.auth.signInWithEmailAndPassword(form.email, form.password)
         .then((response) => {
-          this.working = false
-          this.router.navigate(['/account'])
+          self.working = false
+          self.router.navigate(['/account'])
         })
         .catch(function (error) {
           // Handle Errors here.
-          this.openSnackBar(error.message, 'OKAY')
-          this.working = false
+          self.openSnackBar(error.message, 'OKAY')
+          self.working = false
           console.log(error)
         });
     }

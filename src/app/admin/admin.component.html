@@ -4,13 +4,15 @@
     <mat-toolbar>
       <mat-toolbar-row>
         <span>Admin</span>
-        <button mat-icon-button matTooltip="View Schedule" matTooltipPosition="below" *ngIf="tabIndex == 0 && schedule_selection.selected.length == 1" (click)="viewScheduleDialog()">
+        <button mat-icon-button matTooltip="View Schedule" matTooltipPosition="below" *ngIf="tabIndex == 0 && schedule_selection.selected.length == 1"
+          (click)="viewScheduleDialog()">
           <mat-icon aria-label="View Schedule">assignment</mat-icon>
         </button>
-        <button mat-icon-button matTooltip="Download Schedule" matTooltipPosition="after" *ngIf="tabIndex == 0 && schedule_selection.selected.length == 1" (click)="downloadSchedule()">
+        <button mat-icon-button matTooltip="Download Schedule" matTooltipPosition="after" *ngIf="tabIndex == 0 && schedule_selection.selected.length == 1"
+          (click)="downloadSchedule()">
           <mat-icon aria-label="View Schedule">file_download</mat-icon>
         </button>
-        <button mat-icon-button matTooltip="Download Users" matTooltipPosition="after" *ngIf="tabIndex == 1" (click)="downloadUsers()">
+        <button mat-icon-button matTooltip="Download Volunteers" matTooltipPosition="after" *ngIf="tabIndex == 1" (click)="downloadUsers()">
           <mat-icon aria-label="View Schedule">file_download</mat-icon>
         </button>
         <span class="spacer"></span>
@@ -19,10 +21,12 @@
         <button mat-raised-button *ngIf="tabIndex == 1 && user_selection.selected.length ==1" color="primary" (click)="userDialog()">
           Edit
         </button>
-        <button mat-raised-button *ngIf="tabIndex == 1 && user_selection.selected.length == 1 && !isRole('volunteer')" color="accent" (click)="volunteerDialog(true)">
+        <button mat-raised-button *ngIf="tabIndex == 1 && user_selection.selected.length == 1 && !isRole('volunteer')" color="accent"
+          (click)="volunteerDialog(true)">
           Set Volunteer
         </button>
-        <button mat-raised-button *ngIf="tabIndex == 1 && user_selection.selected.length == 1 && isRole('volunteer')" color="warn" (click)="volunteerDialog(false)">
+        <button mat-raised-button *ngIf="tabIndex == 1 && user_selection.selected.length == 1 && isRole('volunteer')" color="warn"
+          (click)="volunteerDialog(false)">
           Remove Volunteer
         </button>
 

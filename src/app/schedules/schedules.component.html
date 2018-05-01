@@ -10,15 +10,17 @@
     <div class="flex-90 flex-gt-sm-70">
       <div class="layout-column layout-gt-sm-row layout-align-space-around-center layout-wrap">
         <div *ngFor="let schedule of schedules">
-          <mat-card class="m-15" [style.background]="schedule.color">
+          <mat-card class="m-15">
             <mat-card-header>
               <div mat-card-avatar>
-                <mat-icon>assignment</mat-icon>
+                <mat-icon [style.color]="schedule.color">assignment</mat-icon>
               </div>
               <mat-card-title>{{schedule.title}}</mat-card-title>
               <mat-card-subtitle>{{locationName(schedule.location)}}</mat-card-subtitle>
             </mat-card-header>
-            <img mat-card-image src="{{schedule.image}}">
+            <div class="txt-center">
+              <img mat-card-image src="{{schedule.image}}">
+            </div>
             <mat-card-content>
               <p>{{schedule.description}}</p>
             </mat-card-content>

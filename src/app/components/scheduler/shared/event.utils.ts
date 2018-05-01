@@ -17,8 +17,8 @@ export default class EventUtils {
             title: user.profile.name + ' - ' + this.getSlot(event.start),
             user: event.user,
             color: {
-                primary: event.primary,
-                secondary: event.secondary
+                primary: user.profile.color,
+                secondary: user.profile.color
             }
         }
 
@@ -53,7 +53,7 @@ export default class EventUtils {
         return futureEvents
     }
 
-    static mapFromFormToEvent(form: any, schedule_key: string): Event {
+    static mapFromFormToEvent(form: any, schedule_key: string, user: UserProfile): Event {
 
         let slotMoment = moment(form.slot, 'HH:mm')
         let _moment = moment(form.date).hour(slotMoment.get('hour')).minute(slotMoment.get('minutes'))
@@ -64,8 +64,8 @@ export default class EventUtils {
             user: form.user,
             start: _moment.format(),
             end: _moment.add(1, 'hours').format(),
-            primary: form.primary,
-            secondary: form.secondary,
+            primary: user.profile.color,
+            secondary: user.profile.color,
             timeStamp: moment().format()
         }
 

@@ -43,20 +43,12 @@ export class EventDialog {
 
     buildForm(data: any) {
         this.create = data.event.$key == null
-        if (!data.event.color) {
-            data.event.color = {
-                'primary': colors.red.primary,
-                'secondary': colors.red.secondary
-            }
-        }
         this.slots = EventUtils.formSlots(data.event.start ? moment(data.event.start) : moment())
         this.slotValue = data.event.start ? moment(data.event.start).format('HH:mm') : null
         this.form = this.fb.group({
             'user': [data.event.user || null, Validators.required],
             'date': [data.event.start || null, Validators.required],
-            'slot': [this.slotValue, Validators.required],
-            'primary': [data.event.color.primary, Validators.required],
-            'secondary': [data.event.color.secondary, Validators.required]
+            'slot': [this.slotValue, Validators.required]
         })
     }
 
@@ -68,7 +60,7 @@ export class EventDialog {
     saveEvent() {
         if (this.form.valid) {
             let form = this.form.value
-            let event = EventUtils.mapFromFormToEvent(form, this.data.scheduleKey)
+            let event = EventUtils.mapFromFormToEvent(form, this.data.scheduleKey, this.data.volunteers.find(p => p.uid == form.user))
 
             if (!this.create) {
                 event["id"] = this.data.event.id

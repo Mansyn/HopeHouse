@@ -37,6 +37,12 @@
       </mat-error>
     </mat-form-field>
     <mat-form-field class="full-width">
+      <input matInput placeholder="Color" type="color" [formControl]="form.controls['color']" (change)="refresh.next()">
+      <mat-error *ngIf="form.controls['color'].hasError('required')">
+        Color is required
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field class="full-width">
       <input matInput placeholder="Photo URL" type="url" [formControl]="form.controls['photoURL']">
     </mat-form-field>
   </form>

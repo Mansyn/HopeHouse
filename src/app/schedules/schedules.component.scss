@@ -23,8 +23,13 @@
     margin-top: 2rem;
   }
 
+  .mat-card-image:first-child {
+    margin-top: 0 !important;
+  }
+
   .mat-card {
     background: mat-color($candy-app-accent, 100);
+    width: 400px;
   }
 
   .mat-card-header .mat-icon {
@@ -32,8 +37,8 @@
   }
 
   .mat-card-image {
-    max-width: 350px;
-    max-height: 350px;
+    max-width: 400px;
+    max-height: 400px;
   }
 
   .mat-expansion-panel-header-title {
