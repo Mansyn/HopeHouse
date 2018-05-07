@@ -55,7 +55,7 @@
   font-size: 26px;
   width: 100%;
   font-weight: bold;
-  cursor: text;
+  cursor: pointer;
   height: 38px;
   line-height: 38px;
   padding-left: 2px;
@@ -71,7 +71,7 @@
   font-size: 20px;
   width: 100%;
   font-weight: 300;
-  cursor: text;
+  cursor: pointer;
   height: 30px;
   line-height: 30px;
   padding-left: 2px;
@@ -81,6 +81,10 @@
   font-size: 20px;
   width: 100%;
   font-weight: 300;
+}
+
+.color {
+  cursor: pointer;
 }
 
 .info {

@@ -157,8 +157,10 @@ export class AdminComponent implements AfterViewInit, OnDestroy {
                     if (user.roles['volunteer']) {
                         let event = {
                             Volunteer: user.profile.name,
-                            Date: this.formatDateDisplay(_event.start, _event.end),
-                            Type: _event.type
+                            Date: moment(_event.start).format('l'),
+                            Meal: EventUtils.getSlot(_event.start),
+                            Type: _event.type,
+                            Time: moment(_event.start).format('LT')
                         }
                         events.push(event)
                     }

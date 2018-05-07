@@ -15,7 +15,7 @@
             <input class="phone-edit" *ngIf="phoneEditing" [(ngModel)]="profileRef.phoneNumber" (keydown.enter)="togglePhone(false)" (focusout)="togglePhone(false)" type="text" [focus]="true" maxlength="10" />
           </div>
           <div class="details">
-            <input matInput placeholder="Color" type="color" [(ngModel)]="profileRef.color" (change)="updateProfile()">
+            <input matInput placeholder="Color" type="color" class="color" [(ngModel)]="profileRef.color" (change)="updateProfile()">
           </div>
           <div class="info">
             <div class="email">

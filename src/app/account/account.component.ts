@@ -142,7 +142,11 @@ export class AccountComponent implements OnInit, OnDestroy {
   filterPastCalendarEvents(events: CalendarEvent[]) {
     let now = new Date()
     let futureEvents = []
-    events.forEach(element => {
+    events.sort((a, b) => {
+      if (a.start < b.start) return -1;
+      else if (a.start > b.start) return 1;
+      else return 0;
+    }).forEach(element => {
       if (element.start > now) {
         futureEvents.push(element)
       }
