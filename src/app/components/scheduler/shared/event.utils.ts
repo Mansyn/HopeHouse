@@ -1,5 +1,5 @@
 import { CalendarEvent, CalendarEventAction } from 'angular-calendar'
-import { Event } from './event'
+import { Event, EventType } from './event'
 import { UserProfile } from '../../../core/user'
 
 import * as _moment from 'moment'
@@ -14,11 +14,15 @@ export default class EventUtils {
             id: event.$key,
             start: new Date(event.start),
             end: new Date(event.end),
-            title: user.profile.name + ' - ' + this.getSlot(event.start),
+            title: user.profile.name + ' &ndash; ' + event.type + ' ' + this.getSlot(event.start),
             user: event.user,
             color: {
                 primary: user.profile.color,
                 secondary: user.profile.color
+            },
+            meta: {
+                schedule_key: event.schedule_key,
+                type: event.type ? event.type : EventType.Serve
             }
         }
 
@@ -34,12 +38,24 @@ export default class EventUtils {
             user: userid,
             start: moment(calendarevent.start).format(),
             end: moment(calendarevent.end).format(),
+            type: calendarevent.meta.type,
             primary: calendarevent.color.primary,
             secondary: calendarevent.color.secondary,
             timeStamp: moment().format()
         }
 
         return event;
+    }
+
+    static filterPastCalendarEvents(events: CalendarEvent[]) {
+        let now = new Date()
+        let futureEvents = []
+        events.forEach(element => {
+            if (element.start > now) {
+                futureEvents.push(element)
+            }
+        })
+        return futureEvents
     }
 
     static filterPastEvents(events: Event[]) {
@@ -66,6 +82,7 @@ export default class EventUtils {
             end: _moment.add(1, 'hours').format(),
             primary: user.profile.color,
             secondary: user.profile.color,
+            type: form.type,
             timeStamp: moment().format()
         }
 

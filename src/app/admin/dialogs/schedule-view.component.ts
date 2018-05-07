@@ -9,6 +9,9 @@ import { EventService } from "../../components/scheduler/shared/event.service"
 import { Schedule } from "../../schedule/shared/schedule"
 import { Event } from "../../components/scheduler/shared/event"
 import { User } from "../../core/user"
+import { AuthService } from "../../core/auth.service"
+import { ProfileService } from "../../core/profile.service"
+import UserUtils from "../../core/user.utils"
 import EventUtils from "../../components/scheduler/shared/event.utils"
 
 import { Subject } from 'rxjs/Subject'
@@ -29,6 +32,8 @@ export class ViewScheduleDialog {
     constructor(
         public dialogRef: MatDialogRef<ViewScheduleDialog>,
         @Inject(MAT_DIALOG_DATA) public data: any,
+        public auth: AuthService,
+        private profileService: ProfileService,
         private scheduleService: ScheduleService,
         private eventService: EventService
     ) {
@@ -39,11 +44,18 @@ export class ViewScheduleDialog {
     getScheduleData(key) {
         const schedules$ = this.scheduleService.getScheduleSnapshot(key)
         const events$ = this.eventService.getScheduleEventsSnapshot(key)
+        const userProfiles$ = this.profileService.getProfilesData()
+        const users$ = this.auth.getAllUsers()
 
         combineLatest(
-            schedules$, events$,
-            (scheduleData, eventsData) => {
+            schedules$, events$, userProfiles$, users$,
+            (scheduleData, eventsData, userProfilesData, usersData) => {
+                let users = usersData.map((user) => {
+                    return UserUtils.mapToUserProfile(user, userProfilesData.find(p => p.user_uid == user.uid))
+                })
+
                 let _events = []
+                let calendarEvents = []
                 let _schedules = []
                 eventsData.forEach(_event => {
                     var event = _event.payload.toJSON()
@@ -53,17 +65,19 @@ export class ViewScheduleDialog {
                 let schedule = scheduleData.payload.toJSON()
                 schedule['$key'] = scheduleData.key
                 let userEvents = _events.filter(x => x.schedule_key == scheduleData.key)
-                schedule['events'] = EventUtils.filterPastEvents(userEvents)
+                userEvents.forEach((event) => {
+                    let targetUser = users.find(u => u.uid == event.user)
+                    if (targetUser) {
+                        calendarEvents.push(EventUtils.mapToCalendarEvent(event, targetUser))
+                    }
+                })
+                schedule['events'] = EventUtils.filterPastCalendarEvents(calendarEvents)
                 if (schedule['events'].length > 0) {
                     _schedules.push(schedule as Schedule)
                 }
                 this.schedule = schedule
             }
         ).takeUntil(this.destroy$).subscribe()
-    }
-
-    findUser(userId: string): User {
-        return this.users.find(u => u.uid == userId)
     }
 
     formatDateDisplay(start, end) {

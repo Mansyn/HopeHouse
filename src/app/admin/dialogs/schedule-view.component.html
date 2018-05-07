@@ -5,8 +5,8 @@
   <mat-list *ngIf="schedule">
     <mat-list-item *ngFor="let event of schedule.events">
       <mat-icon mat-list-icon>local_dining</mat-icon>
-      <h4 mat-line>{{event.title}}</h4>
-      <p mat-line>{{formatDateDisplay(event.start, event.end)}} &ndash; {{findUser(event.user).profile.name}}</p>
+      <h4 mat-line [innerHTML]="event.title"></h4>
+      <p mat-line>{{formatDateDisplay(event.start, event.end)}}</p>
     </mat-list-item>
   </mat-list>
 </div>

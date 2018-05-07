@@ -9,9 +9,12 @@ const moment = _rollupMoment || _moment
 
 import { AuthService } from '../core/auth.service'
 import { Event } from '../components/scheduler/shared/event'
+import EventUtils from '../components/scheduler/shared/event.utils'
+import { CalendarEvent } from 'angular-calendar'
 import { EventService } from '../components/scheduler/shared/event.service'
 import { Observable } from 'rxjs/Observable'
-import { User, Profile } from '../core/user'
+import { User, Profile, UserProfile } from '../core/user'
+import UserUtils from '../core/user.utils'
 import { Schedule } from '../schedule/shared/schedule'
 import { ScheduleService } from '../schedule/shared/schedule.service'
 import { ProfileService } from '../core/profile.service'
@@ -30,6 +33,7 @@ export class AccountComponent implements OnInit, OnDestroy {
 
   destroy$: Subject<boolean> = new Subject<boolean>()
 
+  calendarEvents: CalendarEvent[] = []
   events: Event[] = []
   schedules: Schedule[] = []
 
@@ -39,6 +43,7 @@ export class AccountComponent implements OnInit, OnDestroy {
 
   userRef: User
   profileRef: Profile
+  userProfile: UserProfile
   nameRef: string = ''
   phoneNumberRef: string = ''
 
@@ -80,6 +85,7 @@ export class AccountComponent implements OnInit, OnDestroy {
         this.profileRef = _profile as Profile
         this.nameRef = this.profileRef.name
         this.phoneNumberRef = this.profileRef.phoneNumber
+        this.userProfile = UserUtils.mapToUserProfile(user, this.profileRef)
 
         // events
         this.events = []
@@ -90,11 +96,12 @@ export class AccountComponent implements OnInit, OnDestroy {
           event["$key"] = _event.key
           this.events.push(event as Event)
         })
+        this.calendarEvents = this.events.map(event => EventUtils.mapToCalendarEvent(event, this.userProfile))
         scheduleData.forEach(_schedule => {
           let schedule = _schedule.payload.toJSON()
           schedule['$key'] = _schedule.key
-          let userEvents = this.events.filter(x => x.schedule_key == _schedule.key)
-          schedule['events'] = this.filterPastEvents(userEvents)
+          let userEvents = this.calendarEvents.filter(x => x.meta.schedule_key == _schedule.key)
+          schedule['events'] = this.filterPastCalendarEvents(userEvents)
           if (schedule['events'].length > 0) {
             _schedules.push(schedule as Schedule)
           }
@@ -132,8 +139,8 @@ export class AccountComponent implements OnInit, OnDestroy {
     this.profileService.updateProfile(this.profileRef['$key'], targetProfile)
   }
 
-  filterPastEvents(events: Event[]) {
-    let now = moment().format()
+  filterPastCalendarEvents(events: CalendarEvent[]) {
+    let now = new Date()
     let futureEvents = []
     events.forEach(element => {
       if (element.start > now) {

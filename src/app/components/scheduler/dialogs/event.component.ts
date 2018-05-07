@@ -11,6 +11,7 @@ import { colors } from "../shared/colors"
 import { AuthService } from "../../../core/auth.service"
 import { User } from "../../../core/user"
 import EventUtils from "../shared/event.utils"
+import { EventType } from "../shared/event"
 
 @Component({
     selector: 'event-dialog',
@@ -26,6 +27,8 @@ export class EventDialog {
 
     create: boolean
     form: FormGroup
+    typeValues = ['Serving', 'Supplying']
+    typeValue: string = 'Serving'
     slotValue: any
 
     filterSunday = (d: Date): boolean => {
@@ -47,6 +50,7 @@ export class EventDialog {
         this.slotValue = data.event.start ? moment(data.event.start).format('HH:mm') : null
         this.form = this.fb.group({
             'user': [data.event.user || null, Validators.required],
+            'type': [data.event.type || this.typeValue],
             'date': [data.event.start || null, Validators.required],
             'slot': [this.slotValue, Validators.required]
         })

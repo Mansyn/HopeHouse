@@ -1,6 +1,5 @@
 <h1 mat-dialog-title>
-  <span *ngIf="create">Serve Meal</span>
-  <span *ngIf="!create">Edit Meal</span>
+  <span>{{typeValue}} Meal</span>
 </h1>
 <form [formGroup]="form" (ngSubmit)="saveEvent()">
   <div mat-dialog-content>
@@ -12,8 +11,7 @@
       </mat-select>
     </mat-form-field>
     <mat-form-field class="half-width">
-      <input matInput [matDatepickerFilter]="filterSunday" [min]="today" (dateInput)="inputDate($event)" [matDatepicker]="date"
-        placeholder="Date" [formControl]="form.controls['date']" required>
+      <input matInput [matDatepickerFilter]="filterSunday" [min]="today" (dateInput)="inputDate($event)" [matDatepicker]="date" placeholder="Date" [formControl]="form.controls['date']" required>
       <mat-datepicker-toggle matSuffix [for]="date"></mat-datepicker-toggle>
       <mat-datepicker #date></mat-datepicker>
     </mat-form-field>
@@ -24,6 +22,14 @@
         </mat-option>
       </mat-select>
       <mat-hint align="end">Select meal you will be serving</mat-hint>
+    </mat-form-field>
+    <mat-form-field floatPlaceholder="always" class="input-no-underline full-width">
+      <input matInput placeholder="Type" style="display: none">
+      <mat-radio-group [formControl]="form.controls['type']" [(ngModel)]="typeValue">
+        <mat-radio-button *ngFor="let type of typeValues" [value]="type">
+          {{type}}
+        </mat-radio-button>
+      </mat-radio-group>
     </mat-form-field>
   </div>
   <div mat-dialog-actions align="end">

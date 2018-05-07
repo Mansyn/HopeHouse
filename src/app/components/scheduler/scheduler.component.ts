@@ -29,6 +29,7 @@ import { EventDeleteDialog } from './dialogs/delete.component'
 import { AuthService } from '../../core/auth.service'
 import { ProfileService } from '../../core/profile.service'
 import { User, UserProfile } from '../../core/user'
+import UserUtils from '../../core/user.utils'
 import { EventTitleFormatter } from './event-title-formatter.provider'
 import EventUtils from './shared/event.utils'
 
@@ -132,15 +133,7 @@ export class SchedulerComponent implements OnInit {
                 this.refresh.next()
                 this.loading = false
                 let users = usersData.map((user) => {
-                    return {
-                        uid: user.uid,
-                        displayName: user.displayName,
-                        email: user.email,
-                        phoneNumber: user.phoneNumber,
-                        photoURL: user.photoURL,
-                        roles: user.roles,
-                        profile: userProfilesData.find(p => p.user_uid == user.uid)
-                    } as UserProfile
+                    return UserUtils.mapToUserProfile(user, userProfilesData.find(p => p.user_uid == user.uid))
                 })
                 this.events.forEach((event) => {
                     let targetUser = users.find(u => u.uid == event.user)

@@ -26,6 +26,7 @@ import { ViewScheduleDialog } from './dialogs/schedule-view.component'
 import { ExcelService } from '../utilities/services/excel.service'
 import { EventService } from '../components/scheduler/shared/event.service'
 import EventUtils from "../components/scheduler/shared/event.utils"
+import UserUtils from '../core/user.utils'
 
 @Component({
     selector: 'admin',
@@ -62,28 +63,14 @@ export class AdminComponent implements AfterViewInit, OnDestroy {
     ) { }
 
     ngAfterViewInit() {
-        const userProfiles$ = this.profileService.getProfilesSnapshot()
+        const userProfiles$ = this.profileService.getProfilesData()
         const users$ = this.auth.getAllUsers()
 
         combineLatest(
             userProfiles$, users$,
             (userProfilesData, usersData) => {
-                let userProfiles = []
-                userProfilesData.forEach((_profile) => {
-                    var profile = _profile.payload.toJSON()
-                    profile.uid = _profile.key
-                    userProfiles.push(profile as Profile)
-                })
                 let users = usersData.map((user) => {
-                    return {
-                        uid: user.uid,
-                        displayName: user.displayName,
-                        email: user.email,
-                        phoneNumber: user.phoneNumber,
-                        photoURL: user.photoURL,
-                        roles: user.roles,
-                        profile: userProfiles.find(p => p.user_uid == user.uid)
-                    } as UserProfile
+                    return UserUtils.mapToUserProfile(user, userProfilesData.find(p => p.user_uid == user.uid))
                 })
                 this.user_dataSource.data = users
             }).takeUntil(this.destroy$).subscribe()
@@ -170,7 +157,8 @@ export class AdminComponent implements AfterViewInit, OnDestroy {
                     if (user.roles['volunteer']) {
                         let event = {
                             Volunteer: user.profile.name,
-                            Date: this.formatDateDisplay(_event.start, _event.end)
+                            Date: this.formatDateDisplay(_event.start, _event.end),
+                            Type: _event.type
                         }
                         events.push(event)
                     }

@@ -1,3 +1,11 @@
 .mat-form-field {
   margin-bottom: 20px;
 }
+
+::ng-deep .input-no-underline .mat-input-wrapper .mat-input-underline {
+  display: none;
+}
+
+.mat-radio-button {
+  padding-right: 2em;
+}
