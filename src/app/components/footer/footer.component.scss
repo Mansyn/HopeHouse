@@ -9,3 +9,18 @@
   background-color: mat-color($candy-app-accent, 800);
   color: #fff;
 }
+
+a {
+  color: white;
+  text-decoration: none;
+}
+
+a:hover {
+  color: white;
+  text-decoration: underline;
+}
+
+a:active,
+a:visited {
+  color: white;
+}

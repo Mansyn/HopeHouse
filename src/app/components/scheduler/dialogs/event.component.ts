@@ -27,7 +27,7 @@ export class EventDialog {
 
     create: boolean
     form: FormGroup
-    typeValues = ['Serving', 'Supplying']
+    typeValues = ['Serving', 'Serving & Supplying']
     typeValue: string
     slotValue: any
 
@@ -48,7 +48,7 @@ export class EventDialog {
         this.create = data.event.$key == null
         this.slots = EventUtils.formSlots(data.event.start ? moment(data.event.start) : moment())
         this.slotValue = data.event.start ? moment(data.event.start).format('HH:mm') : null
-        this.typeValue = data.event.meta.type ? data.event.meta.type : this.typeValues[0]
+        this.typeValue = data.event.meta && data.event.meta.type ? data.event.meta.type : this.typeValues[0]
         this.form = this.fb.group({
             'user': [data.event.user || null, Validators.required],
             'type': [this.typeValue, Validators.required],

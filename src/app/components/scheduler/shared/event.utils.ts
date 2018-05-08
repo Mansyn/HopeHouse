@@ -54,7 +54,7 @@ export default class EventUtils {
             if (a.start < b.start) return -1;
             else if (a.start > b.start) return 1;
             else return 0;
-          }).forEach(element => {
+        }).forEach(element => {
             if (element.start > now) {
                 futureEvents.push(element)
             }
@@ -69,7 +69,7 @@ export default class EventUtils {
             if (a.start < b.start) return -1;
             else if (a.start > b.start) return 1;
             else return 0;
-          }).forEach(element => {
+        }).forEach(element => {
             if (element.start > now) {
                 futureEvents.push(element)
             }
@@ -100,20 +100,20 @@ export default class EventUtils {
     static formSlots(day) {
         let slots = []
         switch (day.day()) {
-            case 2:
+            case 3:
                 slots = [
                     { value: '12:00', viewValue: 'Lunch' },
                     { value: '16:00', viewValue: 'Dinner' }
                 ]
                 break
             case 1:
-            case 3:
+            case 2:
             case 4:
             case 5:
             case 6:
                 slots = [
                     { value: '12:00', viewValue: 'Lunch' },
-                    { value: '17:30', viewValue: 'Dinner' }
+                    { value: '17:00', viewValue: 'Dinner' }
                 ]
                 break
             default:
@@ -130,7 +130,7 @@ export default class EventUtils {
                 slot = 'Lunch'
                 break
             case '16:00':
-            case '17:30':
+            case '17:00':
                 slot = 'Dinner'
                 break
         }
