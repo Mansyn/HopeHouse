@@ -6,12 +6,13 @@ import { Subject } from "rxjs/Subject"
 import * as _moment from 'moment'
 import { default as _rollupMoment } from 'moment'
 const moment = _rollupMoment || _moment
+import RRule from 'rrule'
 
 import { colors } from "../shared/colors"
 import { AuthService } from "../../../core/auth.service"
 import { User } from "../../../core/user"
 import EventUtils from "../shared/event.utils"
-import { EventType } from "../shared/event"
+import { SelectListItem } from "../../../models/selectlist"
 
 @Component({
     selector: 'event-dialog',
@@ -28,7 +29,10 @@ export class EventDialog {
     create: boolean
     form: FormGroup
     typeValues = ['Serving', 'Serving & Supplying']
+    isRepeating: boolean
+    freqValues: SelectListItem[] = EventUtils.getRuleValues()
     typeValue: string
+    freqValue: number
     slotValue: any
 
     filterSunday = (d: Date): boolean => {
@@ -49,17 +53,24 @@ export class EventDialog {
         this.slots = EventUtils.formSlots(data.event.start ? moment(data.event.start) : moment())
         this.slotValue = data.event.start ? moment(data.event.start).format('HH:mm') : null
         this.typeValue = data.event.meta && data.event.meta.type ? data.event.meta.type : this.typeValues[0]
+        this.isRepeating = data.event.rrule.freq != null
+        this.freqValue = this.isRepeating ? data.event.rrule.freq : this.freqValues[0]
         this.form = this.fb.group({
             'user': [data.event.user || null, Validators.required],
             'type': [this.typeValue, Validators.required],
             'date': [data.event.start || null, Validators.required],
-            'slot': [this.slotValue, Validators.required]
+            'slot': [this.slotValue, Validators.required],
+            'freq': [this.freqValue]
         })
     }
 
     inputDate(event: MatDatepickerInputEvent<Date>) {
         this.slots = EventUtils.formSlots(moment(event.value))
         this.slotValue = null
+    }
+
+    onRepeatChange($event) {
+        this.isRepeating = !this.isRepeating
     }
 
     saveEvent() {

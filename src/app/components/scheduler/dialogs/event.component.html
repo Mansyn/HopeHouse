@@ -1,6 +1,10 @@
-<h1 mat-dialog-title>
+<div class="event-title">
   <span>{{typeValue}} Meal</span>
-</h1>
+  <div class="flex-spacer"></div>
+  <mat-slide-toggle class="m-10" color="primary" (change)="onRepeatChange($event)" [checked]="isRepeating">
+    Repeating
+  </mat-slide-toggle>
+</div>
 <form [formGroup]="form" (ngSubmit)="saveEvent()">
   <div mat-dialog-content>
     <mat-form-field class="full-width">
@@ -31,6 +35,16 @@
         </mat-radio-button>
       </mat-radio-group>
     </mat-form-field>
+    <section *ngIf="isRepeating">
+      <mat-form-field floatPlaceholder="always" class="input-no-underline full-width">
+        <input matInput placeholder="Frequency" style="display: none">
+        <mat-radio-group [formControl]="form.controls['freq']" [(ngModel)]="freqValue">
+          <mat-radio-button *ngFor="let freq of freqValues" [value]="freq.value">
+            {{freq.name}}
+          </mat-radio-button>
+        </mat-radio-group>
+      </mat-form-field>
+    </section>
   </div>
   <div mat-dialog-actions align="end">
     <button mat-raised-button [disabled]="!form.valid" type="submit" color="primary">Ok</button>

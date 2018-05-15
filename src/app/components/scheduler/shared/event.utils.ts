@@ -1,14 +1,24 @@
-import { CalendarEvent, CalendarEventAction } from 'angular-calendar'
-import { Event, EventType } from './event'
+import { CalendarEventAction } from 'angular-calendar'
+import { Event, RecurringCalendarEvent } from './event'
 import { UserProfile } from '../../../core/user'
 
 import * as _moment from 'moment'
 import { default as _rollupMoment } from 'moment'
 const moment = _rollupMoment || _moment;
+import RRule from 'rrule'
 
 export default class EventUtils {
 
-    static mapToCalendarEvent(event: Event, user: UserProfile): CalendarEvent {
+    static mapToCalendarEvent(event: Event, user: UserProfile): RecurringCalendarEvent {
+
+        let byweekday = []
+        if (event.by_weekday) {
+            let tempWeekDay = event.by_weekday.split(",");
+
+            for (let day in tempWeekDay) {
+                byweekday.push(parseInt(tempWeekDay[day], 10))
+            }
+        }
 
         let calendarEvent = {
             id: event.$key,
@@ -20,16 +30,22 @@ export default class EventUtils {
                 primary: user.profile.color,
                 secondary: user.profile.color
             },
+            rrule: {
+                freq: event.frequency,
+                bymonth: event.by_month,
+                bymonthday: event.by_monthday,
+                byweekday: event.by_weekday ? byweekday : null
+            },
             meta: {
                 schedule_key: event.schedule_key,
-                type: event.type ? event.type : EventType.Serve
+                type: event.type ? event.type : 'Serving'
             }
         }
 
         return calendarEvent;
     }
 
-    static mapFromCalendarEvent(calendarevent: CalendarEvent, schedule_key: string, userid: string): Event {
+    static mapFromCalendarEvent(calendarevent: RecurringCalendarEvent, schedule_key: string, userid: string): Event {
 
         let event = {
             $key: '',
@@ -41,13 +57,17 @@ export default class EventUtils {
             type: calendarevent.meta.type,
             primary: calendarevent.color.primary,
             secondary: calendarevent.color.secondary,
+            frequency: calendarevent.rrule.freq,
+            by_month: calendarevent.rrule.bymonth,
+            by_monthday: calendarevent.rrule.bymonthday,
+            by_weekday: calendarevent.rrule.byweekday.join(','),
             timeStamp: moment().format()
         }
 
         return event;
     }
 
-    static filterPastCalendarEvents(events: CalendarEvent[]) {
+    static filterPastCalendarEvents(events: RecurringCalendarEvent[]) {
         let now = new Date()
         let futureEvents = []
         events.sort((a, b) => {
@@ -90,6 +110,10 @@ export default class EventUtils {
             end: _moment.add(1, 'hours').format(),
             primary: user.profile.color,
             secondary: user.profile.color,
+            frequency: form.frequency,
+            by_month: form.bymonth,
+            by_monthday: form.bymonthday,
+            by_weekday: form.byweekday.join(','),
             type: form.type,
             timeStamp: moment().format()
         }
@@ -135,5 +159,9 @@ export default class EventUtils {
                 break
         }
         return slot
+    }
+
+    static getRuleValues() {
+        return [{ name: 'DAILY', value: 3 }, { name: 'WEEKLY', value: 2 }, { name: 'MONTHLY', value: 1 }, { name: 'YEARLY', value: 0 }]
     }
 }
