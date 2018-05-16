@@ -33,6 +33,15 @@
 // import 'core-js/es6/map';
 // import 'core-js/es6/weak-map';
 // import 'core-js/es6/set';
+import 'core-js/es6/reflect';
+import 'core-js/es7/reflect';
+import 'zone.js/dist/zone';
+import 'hammerjs';
+import 'web-animations-js';
+import 'rxjs/add/operator/takeUntil'
+import 'rxjs/add/operator/switchMap';
+import 'rxjs/add/operator/take';
+import 'rxjs/add/observable/of';
 
 /** IE10 and IE11 requires the following for NgClass support on SVG elements */
 // import 'classlist.js';  // Run `npm install --save classlist.js`.

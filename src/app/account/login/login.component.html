@@ -35,12 +35,16 @@
     <div class="layout-row">
       <div class="flex-offset-gt-sm-20 flex-100 flex-gt-sm-60 txt-center">
         <h5>OR</h5>
-        <button mat-raised-button (click)="auth.googleLogin()" color="primary">
-          Google Login
-        </button>
-        <button mat-raised-button (click)="auth.facebookLogin()" color="primary">
-          Facebook Login
-        </button>
+        <span>
+          <button mat-raised-button (click)="auth.googleLogin()" color="primary">
+            Google Login
+          </button>
+        </span>
+        <span class="m-l-15">
+          <button mat-raised-button (click)="auth.facebookLogin()" color="primary">
+            Facebook Login
+          </button>
+        </span>
       </div>
     </div>
   </div>
