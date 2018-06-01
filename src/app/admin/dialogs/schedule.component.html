@@ -2,17 +2,17 @@
   <span *ngIf="create">Create Schedule</span>
   <span *ngIf="!create">Edit Schedule</span>
 </h1>
-<div mat-dialog-content>
-  <form [formGroup]="form">
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div mat-dialog-content>
     <mat-form-field class="full-width">
-      <mat-select placeholder="Select Location" [formControl]="form.controls['location']" [(ngModel)]="data.schedule.location">
+      <mat-select placeholder="Select Location" [formControl]="form.controls['location']">
         <mat-option *ngFor="let location of data.locations" [value]="location.$key">
           {{ location.name }}
         </mat-option>
       </mat-select>
     </mat-form-field>
     <mat-form-field class="full-width">
-      <input matInput placeholder="Title" type="text" [formControl]="form.controls['title']" [(ngModel)]="data.schedule.title">
+      <input matInput placeholder="Title" type="text" [formControl]="form.controls['title']">
       <mat-error *ngIf="form.controls['title'].hasError('required')">
         Title is required
       </mat-error>
@@ -21,23 +21,23 @@
       </mat-error>
     </mat-form-field>
     <mat-form-field class="full-width">
-      <input matInput placeholder="Description" type="text" [formControl]="form.controls['description']" [(ngModel)]="data.schedule.description">
+      <input matInput placeholder="Description" type="text" [formControl]="form.controls['description']">
       <mat-error *ngIf="form.controls['description'].hasError('required')">
         Description is required
       </mat-error>
     </mat-form-field>
     <mat-form-field class="full-width">
-      <input matInput placeholder="Color" type="color" [formControl]="form.controls['color']" [(ngModel)]="data.schedule.color" (change)="refresh.next()">
+      <input matInput placeholder="Color" type="color" [formControl]="form.controls['color']" (change)="refresh.next()">
       <mat-error *ngIf="form.controls['color'].hasError('required')">
         Color is required
       </mat-error>
     </mat-form-field>
-    <div class="full-width">
-      <file-upload [showFileNameInput]="true" allowedTypes="image/*" uploadButtonText="Upload Image" [formControl]="form.controls['image']" [(ngModel)]="data.schedule.image"></file-upload>
-    </div>
-  </form>
-</div>
-<div mat-dialog-actions align="end">
-  <button mat-raised-button (click)="saveSchedule()" [disabled]="!form.valid" color="primary">Ok</button>
-  <button mat-button [mat-dialog-close]="false">Cancel</button>
-</div>
+    <!-- <div class="full-width">
+      <file-upload [showFileNameInput]="true" allowedTypes="image/*" uploadButtonText="Upload Image" [formControl]="form.controls['image']"></file-upload>
+    </div> -->
+  </div>
+  <div mat-dialog-actions align="end">
+    <button mat-raised-button type="submit" [disabled]="!form.valid" color="primary">Ok</button>
+    <button mat-button type="button" [mat-dialog-close]="false">Cancel</button>
+  </div>
+</form>

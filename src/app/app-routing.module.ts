@@ -9,7 +9,6 @@ import { ContactComponent } from './contact/contact.component'
 import { SchedulesComponent } from './schedules/schedules.component';
 import { LoginComponent } from './account/login/login.component';
 
-import { AdminGuard } from './core/admin.guard';
 import { VolunteerGuard } from './core/volunteer.guard';
 import { CanReadGuard } from './core/can-read.guard';
 import { ScheduleComponent } from './schedule/schedule.component';
@@ -21,7 +20,7 @@ const routes: Routes = [
   { path: 'contact', component: ContactComponent },
   { path: 'account/register', component: RegisterComponent },
   { path: 'account/login', component: LoginComponent },
-  { path: 'admin', component: AdminComponent, canActivate: [AdminGuard] },
+  { path: 'admin', loadChildren: 'app/admin/admin.module#AdminModule' },
   { path: 'schedules', component: SchedulesComponent, canActivate: [VolunteerGuard] },
   { path: 'schedule/:id', component: ScheduleComponent, canActivate: [VolunteerGuard] },
   { path: '*', redirectTo: 'home' }

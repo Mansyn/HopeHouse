@@ -19,22 +19,23 @@ export class ScheduleDialog {
             'title': [data.schedule.title || null, Validators.compose([Validators.maxLength(25), Validators.required])],
             'color': [data.schedule.color || null, Validators.required],
             'description': [data.schedule.description || null, Validators.required],
-            'image': [data.schedule.image || null, Validators.required]
+            //'image': [data.schedule.image || null, Validators.required]
         })
     }
 
     refresh: Subject<any> = new Subject();
 
-    saveSchedule() {
+    onSubmit() {
         if (this.form.valid) {
+            let form = this.form.value
             let now = new Date().toDateString();
 
             let schedule = {
-                location: this.data.schedule.location,
-                title: this.data.schedule.title,
-                color: this.data.schedule.color,
-                description: this.data.schedule.description,
-                image: this.data.schedule.image,
+                location: form.location,
+                title: form.title,
+                color: form.color,
+                description: form.description,
+                // image: form.image,
                 timeStamp: now,
                 active: true
             }

@@ -18,7 +18,6 @@ import {
   MatInputModule,
   MatListModule,
   MatNativeDateModule,
-  MatPaginatorModule,
   MatProgressBarModule,
   MatProgressSpinnerModule,
   MatRadioModule,
@@ -28,7 +27,6 @@ import {
   MatSnackBarModule,
   MatSortModule,
   MatToolbarModule,
-  MatTableModule,
   MatTabsModule,
   MatTooltipModule
 } from '@angular/material'
@@ -57,7 +55,7 @@ import { ExcelService } from './utilities/services/excel.service';
 /* Sub Components */
 import { DisableControlDirective } from './utilities/directives/disable-control.directive';
 import { FocusDirective } from './utilities/directives/focus.directive'
-import { PhonePipe } from './utilities/pipes/phone.pipe'
+import { PipesModule } from './utilities/pipes/pipes.module'
 
 /* My Components */
 import { AppComponent } from './app.component';
@@ -65,12 +63,6 @@ import { NavbarComponent } from './components/navbar/navbar.component'
 import { FooterComponent } from './components/footer/footer.component';
 import { HomeComponent } from './home/home.component';
 import { AccountComponent } from './account/account.component';
-import { AdminComponent } from './admin/admin.component';
-import { VolunteerDialog } from './admin/dialogs/volunteer.component';
-import { UserDialog } from './admin/dialogs/user.component';
-import { ViewScheduleDialog } from './admin/dialogs/schedule-view.component';
-import { ScheduleDialog } from './admin/dialogs/schedule.component';
-import { ScheduleDeleteDialog } from './admin/dialogs/schedule-delete.component';
 import { ContactComponent } from './contact/contact.component';
 import { SchedulerComponent } from './components/scheduler/scheduler.component';
 import { EventDialog } from './components/scheduler/dialogs/event.component';
@@ -85,17 +77,11 @@ import { LoginComponent } from './account/login/login.component';
   declarations: [
     AppComponent,
     HomeComponent,
-    AdminComponent,
     NavbarComponent,
     FooterComponent,
     AccountComponent,
     ContactComponent,
     SchedulerComponent,
-    ScheduleDeleteDialog,
-    VolunteerDialog,
-    UserDialog,
-    ViewScheduleDialog,
-    ScheduleDialog,
     EventDialog,
     EventDeleteDialog,
     SchedulesComponent,
@@ -104,7 +90,6 @@ import { LoginComponent } from './account/login/login.component';
     FileUploadComponent,
     DisableControlDirective,
     FocusDirective,
-    PhonePipe,
     LoginComponent
   ],
   imports: [
@@ -127,7 +112,6 @@ import { LoginComponent } from './account/login/login.component';
     MatInputModule,
     MatListModule,
     MatNativeDateModule,
-    MatPaginatorModule,
     MatProgressBarModule,
     MatProgressSpinnerModule,
     MatRadioModule,
@@ -137,16 +121,16 @@ import { LoginComponent } from './account/login/login.component';
     MatSnackBarModule,
     MatSortModule,
     MatToolbarModule,
-    MatTableModule,
     MatTabsModule,
     MatTooltipModule,
+    PipesModule,
     CalendarModule.forRoot(),
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireDatabaseModule,
     AngularFireAuthModule
   ],
-  entryComponents: [VolunteerDialog, UserDialog, ViewScheduleDialog, ScheduleDialog, EventDialog, EventDeleteDialog],
-  providers: [AngularFirestore, ScheduleService, EventService, ScheduleDeleteDialog, LocationService, ProfileService, ExcelService],
+  entryComponents: [EventDialog, EventDeleteDialog],
+  providers: [AngularFirestore, ScheduleService, EventService, LocationService, ProfileService, ExcelService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
