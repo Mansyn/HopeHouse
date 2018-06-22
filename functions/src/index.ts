@@ -28,9 +28,19 @@ export const sendWelcomeEmail = functions.auth.user().onCreate((user) => {
         from: `${APP_NAME} <noreply@firebase.com>`,
         to: email,
         subject: `Welcome to ${APP_NAME}!`,
-        text: `Thanks for signing up to serve a meal at Hope House Mission men's shelter! We couldn't do what we do without the help of our volunteers. Together, we can help break the cycle of poverty and despair one life at a time.
+        text: `Thanks for signing up to serve a meal at Hope House Mission! We couldn't do what we do without the help of our volunteers. Together, we can help break the cycle of poverty and despair one life at a time.
 
 Below is the vital info you need to plan your meal:
+
+Women's Shelter Meals
+
+  *   1300 Girard Ave., Middletown Ohio
+  *   513-217-5056
+  *   Parking and entrance are around the back of the building
+  *   Plan for 40 servings
+  *   Lunch - Arrive no later than 11:30am, ready to serve at 12:00pm
+  *   Dinner - Arrive no later than 5:00pm, ready to serve at 5:30pm
+  *   We have plates, cups, serving utensils
 
 Men's Shelter Meals
 
@@ -46,8 +56,18 @@ Looking forward to seeing you soon!
 
 Volunteer Coordinator
 Ph: (513) 424-4673`,
-        html: `<p>Thanks for signing up to serve a meal at Hope House Mission men's shelter! We couldn't do what we do without the help of our volunteers. Together, we can help break the cycle of poverty and despair one life at a time.</p>
+        html: `<p>Thanks for signing up to serve a meal at Hope House Mission! We couldn't do what we do without the help of our volunteers. Together, we can help break the cycle of poverty and despair one life at a time.</p>
   <p>Below is the vital info you need to plan your meal:</p>
+  <p><u>Women’s Shelter Meals</u></p>
+  <ul>
+  <li>1300 Girard Ave., Middletown Ohio</li>
+  <li>513-217-5056</li>
+  <li>Parking and entrance are around the back of the building</li>
+  <li>Plan for 40 servings</li>
+  <li>Lunch - Arrive no later than 11:30am, ready to serve at 12:00pm</li>
+  <li>Dinner - Arrive no later than 5:00pm, ready to serve at 5:30pm</li>
+  <li>We have plates, cups, serving utensils</li>
+  </ul>
   <p><u>Men's Shelter Meals</u></p>
   <ul>
   <li>34 S. Main St., Middletown Ohio</li>
